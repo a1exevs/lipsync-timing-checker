@@ -3,8 +3,6 @@ name: Github Pages deploy
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: []
 
 jobs:
   build:
