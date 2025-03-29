@@ -136,7 +136,7 @@ const App: React.FC = () => {
         <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
       </div>
       <div className="json-data" ref={jsonDataContainerRef}>
-        <h3>Слова и фонемы</h3>
+        <h3>Слова и фонемы:</h3>
         <div className="current-time" id="current-time"></div>
       </div>
     </>
