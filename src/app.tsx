@@ -131,14 +131,14 @@ const App: React.FC = () => {
       }
       jsonDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
     };
-    waveFormContainerRef.current.addEventListener('scroll', waveFormContainerRefScrollSyncFn);
-    jsonDataContainerRef.current.addEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+    waveFormContainerRef.current.addEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+    jsonDataContainerRef.current.addEventListener('scroll', waveFormContainerRefScrollSyncFn);
     return () => {
       if (waveFormContainerRef.current) {
-        waveFormContainerRef.current.removeEventListener('scroll', waveFormContainerRefScrollSyncFn);
+        waveFormContainerRef.current.removeEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
       }
       if (jsonDataContainerRef.current) {
-        jsonDataContainerRef.current.removeEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+        jsonDataContainerRef.current.removeEventListener('scroll', waveFormContainerRefScrollSyncFn);
       }
     };
   }, [waveFormContainerRef, jsonDataContainerRef]);
