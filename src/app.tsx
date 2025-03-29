@@ -1,59 +1,64 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WavesurferPlayer from '@wavesurfer/react';
 
 const App: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [wavesurfer, setWavesurfer] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [width, setWidth] = useState<number>(0);
+
+  const waveFormContainerRef = useRef<HTMLDivElement>(null);
   const jsonDataContainerRef = useRef<HTMLDivElement>(null);
+  const jsonDataElRef = useRef<HTMLDivElement>(null);
 
   const onReady = (ws: any) => {
     setWavesurfer(ws);
     setIsPlaying(false);
     updateCurrentTime();
+    const width = ws.getDuration() * 400;
+    setWidth(width);
   };
 
   const onPlayPause = () => {
     wavesurfer && (wavesurfer as any).playPause();
   };
 
-  const onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    debugger;
-    if ((event as any).target.files.length > 0) {
-      const file = (event as any).target.files[0];
-      const url = URL.createObjectURL(file);
-      setAudioUrl(url);
+  const onAudioFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    if ((event as any).target.files.length === 0) {
+      return;
     }
+    const file = (event as any).target.files[0];
+    const url = URL.createObjectURL(file);
+    setAudioUrl(url);
   };
 
   const onJSONFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    debugger;
-    if ((event as any).target.files.length > 0) {
-      const file = (event as any).target.files[0];
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        try {
-          debugger;
-          const jsonData = JSON.parse((e as any).target.result);
-          displayJsonData(jsonData);
-        } catch (error) {
-          alert('Некорректный JSON файл');
-        }
-      };
-      reader.readAsText(file);
+    if ((event as any).target.files.length === 0) {
+      return;
     }
+    const file = (event as any).target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const jsonData = JSON.parse((e as any).target.result);
+        displayJsonData(jsonData);
+      } catch (error) {
+        alert('Некорректный JSON файл');
+      }
+    };
+    reader.readAsText(file);
   };
 
   const displayJsonData = (jsonData: any) => {
-    // Сброс содержимого, кроме заголовка
-    const jsonDataContainer: any = jsonDataContainerRef.current;
-    jsonDataContainer.innerHTML = '<h3>Слова и фонемы</h3>';
+    const jsonDataEl: any = jsonDataElRef.current;
+    jsonDataEl.style.width = `${width}px`;
+    jsonDataEl.innerHTML = '<h3>Слова и фонемы</h3>';
 
-    // Создаем ползунок для слов и фонем
+    const jsonDataContainer: any = jsonDataContainerRef.current;
     const indicator = document.createElement('div');
     indicator.id = 'json-data-indicator';
     indicator.className = 'current-time';
-    jsonDataContainer.appendChild(indicator);
+    jsonDataEl.appendChild(indicator);
 
     const duration = wavesurfer.getDuration();
 
@@ -71,7 +76,7 @@ const App: React.FC = () => {
       wordElement.style.left = `${wordLeft}%`;
       wordElement.style.width = `${wordWidth}%`;
 
-      jsonDataContainer.appendChild(wordElement);
+      jsonDataEl.appendChild(wordElement);
 
       // Создание блока для фонем
       if (wordItem.phonemes && Array.isArray(wordItem.phonemes)) {
@@ -89,8 +94,8 @@ const App: React.FC = () => {
           phonemeElement.style.width = `${phonemeWidth}%`;
 
           // Смещаем фонемы ниже слов
-          phonemeElement.style.top = '30px'; // Отступ от слов
-          jsonDataContainer.appendChild(phonemeElement);
+          phonemeElement.style.top = '60px'; // Отступ от слов
+          jsonDataEl.appendChild(phonemeElement);
         });
       }
     });
@@ -104,20 +109,48 @@ const App: React.FC = () => {
     const currentTime = wavesurfer.getCurrentTime();
     const percent = (currentTime / duration) * 100;
 
-    // Обновляем позицию ползунка для слов и фонем
     const jsonDataIndicator = document.getElementById('json-data-indicator');
     if (jsonDataIndicator) {
       jsonDataIndicator.style.left = `${percent}%`;
     }
   };
 
+  useEffect(() => {
+    if (!waveFormContainerRef.current || !jsonDataContainerRef.current) {
+      return;
+    }
+    const waveFormContainerRefScrollSyncFn = (event: Event) => {
+      if (!waveFormContainerRef.current) {
+        return;
+      }
+      waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+    };
+    const jsonDataContainerRefHScrollSyncFn = (event: Event) => {
+      if (!jsonDataContainerRef.current) {
+        return;
+      }
+      jsonDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+    };
+    waveFormContainerRef.current.addEventListener('scroll', waveFormContainerRefScrollSyncFn);
+    jsonDataContainerRef.current.addEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+    return () => {
+      if (waveFormContainerRef.current) {
+        waveFormContainerRef.current.removeEventListener('scroll', waveFormContainerRefScrollSyncFn);
+      }
+      if (jsonDataContainerRef.current) {
+        jsonDataContainerRef.current.removeEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+      }
+    };
+  }, [waveFormContainerRef, jsonDataContainerRef]);
+
   return (
     <>
       <h1>Audio Waveform and JSON Viewer</h1>
-      <div id="waveform">
+      <div id="waveform" ref={waveFormContainerRef}>
         {audioUrl && (
           <WavesurferPlayer
             height={200}
+            width={width || '100%'}
             waveColor="violet"
             url={audioUrl}
             onReady={onReady}
@@ -131,13 +164,13 @@ const App: React.FC = () => {
       <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
       <div className="controls">
         <label htmlFor="audio-upload">Выбрать аудио:</label>
-        <input type="file" id="audio-upload" accept="audio/*" onChange={onFileChange} />
+        <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
         <label htmlFor="json-upload">Выбрать JSON:</label>
         <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
       </div>
-      <div className="json-data" ref={jsonDataContainerRef}>
-        <h3>Слова и фонемы:</h3>
-        <div className="current-time" id="current-time"></div>
+      <h3>Слова и фонемы:</h3>
+      <div className="json-data-container" ref={jsonDataContainerRef}>
+        <div className="json-data" ref={jsonDataElRef}></div>
       </div>
     </>
   );
