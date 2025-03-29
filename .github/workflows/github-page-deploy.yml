@@ -1,4 +1,4 @@
-name: Github Page deploy
+name: Project build
 
 on:
   push:
@@ -7,29 +7,26 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: Github Pages
-      url: ${{steps.deployment.outputs.page_url}}
-
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          # upload entire directory
-          path: '.'
+          node-version: 20
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        run: |
+          npm install -g corepack@0.31.0
+          corepack enable
+          yarn install
+
+      - name: Pre-deploy
+        run: yarn predeploy
+
+      - name: Deploy
+        run: yarn deploy
