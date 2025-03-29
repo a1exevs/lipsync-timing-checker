@@ -28,5 +28,10 @@ jobs:
       - name: Pre-deploy
         run: yarn predeploy
 
+      - name: Set Git Author
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "actions@github.com"
+
       - name: Deploy
         run: yarn deploy
