@@ -27,10 +27,10 @@ body {
 }
 
 #waveform {
-  position: relative;
-  width: 100%;
+  display: flex;
   height: 200px;
-  margin-top: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid #ccc;
 }
 
@@ -47,12 +47,18 @@ body {
   margin: 10px 0;
 }
 
-.json-data {
+.json-data-container {
   position: relative;
   margin-top: 20px;
   height: 100px;
   border: 1px solid #ccc;
-  overflow: hidden; /* Добавляем это свойство */
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.json-data {
+  position: relative;
+  height: 100px;
 }
 
 #json-data-indicator {
@@ -62,7 +68,7 @@ body {
   width: 2px;
   background-color: red;
   pointer-events: none;
-  z-index: 10; /* Чтобы ползунок был поверх слов и фонем */
+  z-index: 10;
 }
 
 .word,
@@ -78,10 +84,10 @@ body {
 
 .word {
   background-color: #add8e6;
-  top: 10px; /* Позиционирование слов */
+  top: 10px;
 }
 
 .phoneme {
   background-color: #ffff99;
-  top: 40px; /* Позиционирование фонем ниже слов */
+  top: 120px;
 }
