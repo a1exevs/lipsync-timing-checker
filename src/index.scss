@@ -7,11 +7,6 @@
   font-family: 'Roboto', sans-serif;
 }
 
-* {
-  scrollbar-color: #505354 #707374;
-  scrollbar-width: thin;
-}
-
 body {
   margin: 0 auto;
   font-family: 'Roboto', sans-serif;
@@ -58,6 +53,11 @@ body {
   border: 1px solid #ccc;
   overflow-x: auto;
   overflow-y: hidden;
+  scrollbar-color: #505354 #707374;
+  scrollbar-width: thin;
+  &_withoutScrollbar {
+    scrollbar-width: none;
+  }
 }
 
 .JSONData {
@@ -83,16 +83,13 @@ body {
   border: 1px solid #000;
   border-radius: 4px;
   cursor: pointer;
-  transform: translateY(-50%);
-  white-space: nowrap; /* Предотвращает перенос текста */
+  white-space: nowrap;
 }
 
 .Word {
   background-color: #add8e6;
-  top: 10px;
 }
 
 .Phoneme {
   background-color: #ffff99;
-  top: 120px;
 }

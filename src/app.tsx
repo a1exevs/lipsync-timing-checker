@@ -1,6 +1,26 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WavesurferPlayer from '@wavesurfer/react';
 
+export type JSONItem = {
+  start: number;
+  end: number;
+};
+
+export type JSONPhoneme = {
+  phoneme: string;
+} & JSONItem;
+
+export type JSONWord = {
+  word: string;
+  phonemes: JSONPhoneme[];
+} & JSONItem;
+
+export type JSONData = {
+  words: JSONWord[];
+};
+
+export const TIME_LINE_SCALE_COEFFICIENT = 400;
+
 const App: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [wavesurfer, setWavesurfer] = useState<any>(null);
@@ -8,19 +28,28 @@ const App: React.FC = () => {
   const [width, setWidth] = useState<number>(0);
 
   const waveFormContainerRef = useRef<HTMLDivElement>(null);
-  const jsonDataContainerRef = useRef<HTMLDivElement>(null);
-  const jsonDataElRef = useRef<HTMLDivElement>(null);
+  const jsonDataWordsContainerRef = useRef<HTMLDivElement>(null);
+  const jsonDataPhonemesContainerRef = useRef<HTMLDivElement>(null);
+  const jsonDataWordsElRef = useRef<HTMLDivElement>(null);
+  const jsonDataPhonemesElRef = useRef<HTMLDivElement>(null);
+
+  const [words, setWords] = useState<JSONWord[]>([]);
+  const [phonemes, setPhonemes] = useState<JSONPhoneme[]>([]);
 
   const onReady = (ws: any) => {
     setWavesurfer(ws);
     setIsPlaying(false);
     updateCurrentTime();
-    const width = ws.getDuration() * 400;
+    const width = ws.getDuration() * TIME_LINE_SCALE_COEFFICIENT;
     setWidth(width);
+    setupContainersWidth(width);
   };
 
-  const onPlayPause = () => {
-    wavesurfer && (wavesurfer as any).playPause();
+  const onPlayPause = (wavesurfer: any): void => {
+    if (!wavesurfer) {
+      return;
+    }
+    (wavesurfer as any).playPause();
   };
 
   const onAudioFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -30,6 +59,7 @@ const App: React.FC = () => {
     const file = (event as any).target.files[0];
     const url = URL.createObjectURL(file);
     setAudioUrl(url);
+    event.target.blur();
   };
 
   const onJSONFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -38,10 +68,17 @@ const App: React.FC = () => {
     }
     const file = (event as any).target.files[0];
     const reader = new FileReader();
+    event.target.blur();
     reader.onload = function (e) {
       try {
-        const jsonData = JSON.parse((e as any).target.result);
-        displayJsonData(jsonData);
+        const jsonData: JSONData = JSON.parse((e as any).target.result);
+        setWords(jsonData.words);
+        setPhonemes(
+          jsonData.words.reduce<JSONPhoneme[]>((result, word) => {
+            result.push(...word.phonemes);
+            return result;
+          }, []),
+        );
       } catch (error) {
         alert('Некорректный JSON файл');
       }
@@ -49,56 +86,13 @@ const App: React.FC = () => {
     reader.readAsText(file);
   };
 
-  const displayJsonData = (jsonData: any) => {
-    const jsonDataEl: any = jsonDataElRef.current;
-    jsonDataEl.style.width = `${width}px`;
-    jsonDataEl.innerHTML = '<h3>Слова и фонемы</h3>';
-
-    const jsonDataContainer: any = jsonDataContainerRef.current;
-    const indicator = document.createElement('div');
-    indicator.id = 'json-data-indicator';
-    indicator.className = 'PositionIndicator';
-    jsonDataEl.appendChild(indicator);
-
-    const duration = wavesurfer.getDuration();
-
-    jsonData.words.forEach((wordItem: any) => {
-      // Создание блока для слова
-      const wordElement = document.createElement('div');
-      wordElement.className = 'Word';
-      wordElement.textContent = wordItem.word;
-
-      // Вычисляем позицию и ширину слова
-      const wordStartRatio = wordItem.start / duration;
-      const wordEndRatio = wordItem.end / duration;
-      const wordLeft = wordStartRatio * 100;
-      const wordWidth = (wordEndRatio - wordStartRatio) * 100;
-      wordElement.style.left = `${wordLeft}%`;
-      wordElement.style.width = `${wordWidth}%`;
-
-      jsonDataEl.appendChild(wordElement);
-
-      // Создание блока для фонем
-      if (wordItem.phonemes && Array.isArray(wordItem.phonemes)) {
-        wordItem.phonemes.forEach((phonemeItem: any) => {
-          const phonemeElement = document.createElement('div');
-          phonemeElement.className = 'Phoneme';
-          phonemeElement.textContent = phonemeItem.phoneme;
-
-          // Вычисляем позицию и ширину фонемы
-          const phonemeStartRatio = phonemeItem.start / duration;
-          const phonemeEndRatio = phonemeItem.end / duration;
-          const phonemeLeft = phonemeStartRatio * 100;
-          const phonemeWidth = (phonemeEndRatio - phonemeStartRatio) * 100;
-          phonemeElement.style.left = `${phonemeLeft}%`;
-          phonemeElement.style.width = `${phonemeWidth}%`;
-
-          // Смещаем фонемы ниже слов
-          phonemeElement.style.top = '60px'; // Отступ от слов
-          jsonDataEl.appendChild(phonemeElement);
-        });
-      }
-    });
+  const setupContainersWidth = (width: number): void => {
+    if (jsonDataWordsElRef.current) {
+      jsonDataWordsElRef.current.style.width = `${width}px`;
+    }
+    if (jsonDataPhonemesElRef.current) {
+      jsonDataPhonemesElRef.current.style.width = `${width}px`;
+    }
   };
 
   const updateCurrentTime = (): void => {
@@ -109,39 +103,99 @@ const App: React.FC = () => {
     const currentTime = wavesurfer.getCurrentTime();
     const percent = (currentTime / duration) * 100;
 
-    const jsonDataIndicator = document.getElementById('json-data-indicator');
-    if (jsonDataIndicator) {
-      jsonDataIndicator.style.left = `${percent}%`;
+    const currentTimePositionLeft = currentTime * TIME_LINE_SCALE_COEFFICIENT;
+    const containerHScrollPositionLeft = waveFormContainerRef?.current?.scrollLeft ?? 0;
+    const containerWidth = waveFormContainerRef?.current?.clientWidth ?? 0;
+    if (
+      Math.abs(currentTimePositionLeft - containerHScrollPositionLeft) > containerWidth &&
+      waveFormContainerRef.current
+    ) {
+      waveFormContainerRef.current.scrollLeft =
+        currentTimePositionLeft - containerHScrollPositionLeft > 0
+          ? waveFormContainerRef.current.scrollLeft + containerWidth
+          : currentTimePositionLeft;
+    }
+    const jsonDataIndicator1 = document.getElementById('json-data-indicator-1');
+    if (jsonDataIndicator1) {
+      jsonDataIndicator1.style.left = `${percent}%`;
+    }
+    const jsonDataIndicator2 = document.getElementById('json-data-indicator-2');
+    if (jsonDataIndicator2) {
+      jsonDataIndicator2.style.left = `${percent}%`;
     }
   };
 
+  const getItemLeftPosition = (item: JSONItem): string => {
+    if (!wavesurfer) {
+      return '';
+    }
+    const duration = wavesurfer.getDuration();
+    return `${(item.start / duration) * 100}%`;
+  };
+
+  const getItemWidth = (item: JSONItem): string => {
+    if (!wavesurfer) {
+      return '';
+    }
+    const duration = wavesurfer.getDuration();
+    return `${((item.end - item.start) / duration) * 100}%`;
+  };
+
   useEffect(() => {
-    if (!waveFormContainerRef.current || !jsonDataContainerRef.current) {
+    if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current || !jsonDataPhonemesContainerRef.current) {
       return;
     }
-    const waveFormContainerRefScrollSyncFn = (event: Event) => {
-      if (!waveFormContainerRef.current) {
-        return;
+    const onJSONDataWordsContainerHScrollChange = (event: Event) => {
+      if (waveFormContainerRef.current) {
+        waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
-      waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
-    };
-    const jsonDataContainerRefHScrollSyncFn = (event: Event) => {
-      if (!jsonDataContainerRef.current) {
-        return;
+      if (jsonDataPhonemesContainerRef.current) {
+        jsonDataPhonemesContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
-      jsonDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
     };
-    waveFormContainerRef.current.addEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
-    jsonDataContainerRef.current.addEventListener('scroll', waveFormContainerRefScrollSyncFn);
+    const onWaveFormContainerScrollChange = (event: Event) => {
+      if (jsonDataWordsContainerRef.current) {
+        jsonDataWordsContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+      }
+      if (jsonDataPhonemesContainerRef.current) {
+        jsonDataPhonemesContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+      }
+    };
+    const onJSONDataPhonemesContainerRef = (event: Event) => {
+      if (waveFormContainerRef.current) {
+        waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+      }
+      if (jsonDataWordsContainerRef.current) {
+        jsonDataWordsContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+      }
+    };
+    waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);
+    jsonDataWordsContainerRef.current.addEventListener('scroll', onJSONDataWordsContainerHScrollChange);
+    jsonDataPhonemesContainerRef.current.addEventListener('scroll', onJSONDataPhonemesContainerRef);
     return () => {
       if (waveFormContainerRef.current) {
-        waveFormContainerRef.current.removeEventListener('scroll', jsonDataContainerRefHScrollSyncFn);
+        waveFormContainerRef.current.removeEventListener('scroll', onWaveFormContainerScrollChange);
       }
-      if (jsonDataContainerRef.current) {
-        jsonDataContainerRef.current.removeEventListener('scroll', waveFormContainerRefScrollSyncFn);
+      if (jsonDataWordsContainerRef.current) {
+        jsonDataWordsContainerRef.current.removeEventListener('scroll', onJSONDataWordsContainerHScrollChange);
+      }
+      if (jsonDataPhonemesContainerRef.current) {
+        jsonDataPhonemesContainerRef.current.removeEventListener('scroll', onJSONDataPhonemesContainerRef);
       }
     };
-  }, [waveFormContainerRef, jsonDataContainerRef]);
+  }, [waveFormContainerRef, jsonDataWordsContainerRef, jsonDataPhonemesContainerRef]);
+
+  useEffect(() => {
+    const handleKeyboardEvents = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        onPlayPause(wavesurfer);
+      }
+    };
+    window.addEventListener('keydown', handleKeyboardEvents);
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardEvents);
+    };
+  }, [wavesurfer]);
 
   return (
     <div className="App">
@@ -151,7 +205,7 @@ const App: React.FC = () => {
         <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
         <label htmlFor="json-upload">Выбрать JSON:</label>
         <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
-        <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
+        <button onClick={() => onPlayPause(wavesurfer)}>{isPlaying ? 'Pause' : 'Play'}</button>
       </section>
       <section>
         <div className="Waveform" ref={waveFormContainerRef}>
@@ -171,8 +225,37 @@ const App: React.FC = () => {
         </div>
       </section>
       <section>
-        <div className="JSONDataContainer" ref={jsonDataContainerRef}>
-          <div className="JSONData" ref={jsonDataElRef}></div>
+        <div className="JSONDataContainer JSONDataContainer_withoutScrollbar" ref={jsonDataWordsContainerRef}>
+          <div className="JSONData" ref={jsonDataWordsElRef}>
+            <div id="json-data-indicator-1" className="PositionIndicator"></div>
+            {words.map((word: JSONWord, index: number) => {
+              return (
+                <div
+                  className="Word"
+                  key={index}
+                  style={{ width: getItemWidth(word), left: getItemLeftPosition(word) }}
+                >
+                  {word.word}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="JSONDataContainer" ref={jsonDataPhonemesContainerRef}>
+          <div className="JSONData" ref={jsonDataPhonemesElRef}>
+            <div id="json-data-indicator-2" className="PositionIndicator"></div>
+            {phonemes.map((phoneme: JSONPhoneme, index: number) => {
+              return (
+                <div
+                  className="Phoneme"
+                  key={index}
+                  style={{ width: getItemWidth(phoneme), left: getItemLeftPosition(phoneme) }}
+                >
+                  {phoneme.phoneme}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
     </div>
