@@ -144,35 +144,38 @@ const App: React.FC = () => {
   }, [waveFormContainerRef, jsonDataContainerRef]);
 
   return (
-    <>
-      <h1>Audio Waveform and JSON Viewer</h1>
-      <div id="waveform" ref={waveFormContainerRef}>
-        {audioUrl && (
-          <WavesurferPlayer
-            height={200}
-            width={width || '100%'}
-            waveColor="violet"
-            url={audioUrl}
-            onReady={onReady}
-            onAudioprocess={updateCurrentTime}
-            onSeeking={updateCurrentTime}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-          />
-        )}
-      </div>
-      <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
-      <div className="controls">
+    <div className="App">
+      <h1 className="App__Title">Audio Waveform and JSON Viewer</h1>
+      <section className="Controls">
         <label htmlFor="audio-upload">Выбрать аудио:</label>
         <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
         <label htmlFor="json-upload">Выбрать JSON:</label>
         <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
-      </div>
-      <h3>Слова и фонемы:</h3>
-      <div className="json-data-container" ref={jsonDataContainerRef}>
-        <div className="json-data" ref={jsonDataElRef}></div>
-      </div>
-    </>
+        <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
+      </section>
+      <section>
+        <div id="waveform" ref={waveFormContainerRef}>
+          {audioUrl && (
+            <WavesurferPlayer
+              height={200}
+              width={width || '100%'}
+              waveColor="violet"
+              url={audioUrl}
+              onReady={onReady}
+              onAudioprocess={updateCurrentTime}
+              onSeeking={updateCurrentTime}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+          )}
+        </div>
+      </section>
+      <section>
+        <div className="json-data-container" ref={jsonDataContainerRef}>
+          <div className="json-data" ref={jsonDataElRef}></div>
+        </div>
+      </section>
+    </div>
   );
 };
 
