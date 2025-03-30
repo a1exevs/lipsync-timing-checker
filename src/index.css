@@ -13,7 +13,7 @@
 }
 
 body {
-  margin: 0;
+  margin: 0 auto;
   font-family: 'Roboto', sans-serif;
   background: #000000;
 
@@ -24,6 +24,18 @@ body {
   font-weight: 400;
   line-height: 1.5rem;
   color: #e8e6e3;
+}
+
+.App {
+  background: rgba(24, 26, 27, 0.75);
+  margin: 0 auto;
+  max-width: 1920px;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.App__Title {
+  text-align: center;
 }
 
 #waveform {
@@ -43,13 +55,15 @@ body {
   pointer-events: none;
 }
 
-.controls {
-  margin: 10px 0;
+.Controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
 }
 
 .json-data-container {
   position: relative;
-  margin-top: 20px;
   height: 100px;
   border: 1px solid #ccc;
   overflow-x: auto;
@@ -73,6 +87,7 @@ body {
 
 .word,
 .phoneme {
+  color: black;
   position: absolute;
   padding: 5px 10px;
   border: 1px solid #000;
