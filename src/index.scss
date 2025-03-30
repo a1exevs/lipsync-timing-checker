@@ -32,27 +32,17 @@ body {
   max-width: 1920px;
   min-height: 100vh;
   padding: 0;
+  &__Title {
+    text-align: center;
+  }
 }
 
-.App__Title {
-  text-align: center;
-}
-
-#waveform {
+.Waveform {
   display: flex;
   height: 200px;
   overflow-x: auto;
   overflow-y: hidden;
   border: 1px solid #ccc;
-}
-
-.current-time {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 2px;
-  background-color: red;
-  pointer-events: none;
 }
 
 .Controls {
@@ -62,7 +52,7 @@ body {
   padding: 8px 16px;
 }
 
-.json-data-container {
+.JSONDataContainer {
   position: relative;
   height: 100px;
   border: 1px solid #ccc;
@@ -70,12 +60,12 @@ body {
   overflow-y: hidden;
 }
 
-.json-data {
+.JSONData {
   position: relative;
   height: 100px;
 }
 
-#json-data-indicator {
+.PositionIndicator {
   position: absolute;
   top: 0;
   height: 100%;
@@ -85,8 +75,8 @@ body {
   z-index: 10;
 }
 
-.word,
-.phoneme {
+.Word,
+.Phoneme {
   color: black;
   position: absolute;
   padding: 5px 10px;
@@ -97,12 +87,12 @@ body {
   white-space: nowrap; /* Предотвращает перенос текста */
 }
 
-.word {
+.Word {
   background-color: #add8e6;
   top: 10px;
 }
 
-.phoneme {
+.Phoneme {
   background-color: #ffff99;
   top: 120px;
 }

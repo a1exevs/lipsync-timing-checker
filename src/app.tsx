@@ -57,7 +57,7 @@ const App: React.FC = () => {
     const jsonDataContainer: any = jsonDataContainerRef.current;
     const indicator = document.createElement('div');
     indicator.id = 'json-data-indicator';
-    indicator.className = 'current-time';
+    indicator.className = 'PositionIndicator';
     jsonDataEl.appendChild(indicator);
 
     const duration = wavesurfer.getDuration();
@@ -65,7 +65,7 @@ const App: React.FC = () => {
     jsonData.words.forEach((wordItem: any) => {
       // Создание блока для слова
       const wordElement = document.createElement('div');
-      wordElement.className = 'word';
+      wordElement.className = 'Word';
       wordElement.textContent = wordItem.word;
 
       // Вычисляем позицию и ширину слова
@@ -82,7 +82,7 @@ const App: React.FC = () => {
       if (wordItem.phonemes && Array.isArray(wordItem.phonemes)) {
         wordItem.phonemes.forEach((phonemeItem: any) => {
           const phonemeElement = document.createElement('div');
-          phonemeElement.className = 'phoneme';
+          phonemeElement.className = 'Phoneme';
           phonemeElement.textContent = phonemeItem.phoneme;
 
           // Вычисляем позицию и ширину фонемы
@@ -154,7 +154,7 @@ const App: React.FC = () => {
         <button onClick={onPlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
       </section>
       <section>
-        <div id="waveform" ref={waveFormContainerRef}>
+        <div className="Waveform" ref={waveFormContainerRef}>
           {audioUrl && (
             <WavesurferPlayer
               height={200}
@@ -171,8 +171,8 @@ const App: React.FC = () => {
         </div>
       </section>
       <section>
-        <div className="json-data-container" ref={jsonDataContainerRef}>
-          <div className="json-data" ref={jsonDataElRef}></div>
+        <div className="JSONDataContainer" ref={jsonDataContainerRef}>
+          <div className="JSONData" ref={jsonDataElRef}></div>
         </div>
       </section>
     </div>
