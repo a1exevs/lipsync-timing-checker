@@ -1,0 +1,45 @@
+.Word {
+  display: flex;
+  color: black;
+  position: absolute;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: #add8e6;
+  &_selected {
+    opacity: 50%;
+    border: 1px solid white;
+  }
+}
+
+.LeftResizer {
+  display: flex;
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  cursor: ew-resize;
+  &:hover {
+    background-color: blue;
+  }
+}
+
+.RightResizer {
+  display: flex;
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: transparent;
+  transform: translateX(-5px);
+  cursor: col-resize;
+  &:hover {
+    background-color: red;
+  }
+}
