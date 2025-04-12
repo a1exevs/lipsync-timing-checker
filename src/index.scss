@@ -75,7 +75,6 @@ body {
   z-index: 10;
 }
 
-.Word,
 .Phoneme {
   color: black;
   position: absolute;
@@ -84,10 +83,6 @@ body {
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.Word {
-  background-color: #add8e6;
 }
 
 .Phoneme {
