@@ -21,32 +21,6 @@ body {
   color: #e8e6e3;
 }
 
-.App {
-  background: rgba(24, 26, 27, 0.75);
-  margin: 0 auto;
-  max-width: 1920px;
-  min-height: 100vh;
-  padding: 0;
-  &__Title {
-    text-align: center;
-  }
-}
-
-.Waveform {
-  display: flex;
-  height: 200px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border: 1px solid #ccc;
-}
-
-.Controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 16px;
-}
-
 .JSONDataContainer {
   position: relative;
   height: 100px;
