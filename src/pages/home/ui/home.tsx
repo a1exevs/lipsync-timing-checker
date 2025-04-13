@@ -278,7 +278,7 @@ const HomePage: React.FC = () => {
           ref={jsonDataWordsContainerRef}
         >
           <div className={classes.HomePage__JSONData} ref={jsonDataWordsElRef} onClick={onWordClick}>
-            <div id="json-data-indicator-1" className="PositionIndicator"></div>
+            <div id="json-data-indicator-1" className={classes.HomePage__PositionIndicator}></div>
             {words.map((word: JSONWord) => (
               <Word
                 key={word.id}
@@ -292,12 +292,12 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         <div className={classes.HomePage__JSONDataContainer} ref={jsonDataPhonemesContainerRef}>
-          <div className="JSONData" ref={jsonDataPhonemesElRef}>
-            <div id="json-data-indicator-2" className="PositionIndicator"></div>
+          <div className={classes.HomePage__JSONData} ref={jsonDataPhonemesElRef}>
+            <div id="json-data-indicator-2" className={classes.HomePage__PositionIndicator}></div>
             {phonemes.map((phoneme: JSONPhoneme) => {
               return (
                 <div
-                  className="Phoneme"
+                  className={classes.HomePage__Phoneme}
                   key={phoneme.id}
                   style={{ width: getItemWidth(phoneme), left: getItemLeftPosition(phoneme) }}
                 >
