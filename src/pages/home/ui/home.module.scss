@@ -1,0 +1,55 @@
+.HomePage {
+  display: flex;
+  flex-direction: column;
+  &__Title {
+    text-align: center;
+  }
+  &__Controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+  }
+  &__Waveform {
+    display: flex;
+    height: 200px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid #ccc;
+  }
+  &__JSONDataContainer {
+    position: relative;
+    height: 100px;
+    border: 1px solid #ccc;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-color: #505354 #707374;
+    scrollbar-width: thin;
+    &_withoutScrollbar {
+      scrollbar-width: none;
+    }
+  }
+  &__JSONData {
+    position: relative;
+    height: 100px;
+  }
+  &__PositionIndicator {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: red;
+    pointer-events: none;
+    z-index: 10;
+  }
+  &__Phoneme {
+    color: black;
+    position: absolute;
+    padding: 5px 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: #ffff99;
+  }
+}

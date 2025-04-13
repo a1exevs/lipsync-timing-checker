@@ -1,35 +1,16 @@
 import React, { ChangeEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
 import WavesurferPlayer from '@wavesurfer/react';
-import Word from 'src/components/word/word';
+import Word from 'src/pages/home/ui/word/word';
 import { arrayToObject } from 'src/shared/helpers/arrays';
+import classes from 'src/pages/home/ui/home.module.scss';
+import cn from 'classnames';
+import { JSONData, JSONItem, JSONPhoneme, JSONWord, ResizerSide } from 'src/pages/home/model/types';
+import { TIME_LINE_SCALE_COEFFICIENT } from 'src/pages/home/model/consts';
+import WaveSurfer from 'wavesurfer.js';
 
-export type JSONItem = {
-  id: string;
-  selected: boolean;
-  start: number;
-  end: number;
-};
-
-export type JSONPhoneme = {
-  phoneme: string;
-} & JSONItem;
-
-export type JSONWord = {
-  word: string;
-  phonemes: JSONPhoneme[];
-} & JSONItem;
-
-export type JSONData = {
-  words: JSONWord[];
-};
-
-export const TIME_LINE_SCALE_COEFFICIENT = 400;
-
-export type ResizerSide = 'left' | 'right';
-
-const App: React.FC = () => {
+const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [wavesurfer, setWavesurfer] = useState<any>(null);
+  const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [width, setWidth] = useState<number>(0);
 
@@ -44,7 +25,7 @@ const App: React.FC = () => {
 
   const [phonemes, setPhonemes] = useState<JSONPhoneme[]>([]);
 
-  const onReady = (ws: any) => {
+  const onReady = (ws: WaveSurfer) => {
     setWavesurfer(ws);
     setIsPlaying(false);
     updateCurrentTime();
@@ -53,33 +34,36 @@ const App: React.FC = () => {
     setupContainersWidth(width);
   };
 
-  const onPlayPause = (wavesurfer: any): void => {
+  const onPlayPause = (wavesurfer: WaveSurfer | null): void => {
     if (!wavesurfer) {
       return;
     }
-    (wavesurfer as any).playPause();
+    wavesurfer.playPause();
   };
 
   const onAudioFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    if ((event as any).target.files.length === 0) {
+    if (!event?.target?.files?.length) {
       return;
     }
-    const file = (event as any).target.files[0];
+    const file = event.target.files[0];
     const url = URL.createObjectURL(file);
     setAudioUrl(url);
     event.target.blur();
   };
 
   const onJSONFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    if ((event as any).target.files.length === 0) {
+    if (!event?.target?.files?.length) {
       return;
     }
-    const file = (event as any).target.files[0];
+    const file = event.target.files[0];
     const reader = new FileReader();
     event.target.blur();
-    reader.onload = function (e) {
+    reader.onload = function (e: ProgressEvent<FileReader>) {
       try {
-        const jsonData: JSONData = JSON.parse((e as any).target.result);
+        if (!e?.target?.result || typeof e.target.result !== 'string') {
+          return;
+        }
+        const jsonData: JSONData = JSON.parse(e.target.result);
         const words = jsonData.words.map((word, index) => ({ ...word, id: String(index), selected: false }));
         setWords(words);
         const phonemes = jsonData.words
@@ -172,7 +156,7 @@ const App: React.FC = () => {
     if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current || !jsonDataPhonemesContainerRef.current) {
       return;
     }
-    const onJSONDataWordsContainerHScrollChange = (event: Event) => {
+    const onJSONDataWordsContainerHScrollChange = (event: any) => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
@@ -214,7 +198,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleKeyboardEvents = (event: KeyboardEvent) => {
-      if (event.code === 'Space') {
+      if (event.code === 'Space' && wavesurfer) {
         onPlayPause(wavesurfer);
       }
     };
@@ -235,18 +219,19 @@ const App: React.FC = () => {
     const startX = e.clientX;
     const startWidth = ref.current.offsetWidth;
     const startLeft = ref.current.offsetLeft;
-    const onMouseMove = (moveEvent: any) => {
+    const onMouseMove: EventListener = (moveEvent: Event) => {
       if (!ref.current) {
         return;
       }
+      const clientX = (moveEvent as unknown as MouseEvent).clientX;
       if (resizerSide === 'left') {
-        const diff = moveEvent.clientX - startX;
+        const diff = clientX - startX;
         const newWidth = startWidth - diff;
         ref.current.style.left = `${startLeft + diff}px`;
         ref.current.style.width = `${newWidth}px`;
       }
       if (resizerSide === 'right') {
-        const newWidth = startWidth + (moveEvent.clientX - startX);
+        const newWidth = startWidth + (clientX - startX);
         ref.current.style.width = `${newWidth}px`;
       }
     };
@@ -263,36 +248,37 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="App">
-      <h1 className="App__Title">Audio Waveform and JSON Viewer</h1>
-      <section className="Controls">
+    <section className={classes.HomePage}>
+      <h1 className={classes.HomePage__Title}>Audio Waveform and JSON Viewer</h1>
+      <section className={classes.HomePage__Controls}>
         <label htmlFor="audio-upload">Выбрать аудио:</label>
         <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
         <label htmlFor="json-upload">Выбрать JSON:</label>
         <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
         <button onClick={() => onPlayPause(wavesurfer)}>{isPlaying ? 'Pause' : 'Play'}</button>
       </section>
-      <section>
-        <div className="Waveform" ref={waveFormContainerRef}>
-          {audioUrl && (
-            <WavesurferPlayer
-              height={200}
-              width={width || '100%'}
-              waveColor="violet"
-              url={audioUrl}
-              onReady={onReady}
-              onAudioprocess={updateCurrentTime}
-              onSeeking={updateCurrentTime}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-            />
-          )}
-        </div>
+      <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
+        {audioUrl && (
+          <WavesurferPlayer
+            height={200}
+            width={width || '100%'}
+            waveColor="violet"
+            url={audioUrl}
+            onReady={onReady}
+            onAudioprocess={updateCurrentTime}
+            onSeeking={updateCurrentTime}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+          />
+        )}
       </section>
       <section>
-        <div className="JSONDataContainer JSONDataContainer_withoutScrollbar" ref={jsonDataWordsContainerRef}>
-          <div className="JSONData" ref={jsonDataWordsElRef} onClick={onWordClick}>
-            <div id="json-data-indicator-1" className="PositionIndicator"></div>
+        <div
+          className={cn(classes.HomePage__JSONDataContainer, classes.HomePage__JSONDataContainer_withoutScrollbar)}
+          ref={jsonDataWordsContainerRef}
+        >
+          <div className={classes.HomePage__JSONData} ref={jsonDataWordsElRef} onClick={onWordClick}>
+            <div id="json-data-indicator-1" className={classes.HomePage__PositionIndicator}></div>
             {words.map((word: JSONWord) => (
               <Word
                 key={word.id}
@@ -305,13 +291,13 @@ const App: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="JSONDataContainer" ref={jsonDataPhonemesContainerRef}>
-          <div className="JSONData" ref={jsonDataPhonemesElRef}>
-            <div id="json-data-indicator-2" className="PositionIndicator"></div>
+        <div className={classes.HomePage__JSONDataContainer} ref={jsonDataPhonemesContainerRef}>
+          <div className={classes.HomePage__JSONData} ref={jsonDataPhonemesElRef}>
+            <div id="json-data-indicator-2" className={classes.HomePage__PositionIndicator}></div>
             {phonemes.map((phoneme: JSONPhoneme) => {
               return (
                 <div
-                  className="Phoneme"
+                  className={classes.HomePage__Phoneme}
                   key={phoneme.id}
                   style={{ width: getItemWidth(phoneme), left: getItemLeftPosition(phoneme) }}
                 >
@@ -322,8 +308,8 @@ const App: React.FC = () => {
           </div>
         </div>
       </section>
-    </div>
+    </section>
   );
 };
 
-export default App;
+export default HomePage;

@@ -1,7 +1,7 @@
-import React, { MouseEvent, RefObject, useEffect, useRef } from 'react';
-import { JSONWord, ResizerSide } from 'src/app';
-import classes from 'src/components/word/word.module.scss';
+import React, { MouseEvent, RefObject, useRef } from 'react';
+import classes from 'src/pages/home/ui/word/word.module.scss';
 import cn from 'classnames';
+import { JSONWord, ResizerSide } from 'src/pages/home/model/types';
 
 type Props = {
   word: JSONWord;
