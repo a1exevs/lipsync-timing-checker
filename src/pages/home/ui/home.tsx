@@ -20,7 +20,6 @@ const HomePage: React.FC = () => {
 
   const waveFormContainerRef = useRef<HTMLDivElement>(null);
   const jsonDataWordsContainerRef = useRef<HTMLDivElement>(null);
-  const jsonDataPhonemesContainerRef = useRef<HTMLDivElement>(null);
   const jsonDataWordsElRef = useRef<HTMLDivElement>(null);
   const jsonDataPhonemesElRef = useRef<HTMLDivElement>(null);
 
@@ -171,23 +170,17 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current || !jsonDataPhonemesContainerRef.current) {
+    if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current) {
       return;
     }
     const onWordsDataContainerHScrollChange = (event: any) => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
-      if (jsonDataPhonemesContainerRef.current) {
-        jsonDataPhonemesContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
-      }
     };
     const onWaveFormContainerScrollChange = (event: Event) => {
       if (jsonDataWordsContainerRef.current) {
         jsonDataWordsContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
-      }
-      if (jsonDataPhonemesContainerRef.current) {
-        jsonDataPhonemesContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
     };
     const onJSONDataPhonemesContainerRef = (event: Event) => {
@@ -200,7 +193,6 @@ const HomePage: React.FC = () => {
     };
     waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);
     jsonDataWordsContainerRef.current.addEventListener('scroll', onWordsDataContainerHScrollChange);
-    jsonDataPhonemesContainerRef.current.addEventListener('scroll', onJSONDataPhonemesContainerRef);
     return () => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.removeEventListener('scroll', onWaveFormContainerScrollChange);
@@ -208,11 +200,8 @@ const HomePage: React.FC = () => {
       if (jsonDataWordsContainerRef.current) {
         jsonDataWordsContainerRef.current.removeEventListener('scroll', onWordsDataContainerHScrollChange);
       }
-      if (jsonDataPhonemesContainerRef.current) {
-        jsonDataPhonemesContainerRef.current.removeEventListener('scroll', onJSONDataPhonemesContainerRef);
-      }
     };
-  }, [waveFormContainerRef, jsonDataWordsContainerRef, jsonDataPhonemesContainerRef]);
+  }, [waveFormContainerRef, jsonDataWordsContainerRef]);
 
   const onMouseDown = useCallback(
     (e: MouseEvent, wordId: string, resizerSide: ResizerSide) => {
@@ -326,10 +315,7 @@ const HomePage: React.FC = () => {
         )}
       </section>
       <section>
-        <div
-          className={cn(classes.HomePage__JSONDataContainer, classes.HomePage__JSONDataContainer_withoutScrollbar)}
-          ref={jsonDataWordsContainerRef}
-        >
+        <div className={cn(classes.HomePage__JSONDataContainer)} ref={jsonDataWordsContainerRef}>
           <div className={classes.HomePage__JSONData} ref={jsonDataWordsElRef} onClick={onWordClick}>
             <div id="json-data-indicator-1" className={classes.HomePage__PositionIndicator}></div>
             {words.map((word: Word, index, arr) => (
