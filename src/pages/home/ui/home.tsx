@@ -1,18 +1,22 @@
-import React, { ChangeEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import WavesurferPlayer from '@wavesurfer/react';
-import Word from 'src/pages/home/ui/word/word';
-import { arrayToObject } from 'src/shared/helpers/arrays';
+import WordComponent from 'src/pages/home/ui/word/word';
 import classes from 'src/pages/home/ui/home.module.scss';
 import cn from 'classnames';
-import { JSONData, JSONItem, JSONPhoneme, JSONWord, ResizerSide } from 'src/pages/home/model/types';
+import { AudioTrackTextDataDTO, ResizerSide, Word } from 'src/pages/home/model/types';
 import { TIME_LINE_SCALE_COEFFICIENT } from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
+import { arrayToObject } from 'src/shared/helpers/arrays';
+import { getFileData } from 'src/shared/helpers/files';
+import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
 
 const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
+  const [wordsDataFileData, setWordsDataFileData] = useState<{ fileName: string; extension: string } | null>(null);
+
   const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [width, setWidth] = useState<number>(0);
+  const [timelineWidth, setTimelineWidth] = useState<number>(0);
 
   const waveFormContainerRef = useRef<HTMLDivElement>(null);
   const jsonDataWordsContainerRef = useRef<HTMLDivElement>(null);
@@ -20,17 +24,15 @@ const HomePage: React.FC = () => {
   const jsonDataWordsElRef = useRef<HTMLDivElement>(null);
   const jsonDataPhonemesElRef = useRef<HTMLDivElement>(null);
 
-  const [words, setWords] = useState<JSONWord[]>([]);
-  const [wordsMap, setWordsMap] = useState<Record<number, JSONWord>>({});
-
-  const [phonemes, setPhonemes] = useState<JSONPhoneme[]>([]);
+  const [words, setWords] = useState<Word[]>([]);
+  const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
 
   const onReady = (ws: WaveSurfer) => {
     setWavesurfer(ws);
     setIsPlaying(false);
     updateCurrentTime();
     const width = ws.getDuration() * TIME_LINE_SCALE_COEFFICIENT;
-    setWidth(width);
+    setTimelineWidth(width);
     setupContainersWidth(width);
   };
 
@@ -51,11 +53,12 @@ const HomePage: React.FC = () => {
     event.target.blur();
   };
 
-  const onJSONFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const onWordsDataFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
     if (!event?.target?.files?.length) {
       return;
     }
     const file = event.target.files[0];
+    const { fileName, extension } = getFileData(file);
     const reader = new FileReader();
     event.target.blur();
     reader.onload = function (e: ProgressEvent<FileReader>) {
@@ -63,18 +66,22 @@ const HomePage: React.FC = () => {
         if (!e?.target?.result || typeof e.target.result !== 'string') {
           return;
         }
-        const jsonData: JSONData = JSON.parse(e.target.result);
-        const words = jsonData.words.map((word, index) => ({ ...word, id: String(index), selected: false }));
+        // TODO encapsulate JSON.parse in parser factory
+        const dataDTO: AudioTrackTextDataDTO = JSON.parse(e.target.result);
+        const words: Word[] = dataDTO.words.map((wordDTO, index) =>
+          convertWordDTOToWord({
+            wordDTO,
+            wordId: String(index),
+            audioDuration: wavesurfer?.getDuration() ?? 0,
+            timelineWidth,
+          }),
+        );
         setWords(words);
-        const phonemes = jsonData.words
-          .reduce<JSONPhoneme[]>((result, word) => {
-            result.push(...word.phonemes);
-            return result;
-          }, [])
-          .map((phoneme, index) => ({ ...phoneme, id: String(index), selected: false }));
-        setPhonemes(phonemes);
+        setWordsDataFileData({ fileName, extension });
       } catch (error) {
-        alert('Некорректный JSON файл');
+        setWords([]);
+        setWordsDataFileData(null);
+        alert(`Something went wrong while ${extension}-file loading.`);
       }
     };
     reader.readAsText(file);
@@ -95,7 +102,7 @@ const HomePage: React.FC = () => {
     }
     const duration = wavesurfer.getDuration();
     const currentTime = wavesurfer.getCurrentTime();
-    const scaledTimePx = (currentTime / duration) * width;
+    const scaledTimePx = (currentTime / duration) * timelineWidth;
     const currentTimePositionLeft = currentTime * TIME_LINE_SCALE_COEFFICIENT;
     const containerHScrollPositionLeft = waveFormContainerRef?.current?.scrollLeft ?? 0;
     const containerWidth = waveFormContainerRef?.current?.clientWidth ?? 0;
@@ -118,22 +125,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const getItemLeftPosition = (item: JSONItem): string => {
-    if (!wavesurfer) {
-      return '';
-    }
-    const duration = wavesurfer.getDuration();
-    return `${(item.start / duration) * width}px`;
-  };
-
-  const getItemWidth = (item: JSONItem): string => {
-    if (!wavesurfer) {
-      return '';
-    }
-    const duration = wavesurfer.getDuration();
-    return `${((item.end - item.start) / duration) * width}px`;
-  };
-
   const onWordClick = (event: MouseEvent): void => {
     // TODO Support moving functionality
     // const wordElement = (event as any).target.closest(`.${wordClasses.Word}`);
@@ -152,11 +143,38 @@ const HomePage: React.FC = () => {
     // setWords(structuredClone(words));
   };
 
+  const isLoadJSONDataButtonEnabled = (): boolean => audioUrl !== '';
+  const isAudioPlayButtonEnabled = (): boolean => audioUrl !== '';
+  const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
+
+  const onDownloadJSONDataButtonClick = (): void => {
+    if (wordsDataFileData === null) {
+      return;
+    }
+    const data = {
+      words: words.map(word =>
+        convertWordToWordDTO({
+          word,
+          timelineWidth,
+          audioDuration: wavesurfer?.getDuration() ?? 0,
+        }),
+      ),
+    };
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${wordsDataFileData.fileName}.export.${wordsDataFileData.extension}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current || !jsonDataPhonemesContainerRef.current) {
       return;
     }
-    const onJSONDataWordsContainerHScrollChange = (event: any) => {
+    const onWordsDataContainerHScrollChange = (event: any) => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
@@ -181,20 +199,77 @@ const HomePage: React.FC = () => {
       }
     };
     waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);
-    jsonDataWordsContainerRef.current.addEventListener('scroll', onJSONDataWordsContainerHScrollChange);
+    jsonDataWordsContainerRef.current.addEventListener('scroll', onWordsDataContainerHScrollChange);
     jsonDataPhonemesContainerRef.current.addEventListener('scroll', onJSONDataPhonemesContainerRef);
     return () => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.removeEventListener('scroll', onWaveFormContainerScrollChange);
       }
       if (jsonDataWordsContainerRef.current) {
-        jsonDataWordsContainerRef.current.removeEventListener('scroll', onJSONDataWordsContainerHScrollChange);
+        jsonDataWordsContainerRef.current.removeEventListener('scroll', onWordsDataContainerHScrollChange);
       }
       if (jsonDataPhonemesContainerRef.current) {
         jsonDataPhonemesContainerRef.current.removeEventListener('scroll', onJSONDataPhonemesContainerRef);
       }
     };
   }, [waveFormContainerRef, jsonDataWordsContainerRef, jsonDataPhonemesContainerRef]);
+
+  const onMouseDown = useCallback(
+    (e: MouseEvent, wordId: string, resizerSide: ResizerSide) => {
+      const word = wordsMap[wordId];
+      if (word === undefined) {
+        return;
+      }
+      const wordIndex = words.indexOf(word);
+      if (wordIndex === -1) {
+        return;
+      }
+      const prevWord = words[wordIndex - 1];
+      const nextWord = words[wordIndex + 1];
+
+      const startX = e.clientX;
+      const startWidthPx = word.widthPx;
+      const startLeftPx = word.leftPx;
+      const onMouseMove: EventListener = (moveEvent: Event) => {
+        const clientX = (moveEvent as unknown as MouseEvent).clientX;
+        if (resizerSide === 'left') {
+          const diffPx = clientX - startX;
+          const newWidthPx = startWidthPx - diffPx;
+          const newLeftPx = startLeftPx + diffPx;
+          const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
+          if (prevWord && newLeftPx < prevWordRightPx) {
+            const leftDiffPx = prevWordRightPx - word.leftPx;
+            word.leftPx = prevWordRightPx;
+            word.widthPx = word.widthPx - leftDiffPx;
+          } else {
+            word.leftPx = newLeftPx;
+            word.widthPx = newWidthPx;
+          }
+        }
+        if (resizerSide === 'right') {
+          const newWidthPx = startWidthPx + (clientX - startX);
+          if (nextWord && word.leftPx + newWidthPx > nextWord.leftPx) {
+            word.widthPx = nextWord.leftPx - word.leftPx;
+          } else {
+            word.widthPx = newWidthPx;
+          }
+        }
+        words.splice(wordIndex, 1, word);
+        setWords([...words]);
+      };
+
+      const onMouseUp = () => {
+        console.log('onMouseUp');
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
+
+      console.log('onMouseDown');
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    },
+    [words.length, Object.keys(wordsMap).length],
+  );
 
   useEffect(() => {
     const handleKeyboardEvents = (event: KeyboardEvent) => {
@@ -212,56 +287,34 @@ const HomePage: React.FC = () => {
     setWordsMap(arrayToObject(words, 'id'));
   }, [words]);
 
-  const onMouseDown = (e: MouseEvent, ref: RefObject<HTMLDivElement>, resizerSide: ResizerSide) => {
-    if (!ref.current) {
-      return;
-    }
-    const startX = e.clientX;
-    const startWidth = ref.current.offsetWidth;
-    const startLeft = ref.current.offsetLeft;
-    const onMouseMove: EventListener = (moveEvent: Event) => {
-      if (!ref.current) {
-        return;
-      }
-      const clientX = (moveEvent as unknown as MouseEvent).clientX;
-      if (resizerSide === 'left') {
-        const diff = clientX - startX;
-        const newWidth = startWidth - diff;
-        ref.current.style.left = `${startLeft + diff}px`;
-        ref.current.style.width = `${newWidth}px`;
-      }
-      if (resizerSide === 'right') {
-        const newWidth = startWidth + (clientX - startX);
-        ref.current.style.width = `${newWidth}px`;
-      }
-    };
-
-    const onMouseUp = () => {
-      console.log('onMouseUp');
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    console.log('onMouseDown');
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-
   return (
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Audio Waveform and JSON Viewer</h1>
       <section className={classes.HomePage__Controls}>
-        <label htmlFor="audio-upload">Выбрать аудио:</label>
+        <label htmlFor="audio-upload">Load audio:</label>
         <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
-        <label htmlFor="json-upload">Выбрать JSON:</label>
-        <input type="file" id="json-upload" accept="application/json" onChange={onJSONFileChange} />
-        <button onClick={() => onPlayPause(wavesurfer)}>{isPlaying ? 'Pause' : 'Play'}</button>
+        <label htmlFor="json-upload">Load JSON data:</label>
+        <input
+          id="json-upload"
+          type="file"
+          disabled={!isLoadJSONDataButtonEnabled()}
+          accept="application/json"
+          onChange={onWordsDataFileChange}
+        />
+        <button disabled={!isDownloadJSONDataButtonEnabled()} onClick={onDownloadJSONDataButtonClick}>
+          Download Download JSON data
+        </button>
+      </section>
+      <section className={classes.HomePage__Controls}>
+        <button disabled={!isAudioPlayButtonEnabled()} onClick={() => onPlayPause(wavesurfer)}>
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
       </section>
       <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
         {audioUrl && (
           <WavesurferPlayer
             height={200}
-            width={width || '100%'}
+            width={timelineWidth || '100%'}
             waveColor="violet"
             url={audioUrl}
             onReady={onReady}
@@ -279,32 +332,22 @@ const HomePage: React.FC = () => {
         >
           <div className={classes.HomePage__JSONData} ref={jsonDataWordsElRef} onClick={onWordClick}>
             <div id="json-data-indicator-1" className={classes.HomePage__PositionIndicator}></div>
-            {words.map((word: JSONWord) => (
-              <Word
+            {words.map((word: Word, index, arr) => (
+              <WordComponent
                 key={word.id}
-                word={word}
+                id={word.id}
+                widthPx={word.widthPx}
+                leftPx={word.leftPx}
+                word={word.word}
+                start={word.start}
+                end={word.end}
                 selected={word.selected}
-                width={getItemWidth(word)}
-                left={getItemLeftPosition(word)}
-                onResizeStart={(e, ref, resizerSide: ResizerSide) => onMouseDown(e, ref, resizerSide)}
+                phonemes={word.phonemes}
+                hideLeftResizer={index === 0}
+                hideRightResizer={index === arr.length - 1}
+                onResizeStart={onMouseDown}
               />
             ))}
-          </div>
-        </div>
-        <div className={classes.HomePage__JSONDataContainer} ref={jsonDataPhonemesContainerRef}>
-          <div className={classes.HomePage__JSONData} ref={jsonDataPhonemesElRef}>
-            <div id="json-data-indicator-2" className={classes.HomePage__PositionIndicator}></div>
-            {phonemes.map((phoneme: JSONPhoneme) => {
-              return (
-                <div
-                  className={classes.HomePage__Phoneme}
-                  key={phoneme.id}
-                  style={{ width: getItemWidth(phoneme), left: getItemLeftPosition(phoneme) }}
-                >
-                  {phoneme.phoneme}
-                </div>
-              );
-            })}
           </div>
         </div>
       </section>

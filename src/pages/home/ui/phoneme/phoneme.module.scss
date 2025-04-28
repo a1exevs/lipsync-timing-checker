@@ -1,0 +1,15 @@
+.Phoneme {
+  color: black;
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: #ffff99;
+  &_withoutLeftBorder {
+    border-left: none;
+  }
+  &_withoutRightBorder {
+    border-right: none;
+  }
+}

@@ -42,14 +42,4 @@
     pointer-events: none;
     z-index: 10;
   }
-  &__Phoneme {
-    color: black;
-    position: absolute;
-    padding: 5px 10px;
-    border: 1px solid #000;
-    border-radius: 4px;
-    cursor: pointer;
-    white-space: nowrap;
-    background-color: #ffff99;
-  }
 }

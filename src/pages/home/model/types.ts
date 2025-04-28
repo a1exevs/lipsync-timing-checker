@@ -1,21 +1,44 @@
-export type JSONItem = {
-  id: string;
-  selected: boolean;
+export type AudioTrackTextItemDTO = {
   start: number;
   end: number;
 };
 
-export type JSONPhoneme = {
+export type PhonemeDTO = {
   phoneme: string;
-} & JSONItem;
+} & AudioTrackTextItemDTO;
 
-export type JSONWord = {
+export type WordDTO = {
   word: string;
-  phonemes: JSONPhoneme[];
-} & JSONItem;
+  phonemes: PhonemeDTO[];
+} & AudioTrackTextItemDTO;
 
-export type JSONData = {
-  words: JSONWord[];
+export type AudioTrackTextDataDTO = {
+  words: WordDTO[];
 };
 
 export type ResizerSide = 'left' | 'right';
+
+export type AudioTrackWordItemMetaData = {
+  id: string;
+  selected: boolean;
+  widthPx: number;
+  leftPx: number;
+};
+
+export type AudioTrackPhonemeItemMetaData = {
+  id: string;
+  widthPercent: number;
+};
+
+export type Phoneme = {
+  start: number;
+  end: number;
+  phoneme: string;
+} & AudioTrackPhonemeItemMetaData;
+
+export type Word = {
+  word: string;
+  phonemes: Phoneme[];
+  start: number;
+  end: number;
+} & AudioTrackWordItemMetaData;
