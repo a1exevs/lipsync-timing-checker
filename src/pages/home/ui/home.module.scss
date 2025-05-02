@@ -17,7 +17,7 @@
     overflow-y: hidden;
     border: 1px solid #ccc;
   }
-  &__JSONDataContainer {
+  &__WordsDataContainer {
     position: relative;
     height: 100px;
     border: 1px solid #ccc;
@@ -25,15 +25,12 @@
     overflow-y: hidden;
     scrollbar-color: #505354 #707374;
     scrollbar-width: thin;
-    &_withoutScrollbar {
-      scrollbar-width: none;
-    }
   }
-  &__JSONData {
+  &__WordsData {
     position: relative;
     height: 100px;
   }
-  &__PositionIndicator {
+  &__TimeIndicator {
     position: absolute;
     top: 0;
     height: 100%;

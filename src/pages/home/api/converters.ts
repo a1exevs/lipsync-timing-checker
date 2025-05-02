@@ -47,37 +47,51 @@ export function convertWordToWordDTO({
   audioDuration: number;
   timelineWidth: number;
 }): WordDTO {
-  const getWordStart = (word: Word): number => {
-    return (word.leftPx / timelineWidth) * audioDuration;
-  };
-
-  const getWordEnd = (word: Word): number => {
-    return getWordStart(word) + (word.widthPx / timelineWidth) * audioDuration;
-  };
-
   let phonemeStartShift = 0;
 
-  const getPhonemeStart = (phoneme: Phoneme, parentWord: Word): number => {
-    const wordNewStart = getWordStart(parentWord);
-    return phonemeStartShift + wordNewStart;
+  const getPhonemeStart = (parentWord: Word): number => {
+    return phonemeStartShift + parentWord.start;
   };
 
   const getPhonemeEnd = (phoneme: Phoneme, parentWord: Word): number => {
-    const wordNewStart = getWordStart(parentWord);
-    const wordNewWidth = getWordEnd(parentWord) - wordNewStart;
+    const wordNewWidth = parentWord.end - parentWord.start;
     const phonemeWidth = (phoneme.widthPercent * wordNewWidth) / 100;
-    return getPhonemeStart(phoneme, parentWord) + phonemeWidth;
+    return getPhonemeStart(parentWord) + phonemeWidth;
   };
 
   return {
     word: word.word,
-    start: getWordStart(word),
-    end: getWordEnd(word),
+    start: word.start,
+    end: word.end,
     phonemes: word.phonemes.map((phoneme, index) => {
-      const start = getPhonemeStart(phoneme, word);
+      // TODO toFixed(2) for start and end
+      const start = getPhonemeStart(word);
       const end = getPhonemeEnd(phoneme, word);
       phonemeStartShift += end - start;
       return { phoneme: phoneme.phoneme, start, end };
     }),
+  };
+}
+
+export function recalculateWordWithByNewTimelineWidth({
+  word,
+  prevTimelineWidth,
+  newTimelineWidth,
+}: {
+  word: Word;
+  prevTimelineWidth: number;
+  newTimelineWidth: number;
+}): Word {
+  const getWordWidthPx = (word: Word): number => {
+    return (word.widthPx / prevTimelineWidth) * newTimelineWidth;
+  };
+
+  const getWordLeftPositionPx = (word: Word): number => {
+    return (word.leftPx / prevTimelineWidth) * newTimelineWidth;
+  };
+  return {
+    ...word,
+    widthPx: getWordWidthPx(word),
+    leftPx: getWordLeftPositionPx(word),
   };
 }
