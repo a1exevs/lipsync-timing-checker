@@ -4,11 +4,22 @@ import WordComponent from 'src/pages/home/ui/word/word';
 import classes from 'src/pages/home/ui/home.module.scss';
 import cn from 'classnames';
 import { AudioTrackTextDataDTO, ResizerSide, Word } from 'src/pages/home/model/types';
-import { TIME_LINE_SCALE_COEFFICIENT } from 'src/pages/home/model/consts';
+import {
+  DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
+  DEFAULT_WAVE_FORM_COLOR,
+  DEFAULT_WAVE_FORM_WIDTH,
+  MAX_TIME_LINE_SCALE_COEFFICIENT,
+  MIN_TIME_LINE_SCALE_COEFFICIENT,
+  WAVE_FORM_HEIGHT,
+} from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
 import { arrayToObject } from 'src/shared/helpers/arrays';
 import { getFileData } from 'src/shared/helpers/files';
-import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
+import {
+  convertWordDTOToWord,
+  convertWordToWordDTO,
+  recalculateWordWithByNewTimelineWidth,
+} from 'src/pages/home/api/converters';
 
 const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -18,21 +29,27 @@ const HomePage: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
 
-  const waveFormContainerRef = useRef<HTMLDivElement>(null);
-  const jsonDataWordsContainerRef = useRef<HTMLDivElement>(null);
-  const jsonDataWordsElRef = useRef<HTMLDivElement>(null);
-  const jsonDataPhonemesElRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLElement>(null);
+  const waveFormContainerRef = useRef<HTMLElement>(null);
+  const wordsDataContainerRef = useRef<HTMLDivElement>(null);
+  const wordsDataElementRef = useRef<HTMLDivElement>(null);
+  const wordsDataTimeIndicator = useRef<HTMLDivElement>(null);
 
   const [words, setWords] = useState<Word[]>([]);
   const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
 
+  const [timelineScaleCoefficients, setTimelineScaleCoefficients] = useState<number>(
+    DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
+  );
+
   const onReady = (ws: WaveSurfer) => {
     setWavesurfer(ws);
     setIsPlaying(false);
-    updateCurrentTime();
-    const width = ws.getDuration() * TIME_LINE_SCALE_COEFFICIENT;
-    setTimelineWidth(width);
-    setupContainersWidth(width);
+    const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
+    setTimelineWidth(timelineWidth);
+
+    updateWordsDataTimeIndicatorPosition();
+    setupContainersWidth(timelineWidth);
   };
 
   const onPlayPause = (wavesurfer: WaveSurfer | null): void => {
@@ -65,7 +82,7 @@ const HomePage: React.FC = () => {
         if (!e?.target?.result || typeof e.target.result !== 'string') {
           return;
         }
-        // TODO encapsulate JSON.parse in parser factory
+        // TODO encapsulate JSON.parse in parser factory and add JSON structure validation
         const dataDTO: AudioTrackTextDataDTO = JSON.parse(e.target.result);
         const words: Word[] = dataDTO.words.map((wordDTO, index) =>
           convertWordDTOToWord({
@@ -87,22 +104,19 @@ const HomePage: React.FC = () => {
   };
 
   const setupContainersWidth = (width: number): void => {
-    if (jsonDataWordsElRef.current) {
-      jsonDataWordsElRef.current.style.width = `${width}px`;
-    }
-    if (jsonDataPhonemesElRef.current) {
-      jsonDataPhonemesElRef.current.style.width = `${width}px`;
+    if (wordsDataElementRef.current) {
+      wordsDataElementRef.current.style.width = `${width}px`;
     }
   };
 
-  const updateCurrentTime = (): void => {
+  const updateWordsDataTimeIndicatorPosition = (): void => {
     if (!wavesurfer) {
       return;
     }
     const duration = wavesurfer.getDuration();
     const currentTime = wavesurfer.getCurrentTime();
     const scaledTimePx = (currentTime / duration) * timelineWidth;
-    const currentTimePositionLeft = currentTime * TIME_LINE_SCALE_COEFFICIENT;
+    const currentTimePositionLeft = currentTime * timelineScaleCoefficients;
     const containerHScrollPositionLeft = waveFormContainerRef?.current?.scrollLeft ?? 0;
     const containerWidth = waveFormContainerRef?.current?.clientWidth ?? 0;
     if (
@@ -114,13 +128,8 @@ const HomePage: React.FC = () => {
           ? waveFormContainerRef.current.scrollLeft + containerWidth
           : currentTimePositionLeft;
     }
-    const jsonDataIndicator1 = document.getElementById('json-data-indicator-1');
-    if (jsonDataIndicator1) {
-      jsonDataIndicator1.style.left = `${scaledTimePx}px`;
-    }
-    const jsonDataIndicator2 = document.getElementById('json-data-indicator-2');
-    if (jsonDataIndicator2) {
-      jsonDataIndicator2.style.left = `${scaledTimePx}px`;
+    if (wordsDataTimeIndicator.current) {
+      wordsDataTimeIndicator.current.style.left = `${scaledTimePx}px`;
     }
   };
 
@@ -159,8 +168,8 @@ const HomePage: React.FC = () => {
         }),
       ),
     };
-    const jsonStr = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const dataToDownload = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataToDownload], { type: `application/${wordsDataFileData.extension}` });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -170,7 +179,47 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!waveFormContainerRef.current || !jsonDataWordsContainerRef.current) {
+    // TODO Restore time position and scroll position after scaling
+    const onScaleTimeline = (event: WheelEvent) => {
+      if (event.shiftKey || !event.altKey || !wavesurfer) {
+        return;
+      }
+      const delta = (event as any).wheelDelta;
+      setTimelineScaleCoefficients(prevCoefficient => {
+        let newCoefficient = prevCoefficient + delta;
+        if (newCoefficient < MIN_TIME_LINE_SCALE_COEFFICIENT) {
+          newCoefficient = MIN_TIME_LINE_SCALE_COEFFICIENT;
+        }
+        if (newCoefficient > MAX_TIME_LINE_SCALE_COEFFICIENT) {
+          newCoefficient = MAX_TIME_LINE_SCALE_COEFFICIENT;
+        }
+        const newTimelineWidth = wavesurfer.getDuration() * newCoefficient;
+        setTimelineWidth(newTimelineWidth);
+        setWords(words =>
+          words.map(word =>
+            recalculateWordWithByNewTimelineWidth({
+              word,
+              prevTimelineWidth: timelineWidth,
+              newTimelineWidth,
+            }),
+          ),
+        );
+        return newCoefficient;
+      });
+    };
+
+    if (timelineRef.current) {
+      timelineRef.current.addEventListener('wheel', onScaleTimeline);
+    }
+    return () => {
+      if (timelineRef.current) {
+        timelineRef.current.removeEventListener('wheel', onScaleTimeline);
+      }
+    };
+  }, [timelineRef, timelineWidth, wavesurfer, words, setTimelineWidth, setWords]);
+
+  useEffect(() => {
+    if (!waveFormContainerRef.current || !wordsDataContainerRef.current) {
       return;
     }
     const onWordsDataContainerHScrollChange = (event: any) => {
@@ -179,29 +228,21 @@ const HomePage: React.FC = () => {
       }
     };
     const onWaveFormContainerScrollChange = (event: Event) => {
-      if (jsonDataWordsContainerRef.current) {
-        jsonDataWordsContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
-      }
-    };
-    const onJSONDataPhonemesContainerRef = (event: Event) => {
-      if (waveFormContainerRef.current) {
-        waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
-      }
-      if (jsonDataWordsContainerRef.current) {
-        jsonDataWordsContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+      if (wordsDataContainerRef.current) {
+        wordsDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
     };
     waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);
-    jsonDataWordsContainerRef.current.addEventListener('scroll', onWordsDataContainerHScrollChange);
+    wordsDataContainerRef.current.addEventListener('scroll', onWordsDataContainerHScrollChange);
     return () => {
       if (waveFormContainerRef.current) {
         waveFormContainerRef.current.removeEventListener('scroll', onWaveFormContainerScrollChange);
       }
-      if (jsonDataWordsContainerRef.current) {
-        jsonDataWordsContainerRef.current.removeEventListener('scroll', onWordsDataContainerHScrollChange);
+      if (wordsDataContainerRef.current) {
+        wordsDataContainerRef.current.removeEventListener('scroll', onWordsDataContainerHScrollChange);
       }
     };
-  }, [waveFormContainerRef, jsonDataWordsContainerRef]);
+  }, [waveFormContainerRef, wordsDataContainerRef]);
 
   const onMouseDown = useCallback(
     (e: MouseEvent, wordId: string, resizerSide: ResizerSide) => {
@@ -220,6 +261,10 @@ const HomePage: React.FC = () => {
       const startWidthPx = word.widthPx;
       const startLeftPx = word.leftPx;
       const onMouseMove: EventListener = (moveEvent: Event) => {
+        if (!wavesurfer) {
+          return;
+        }
+        const duration = wavesurfer.getDuration();
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         if (resizerSide === 'left') {
           const diffPx = clientX - startX;
@@ -227,20 +272,34 @@ const HomePage: React.FC = () => {
           const newLeftPx = startLeftPx + diffPx;
           const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
           if (prevWord && newLeftPx < prevWordRightPx) {
+            // TODO toFixed(2) for start and end
             const leftDiffPx = prevWordRightPx - word.leftPx;
+            const newWordStart = prevWord.end;
             word.leftPx = prevWordRightPx;
-            word.widthPx = word.widthPx - leftDiffPx;
-          } else {
-            word.leftPx = newLeftPx;
+            word.start = newWordStart;
+
+            const newWidthPx = word.widthPx - leftDiffPx;
             word.widthPx = newWidthPx;
+            word.end = newWordStart + (newWidthPx / timelineWidth) * duration;
+          } else {
+            // TODO toFixed(2) for start and end
+            word.leftPx = newLeftPx;
+            word.start = (newLeftPx / timelineWidth) * duration;
+
+            word.widthPx = newWidthPx;
+            word.end = ((newLeftPx + newWidthPx) / timelineWidth) * duration;
           }
         }
         if (resizerSide === 'right') {
           const newWidthPx = startWidthPx + (clientX - startX);
           if (nextWord && word.leftPx + newWidthPx > nextWord.leftPx) {
+            // TODO toFixed(2) for start and end
             word.widthPx = nextWord.leftPx - word.leftPx;
+            word.end = nextWord.start;
           } else {
+            // TODO toFixed(2) for start and end
             word.widthPx = newWidthPx;
+            word.end = word.start + (newWidthPx / timelineWidth) * duration;
           }
         }
         words.splice(wordIndex, 1, word);
@@ -257,7 +316,7 @@ const HomePage: React.FC = () => {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
-    [words.length, Object.keys(wordsMap).length],
+    [words.length, Object.keys(wordsMap).length, wavesurfer],
   );
 
   useEffect(() => {
@@ -280,18 +339,18 @@ const HomePage: React.FC = () => {
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Audio Waveform and JSON Viewer</h1>
       <section className={classes.HomePage__Controls}>
-        <label htmlFor="audio-upload">Load audio:</label>
-        <input type="file" id="audio-upload" accept="audio/*" onChange={onAudioFileChange} />
-        <label htmlFor="json-upload">Load JSON data:</label>
+        <label htmlFor="audio-file-upload">Load audio:</label>
+        <input type="file" id="audio-file-upload" accept="audio/*" onChange={onAudioFileChange} />
+        <label htmlFor="words-data-upload">Load JSON data:</label>
         <input
-          id="json-upload"
+          id="words-data-upload"
           type="file"
           disabled={!isLoadJSONDataButtonEnabled()}
           accept="application/json"
           onChange={onWordsDataFileChange}
         />
         <button disabled={!isDownloadJSONDataButtonEnabled()} onClick={onDownloadJSONDataButtonClick}>
-          Download Download JSON data
+          Download JSON data
         </button>
       </section>
       <section className={classes.HomePage__Controls}>
@@ -299,43 +358,45 @@ const HomePage: React.FC = () => {
           {isPlaying ? 'Pause' : 'Play'}
         </button>
       </section>
-      <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
-        {audioUrl && (
-          <WavesurferPlayer
-            height={200}
-            width={timelineWidth || '100%'}
-            waveColor="violet"
-            url={audioUrl}
-            onReady={onReady}
-            onAudioprocess={updateCurrentTime}
-            onSeeking={updateCurrentTime}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-          />
-        )}
-      </section>
-      <section>
-        <div className={cn(classes.HomePage__JSONDataContainer)} ref={jsonDataWordsContainerRef}>
-          <div className={classes.HomePage__JSONData} ref={jsonDataWordsElRef} onClick={onWordClick}>
-            <div id="json-data-indicator-1" className={classes.HomePage__PositionIndicator}></div>
-            {words.map((word: Word, index, arr) => (
-              <WordComponent
-                key={word.id}
-                id={word.id}
-                widthPx={word.widthPx}
-                leftPx={word.leftPx}
-                word={word.word}
-                start={word.start}
-                end={word.end}
-                selected={word.selected}
-                phonemes={word.phonemes}
-                hideLeftResizer={index === 0}
-                hideRightResizer={index === arr.length - 1}
-                onResizeStart={onMouseDown}
-              />
-            ))}
+      <section ref={timelineRef}>
+        <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
+          {audioUrl && (
+            <WavesurferPlayer
+              height={WAVE_FORM_HEIGHT}
+              width={timelineWidth || DEFAULT_WAVE_FORM_WIDTH}
+              waveColor={DEFAULT_WAVE_FORM_COLOR}
+              url={audioUrl}
+              onReady={onReady}
+              onAudioprocess={updateWordsDataTimeIndicatorPosition}
+              onSeeking={updateWordsDataTimeIndicatorPosition}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+          )}
+        </section>
+        <section>
+          <div className={cn(classes.HomePage__WordsDataContainer)} ref={wordsDataContainerRef}>
+            <div className={classes.HomePage__WordsData} ref={wordsDataElementRef} onClick={onWordClick}>
+              <div ref={wordsDataTimeIndicator} className={classes.HomePage__TimeIndicator}></div>
+              {words.map((word: Word, index, arr) => (
+                <WordComponent
+                  key={word.id}
+                  id={word.id}
+                  widthPx={word.widthPx}
+                  leftPx={word.leftPx}
+                  word={word.word}
+                  start={word.start}
+                  end={word.end}
+                  selected={word.selected}
+                  phonemes={word.phonemes}
+                  hideLeftResizer={index === 0}
+                  hideRightResizer={index === arr.length - 1}
+                  onResizeStart={onMouseDown}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
       </section>
     </section>
   );
