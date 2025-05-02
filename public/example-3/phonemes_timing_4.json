@@ -1,0 +1,488 @@
+{
+    "language": "ru",
+    "words": [
+        {
+            "word": "Боро",
+            "start": 0.06,
+            "end": 0.34,
+            "phonemes": [
+                {
+                    "phoneme": "b",
+                    "start": 0.06,
+                    "end": 0.13
+                },
+                {
+                    "phoneme": "o",
+                    "start": 0.13,
+                    "end": 0.2
+                },
+                {
+                    "phoneme": "r",
+                    "start": 0.2,
+                    "end": 0.27
+                },
+                {
+                    "phoneme": "a",
+                    "start": 0.27,
+                    "end": 0.34
+                }
+            ]
+        },
+        {
+            "word": "особо",
+            "start": 0.34,
+            "end": 0.82,
+            "phonemes": [
+                {
+                    "phoneme": "a",
+                    "start": 0.34,
+                    "end": 0.44
+                },
+                {
+                    "phoneme": "s",
+                    "start": 0.44,
+                    "end": 0.53
+                },
+                {
+                    "phoneme": "o",
+                    "start": 0.53,
+                    "end": 0.63
+                },
+                {
+                    "phoneme": "b",
+                    "start": 0.63,
+                    "end": 0.72
+                },
+                {
+                    "phoneme": "a",
+                    "start": 0.72,
+                    "end": 0.82
+                }
+            ]
+        },
+        {
+            "word": "бодить",
+            "start": 0.82,
+            "end": 1.08,
+            "phonemes": [
+                {
+                    "phoneme": "b",
+                    "start": 0.82,
+                    "end": 0.87
+                },
+                {
+                    "phoneme": "a",
+                    "start": 0.87,
+                    "end": 0.92
+                },
+                {
+                    "phoneme": "d",
+                    "start": 0.92,
+                    "end": 0.98
+                },
+                {
+                    "phoneme": "i",
+                    "start": 0.98,
+                    "end": 1.03
+                },
+                {
+                    "phoneme": "t",
+                    "start": 1.03,
+                    "end": 1.08
+                }
+            ]
+        },
+        {
+            "word": "твой",
+            "start": 1.08,
+            "end": 1.32,
+            "phonemes": [
+                {
+                    "phoneme": "t",
+                    "start": 1.08,
+                    "end": 1.14
+                },
+                {
+                    "phoneme": "v",
+                    "start": 1.14,
+                    "end": 1.2
+                },
+                {
+                    "phoneme": "o",
+                    "start": 1.2,
+                    "end": 1.26
+                },
+                {
+                    "phoneme": "j",
+                    "start": 1.26,
+                    "end": 1.32
+                }
+            ]
+        },
+        {
+            "word": "разум,",
+            "start": 1.32,
+            "end": 1.92,
+            "phonemes": [
+                {
+                    "phoneme": "r",
+                    "start": 1.32,
+                    "end": 1.44
+                },
+                {
+                    "phoneme": "a",
+                    "start": 1.44,
+                    "end": 1.56
+                },
+                {
+                    "phoneme": "z",
+                    "start": 1.56,
+                    "end": 1.68
+                },
+                {
+                    "phoneme": "u",
+                    "start": 1.68,
+                    "end": 1.8
+                },
+                {
+                    "phoneme": "m",
+                    "start": 1.8,
+                    "end": 1.92
+                }
+            ]
+        },
+        {
+            "word": "но",
+            "start": 2.64,
+            "end": 3.04,
+            "phonemes": [
+                {
+                    "phoneme": "n",
+                    "start": 2.64,
+                    "end": 2.84
+                },
+                {
+                    "phoneme": "o",
+                    "start": 2.84,
+                    "end": 3.04
+                }
+            ]
+        },
+        {
+            "word": "я",
+            "start": 3.04,
+            "end": 3.14,
+            "phonemes": [
+                {
+                    "phoneme": "ja",
+                    "start": 3.04,
+                    "end": 3.14
+                }
+            ]
+        },
+        {
+            "word": "могу",
+            "start": 3.14,
+            "end": 3.34,
+            "phonemes": [
+                {
+                    "phoneme": "m",
+                    "start": 3.14,
+                    "end": 3.19
+                },
+                {
+                    "phoneme": "a",
+                    "start": 3.19,
+                    "end": 3.24
+                },
+                {
+                    "phoneme": "ɡ",
+                    "start": 3.24,
+                    "end": 3.29
+                },
+                {
+                    "phoneme": "u",
+                    "start": 3.29,
+                    "end": 3.34
+                }
+            ]
+        },
+        {
+            "word": "лишь",
+            "start": 3.34,
+            "end": 3.52,
+            "phonemes": [
+                {
+                    "phoneme": "ɭ",
+                    "start": 3.34,
+                    "end": 3.4
+                },
+                {
+                    "phoneme": "i",
+                    "start": 3.4,
+                    "end": 3.46
+                },
+                {
+                    "phoneme": "ʃ",
+                    "start": 3.46,
+                    "end": 3.52
+                }
+            ]
+        },
+        {
+            "word": "указать",
+            "start": 3.52,
+            "end": 3.9,
+            "phonemes": [
+                {
+                    "phoneme": "u",
+                    "start": 3.52,
+                    "end": 3.58
+                },
+                {
+                    "phoneme": "k",
+                    "start": 3.58,
+                    "end": 3.65
+                },
+                {
+                    "phoneme": "a",
+                    "start": 3.65,
+                    "end": 3.71
+                },
+                {
+                    "phoneme": "z",
+                    "start": 3.71,
+                    "end": 3.77
+                },
+                {
+                    "phoneme": "a",
+                    "start": 3.77,
+                    "end": 3.84
+                },
+                {
+                    "phoneme": "t",
+                    "start": 3.84,
+                    "end": 3.9
+                }
+            ]
+        },
+        {
+            "word": "дверь.",
+            "start": 3.9,
+            "end": 4.18,
+            "phonemes": [
+                {
+                    "phoneme": "d",
+                    "start": 3.9,
+                    "end": 3.96
+                },
+                {
+                    "phoneme": "v",
+                    "start": 3.96,
+                    "end": 4.01
+                },
+                {
+                    "phoneme": "e",
+                    "start": 4.01,
+                    "end": 4.07
+                },
+                {
+                    "phoneme": "r",
+                    "start": 4.07,
+                    "end": 4.12
+                },
+                {
+                    "phoneme": "ɪ^",
+                    "start": 4.12,
+                    "end": 4.18
+                }
+            ]
+        },
+        {
+            "word": "То",
+            "start": 5.26,
+            "end": 5.36,
+            "phonemes": [
+                {
+                    "phoneme": "t",
+                    "start": 5.26,
+                    "end": 5.31
+                },
+                {
+                    "phoneme": "o",
+                    "start": 5.31,
+                    "end": 5.36
+                }
+            ]
+        },
+        {
+            "word": "есть,",
+            "start": 5.36,
+            "end": 5.48,
+            "phonemes": [
+                {
+                    "phoneme": "j",
+                    "start": 5.36,
+                    "end": 5.39
+                },
+                {
+                    "phoneme": "e",
+                    "start": 5.39,
+                    "end": 5.42
+                },
+                {
+                    "phoneme": "s",
+                    "start": 5.42,
+                    "end": 5.45
+                },
+                {
+                    "phoneme": "t",
+                    "start": 5.45,
+                    "end": 5.48
+                }
+            ]
+        },
+        {
+            "word": "а",
+            "start": 5.58,
+            "end": 5.6,
+            "phonemes": [
+                {
+                    "phoneme": "a",
+                    "start": 5.58,
+                    "end": 5.6
+                }
+            ]
+        },
+        {
+            "word": "он",
+            "start": 5.6,
+            "end": 5.7,
+            "phonemes": [
+                {
+                    "phoneme": "o",
+                    "start": 5.6,
+                    "end": 5.65
+                },
+                {
+                    "phoneme": "n",
+                    "start": 5.65,
+                    "end": 5.7
+                }
+            ]
+        },
+        {
+            "word": "должен",
+            "start": 5.7,
+            "end": 5.98,
+            "phonemes": [
+                {
+                    "phoneme": "d",
+                    "start": 5.7,
+                    "end": 5.75
+                },
+                {
+                    "phoneme": "o",
+                    "start": 5.75,
+                    "end": 5.79
+                },
+                {
+                    "phoneme": "ɭ",
+                    "start": 5.79,
+                    "end": 5.84
+                },
+                {
+                    "phoneme": "ʒ",
+                    "start": 5.84,
+                    "end": 5.89
+                },
+                {
+                    "phoneme": "y",
+                    "start": 5.89,
+                    "end": 5.93
+                },
+                {
+                    "phoneme": "n",
+                    "start": 5.93,
+                    "end": 5.98
+                }
+            ]
+        },
+        {
+            "word": "выйти",
+            "start": 5.98,
+            "end": 6.38,
+            "phonemes": [
+                {
+                    "phoneme": "v",
+                    "start": 5.98,
+                    "end": 6.06
+                },
+                {
+                    "phoneme": "y",
+                    "start": 6.06,
+                    "end": 6.14
+                },
+                {
+                    "phoneme": "j",
+                    "start": 6.14,
+                    "end": 6.22
+                },
+                {
+                    "phoneme": "t",
+                    "start": 6.22,
+                    "end": 6.3
+                },
+                {
+                    "phoneme": "ɪ",
+                    "start": 6.3,
+                    "end": 6.38
+                }
+            ]
+        },
+        {
+            "word": "на",
+            "start": 6.38,
+            "end": 6.52,
+            "phonemes": [
+                {
+                    "phoneme": "n",
+                    "start": 6.38,
+                    "end": 6.45
+                },
+                {
+                    "phoneme": "a",
+                    "start": 6.45,
+                    "end": 6.52
+                }
+            ]
+        },
+        {
+            "word": "волю.",
+            "start": 6.52,
+            "end": 6.84,
+            "phonemes": [
+                {
+                    "phoneme": "v",
+                    "start": 6.52,
+                    "end": 6.6
+                },
+                {
+                    "phoneme": "o",
+                    "start": 6.6,
+                    "end": 6.68
+                },
+                {
+                    "phoneme": "ɭ",
+                    "start": 6.68,
+                    "end": 6.76
+                },
+                {
+                    "phoneme": "u\"",
+                    "start": 6.76,
+                    "end": 6.84
+                }
+            ]
+        }
+    ]
+}

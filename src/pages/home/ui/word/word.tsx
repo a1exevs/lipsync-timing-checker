@@ -13,8 +13,8 @@ type Props = {
   end: number;
   phonemes: Phoneme[];
   selected: boolean;
-  hideLeftResizer: boolean;
-  hideRightResizer: boolean;
+  hideLeftResizer?: boolean;
+  hideRightResizer?: boolean;
   onResizeStart: (event: MouseEvent, wordId: string, resizerSide: ResizerSide) => void;
 };
 

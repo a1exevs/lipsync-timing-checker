@@ -242,6 +242,9 @@ const HomePage: React.FC = () => {
 
   const onMouseDown = useCallback(
     (e: MouseEvent, wordId: string, resizerSide: ResizerSide) => {
+      if (!wavesurfer) {
+        return;
+      }
       const word = wordsMap[wordId];
       if (word === undefined) {
         return;
@@ -250,9 +253,14 @@ const HomePage: React.FC = () => {
       if (wordIndex === -1) {
         return;
       }
-      const prevWord = words[wordIndex - 1];
-      const nextWord = words[wordIndex + 1];
-
+      const duration = wavesurfer.getDuration();
+      const prevWord: Word = words[wordIndex - 1] ?? { widthPx: 0, leftPx: 0, start: 0, end: 0 };
+      const nextWord: Word = words[wordIndex + 1] ?? {
+        widthPx: 0,
+        leftPx: timelineWidth,
+        start: duration,
+        end: duration,
+      };
       const startX = e.clientX;
       const startWidthPx = word.widthPx;
       const startLeftPx = word.leftPx;
@@ -312,7 +320,7 @@ const HomePage: React.FC = () => {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
-    [words.length, Object.keys(wordsMap).length, wavesurfer],
+    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
   );
 
   useEffect(() => {
@@ -387,8 +395,6 @@ const HomePage: React.FC = () => {
                   end={word.end}
                   selected={word.selected}
                   phonemes={word.phonemes}
-                  hideLeftResizer={index === 0}
-                  hideRightResizer={index === arr.length - 1}
                   onResizeStart={onMouseDown}
                 />
               ))}
