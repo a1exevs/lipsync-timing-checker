@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
-    updateWordsDataTimeIndicatorPosition();
+    updateWordsDataTimeIndicatorPosition(ws, ws.getDuration());
     setupContainersWidth(timelineWidth);
   };
 
@@ -109,12 +109,8 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const updateWordsDataTimeIndicatorPosition = (): void => {
-    if (!wavesurfer) {
-      return;
-    }
-    const duration = wavesurfer.getDuration();
-    const currentTime = wavesurfer.getCurrentTime();
+  const updateWordsDataTimeIndicatorPosition = (ws: WaveSurfer, currentTime: number): void => {
+    const duration = ws.getDuration();
     const scaledTimePx = (currentTime / duration) * timelineWidth;
     const currentTimePositionLeft = currentTime * timelineScaleCoefficients;
     const containerHScrollPositionLeft = waveFormContainerRef?.current?.scrollLeft ?? 0;
@@ -362,11 +358,13 @@ const HomePage: React.FC = () => {
         <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
           {audioUrl && (
             <WavesurferPlayer
+              dragToSeek={true}
               height={WAVE_FORM_HEIGHT}
               width={timelineWidth || DEFAULT_WAVE_FORM_WIDTH}
               waveColor={DEFAULT_WAVE_FORM_COLOR}
               url={audioUrl}
               onReady={onReady}
+              onDrag={(ws, relativeX) => updateWordsDataTimeIndicatorPosition(ws, relativeX * ws.getDuration())}
               onAudioprocess={updateWordsDataTimeIndicatorPosition}
               onSeeking={updateWordsDataTimeIndicatorPosition}
               onPlay={() => setIsPlaying(true)}
