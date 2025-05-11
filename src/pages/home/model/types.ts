@@ -28,6 +28,7 @@ export type AudioTrackWordItemMetaData = {
 export type AudioTrackPhonemeItemMetaData = {
   id: string;
   widthPercent: number;
+  leftPercent: number;
 };
 
 export type Phoneme = {
