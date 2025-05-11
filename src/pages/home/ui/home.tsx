@@ -19,6 +19,7 @@ import { getFileData } from 'src/shared/helpers/files';
 import {
   convertWordDTOToWord,
   convertWordToWordDTO,
+  recalculatePhonemesStartEnd,
   recalculateWordWithByNewTimelineWidth,
 } from 'src/pages/home/api/converters';
 
@@ -398,6 +399,7 @@ const HomePage: React.FC = () => {
             word.end = word.start + (newWidthPx / timelineWidth) * duration;
           }
         }
+        word.phonemes = recalculatePhonemesStartEnd(word);
         words.splice(wordIndex, 1, word);
         setWords([...words]);
       };

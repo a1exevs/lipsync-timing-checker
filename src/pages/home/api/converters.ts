@@ -15,14 +15,14 @@ export function convertWordDTOToWord({
     ...wordDTO,
     id: wordId,
     selected: false,
-    widthPx: getWordWidthPx({ wordDTO, audioDuration, timelineWidth }),
-    leftPx: getWordLeftPositionPx({ wordDTO, audioDuration, timelineWidth }),
+    widthPx: calculateWordWidthPx({ wordDTO, audioDuration, timelineWidth }),
+    leftPx: calculateWordLeftPositionPx({ wordDTO, audioDuration, timelineWidth }),
     phonemes: wordDTO.phonemes.map<Phoneme>((phonemeDTO, index) => {
       return {
         ...phonemeDTO,
         id: String(index),
-        widthPercent: getPhonemeWidthPercent(phonemeDTO, wordDTO),
-        leftPercent: getPhonemeLeftPercent(phonemeDTO, wordDTO),
+        widthPercent: calculatePhonemeWidthPercent(phonemeDTO, wordDTO),
+        leftPercent: calculatePhonemeLeftPercent(phonemeDTO, wordDTO),
       };
     }),
   };
@@ -51,13 +51,13 @@ export function recalculateWordWithByNewTimelineWidth({
 }): Word {
   return {
     ...word,
-    widthPx: getWordWidthPx({ wordDTO: word, audioDuration, timelineWidth: newTimelineWidth }),
-    leftPx: getWordLeftPositionPx({ wordDTO: word, audioDuration, timelineWidth: newTimelineWidth }),
+    widthPx: calculateWordWidthPx({ wordDTO: word, audioDuration, timelineWidth: newTimelineWidth }),
+    leftPx: calculateWordLeftPositionPx({ wordDTO: word, audioDuration, timelineWidth: newTimelineWidth }),
     phonemes: [...word.phonemes],
   };
 }
 
-function getWordWidthPx({
+function calculateWordWidthPx({
   wordDTO,
   audioDuration,
   timelineWidth,
@@ -69,7 +69,7 @@ function getWordWidthPx({
   return ((wordDTO.end - wordDTO.start) / audioDuration) * timelineWidth;
 }
 
-function getWordLeftPositionPx({
+function calculateWordLeftPositionPx({
   wordDTO,
   audioDuration,
   timelineWidth,
@@ -81,10 +81,18 @@ function getWordLeftPositionPx({
   return (wordDTO.start / audioDuration) * timelineWidth;
 }
 
-function getPhonemeWidthPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
+function calculatePhonemeWidthPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
   return ((phonemeDTO.end - phonemeDTO.start) / (parentWordDTO.end - parentWordDTO.start)) * 100;
 }
 
-function getPhonemeLeftPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
+function calculatePhonemeLeftPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
   return ((phonemeDTO.start - parentWordDTO.start) / (parentWordDTO.end - parentWordDTO.start)) * 100;
+}
+
+export function recalculatePhonemesStartEnd(word: Word): Phoneme[] {
+  return word.phonemes.map(phoneme => {
+    const start = word.start + (phoneme.leftPercent / 100) * (word.end - word.start);
+    const end = start + (phoneme.widthPercent / 100) * (word.end - word.start);
+    return { ...phoneme, start, end };
+  });
 }
