@@ -1,10 +1,11 @@
 import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
 import classes from 'src/pages/home/ui/word/word.module.scss';
 import cn from 'classnames';
-import { AudioTrackTextItemDTO, Phoneme, ResizerSide } from 'src/pages/home/model/types';
+import { Phoneme, ResizerType } from 'src/pages/home/model/types';
 import PhonemeComponent from 'src/pages/home/ui/phoneme/phoneme';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
 import {
+  WORD_CHAIN_RESIZER_COLOR,
   WORD_LEFT_RESIZER_COLOR,
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
@@ -16,18 +17,18 @@ type Props = {
   widthPx: number;
   leftPx: number;
   word: string;
-  start: number;
-  end: number;
   phonemes: Phoneme[];
   selected: boolean;
   hideLeftResizer?: boolean;
   hideRightResizer?: boolean;
-  onWordResizeStart: (event: MouseEvent, wordId: string, resizerSide: ResizerSide) => void;
+  hideChainResizer?: boolean;
+  onWordResizeStart: (event: MouseEvent, wordId: string, resizerType: ResizerType) => void;
+  onWordChainResizeStart: (event: MouseEvent, wordId: string) => void;
   onPhonemeResizeStart: (
     e: MouseEvent,
     wordId: string,
     phonemeId: string,
-    resizerSide: ResizerSide,
+    resizerType: ResizerType,
     phonemesMap: Record<string, Phoneme>,
   ) => void;
 };
@@ -41,11 +42,11 @@ const Word: React.FC<Props> = React.memo(
     id,
     phonemes,
     selected,
-    start,
-    end,
     hideLeftResizer,
     hideRightResizer,
+    hideChainResizer,
     onPhonemeResizeStart,
+    onWordChainResizeStart,
   }) => {
     const [phonemesMap, setPhonemesMap] = useState<Record<string, Phoneme>>({});
     useEffect(() => {
@@ -61,7 +62,7 @@ const Word: React.FC<Props> = React.memo(
       >
         {!hideLeftResizer && (
           <Resizer
-            side="left"
+            type="left"
             onMouseDown={e => onWordResizeStart(e, id, 'left')}
             color={WORD_LEFT_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
@@ -81,8 +82,8 @@ const Word: React.FC<Props> = React.memo(
                 widthPercent={phoneme.widthPercent}
                 withoutLeftBorder={index === 0}
                 withoutRightBorder={index === arr.length - 1}
-                onResizeStart={(event, phonemeId, resizerSide) =>
-                  onPhonemeResizeStart(event, id, phonemeId, resizerSide, phonemesMap)
+                onResizeStart={(event, phonemeId, resizerType) =>
+                  onPhonemeResizeStart(event, id, phonemeId, resizerType, phonemesMap)
                 }
               />
             );
@@ -90,9 +91,17 @@ const Word: React.FC<Props> = React.memo(
         </div>
         {!hideRightResizer && (
           <Resizer
-            side="right"
+            type="right"
             onMouseDown={e => onWordResizeStart(e, id, 'right')}
             color={WORD_RIGHT_RESIZER_COLOR}
+            zIndex={WORD_RESIZER_Z_INDEX}
+          />
+        )}
+        {!hideChainResizer && (
+          <Resizer
+            type="chain"
+            onMouseDown={e => onWordChainResizeStart(e, id)}
+            color={WORD_CHAIN_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
           />
         )}

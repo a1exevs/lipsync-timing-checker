@@ -1,7 +1,7 @@
 import classes from 'src/pages/home/ui/phoneme/phoneme.module.scss';
 import React, { MouseEvent } from 'react';
 import cn from 'classnames';
-import { ResizerSide } from 'src/pages/home/model/types';
+import { ResizerType } from 'src/pages/home/model/types';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
 import {
   PHONEME_LEFT_RESIZER_COLOR,
@@ -16,7 +16,7 @@ type Props = {
   widthPercent: number;
   withoutLeftBorder?: boolean;
   withoutRightBorder?: boolean;
-  onResizeStart: (event: MouseEvent, phonemeId: string, resizerSide: ResizerSide) => void;
+  onResizeStart: (event: MouseEvent, phonemeId: string, resizerType: ResizerType) => void;
 };
 
 const Phoneme: React.FC<Props> = ({
@@ -37,14 +37,14 @@ const Phoneme: React.FC<Props> = ({
       style={{ width: `${widthPercent}%`, left: `${leftPercent}%` }}
     >
       <Resizer
-        side="left"
+        type="left"
         onMouseDown={e => onResizeStart(e, id, 'left')}
         color={PHONEME_LEFT_RESIZER_COLOR}
         zIndex={PHONEME_RESIZER_Z_INDEX}
       />
-      {phoneme}
+      <div className={classes.Phoneme__Title}>{phoneme}</div>
       <Resizer
-        side="right"
+        type="right"
         onMouseDown={e => onResizeStart(e, id, 'right')}
         color={PHONEME_RIGHT_RESIZER_COLOR}
         zIndex={PHONEME_RESIZER_Z_INDEX}
