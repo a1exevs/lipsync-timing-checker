@@ -8,12 +8,13 @@ type Props = {
   onMouseDown: (_: MouseEvent) => void;
   color: string;
   zIndex: number;
+  width: string | number;
 };
 
-const Resizer: React.FC<Props> = ({ onMouseDown, color, type, zIndex }) => {
+const Resizer: React.FC<Props> = ({ onMouseDown, color, type, zIndex, width }) => {
   return (
     <div
-      style={{ ['--hover-color']: color, ['--z-index']: zIndex } as CSSProperties}
+      style={{ ['--hover-color']: color, ['--z-index']: zIndex, ['--width']: width } as CSSProperties}
       className={cn(classes.Resizer, {
         [classes.Resizer_left]: type === 'left',
         [classes.Resizer_right]: type === 'right',

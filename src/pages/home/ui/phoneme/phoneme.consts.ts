@@ -1,4 +1,7 @@
 export const PHONEME_LEFT_RESIZER_COLOR = 'blue';
 export const PHONEME_RIGHT_RESIZER_COLOR = 'red';
+export const PHONEME_CHAIN_RESIZER_COLOR = 'green';
 
 export const PHONEME_RESIZER_Z_INDEX = 2;
+export const PHONEME_RESIZER_WIDTH_PX = 5;
+export const PHONEME_MIN_WIDTH_PX = 2 * PHONEME_RESIZER_WIDTH_PX;
