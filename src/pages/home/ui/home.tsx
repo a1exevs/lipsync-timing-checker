@@ -24,20 +24,21 @@ import {
 } from 'src/pages/home/api/converters';
 import { PHONEME_MIN_WIDTH_PX } from 'src/pages/home/ui/phoneme/phoneme.consts';
 import { WORD_MIN_WIDTH_PX } from 'src/pages/home/ui/word/word.consts';
+import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
 
 const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
-  const [wordsDataFileData, setWordsDataFileData] = useState<{ fileName: string; extension: string } | null>(null);
+  const [wordsDataFileData, setWordsDataFileData] = useState<Nullable<{ fileName: string; extension: string }>>(null);
 
-  const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null);
+  const [wavesurfer, setWavesurfer] = useState<Nullable<WaveSurfer>>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
 
-  const timelineRef = useRef<HTMLElement>(null);
-  const waveFormContainerRef = useRef<HTMLElement>(null);
-  const wordsDataContainerRef = useRef<HTMLDivElement>(null);
-  const wordsDataElementRef = useRef<HTMLDivElement>(null);
-  const wordsDataTimeIndicator = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<Nullable<HTMLElement>>(null);
+  const waveFormContainerRef = useRef<Nullable<HTMLElement>>(null);
+  const wordsDataContainerRef = useRef<Nullable<HTMLDivElement>>(null);
+  const wordsDataElementRef = useRef<Nullable<HTMLDivElement>>(null);
+  const wordsDataTimeIndicator = useRef<Nullable<HTMLDivElement>>(null);
 
   const [words, setWords] = useState<Word[]>([]);
   const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
@@ -56,8 +57,8 @@ const HomePage: React.FC = () => {
     setupContainersWidth(timelineWidth);
   };
 
-  const onPlayPause = (wavesurfer: WaveSurfer | null): void => {
-    if (!wavesurfer) {
+  const onPlayPause = (wavesurfer: Nullable<WaveSurfer>): void => {
+    if (isNull(wavesurfer)) {
       return;
     }
     wavesurfer.playPause();
@@ -108,9 +109,10 @@ const HomePage: React.FC = () => {
   };
 
   const setupContainersWidth = (width: number): void => {
-    if (wordsDataElementRef.current) {
-      wordsDataElementRef.current.style.width = `${width}px`;
+    if (isNull(wordsDataElementRef.current)) {
+      return;
     }
+    wordsDataElementRef.current.style.width = `${width}px`;
   };
 
   const updateWordsDataTimeIndicatorPosition = (ws: WaveSurfer, currentTime: number): void => {
@@ -121,14 +123,14 @@ const HomePage: React.FC = () => {
     const containerWidth = waveFormContainerRef?.current?.clientWidth ?? 0;
     if (
       Math.abs(currentTimePositionLeft - containerHScrollPositionLeft) > containerWidth &&
-      waveFormContainerRef.current
+      !isNull(waveFormContainerRef.current)
     ) {
       waveFormContainerRef.current.scrollLeft =
         currentTimePositionLeft - containerHScrollPositionLeft > 0
           ? waveFormContainerRef.current.scrollLeft + containerWidth
           : currentTimePositionLeft;
     }
-    if (wordsDataTimeIndicator.current) {
+    if (!isNull(wordsDataTimeIndicator.current)) {
       wordsDataTimeIndicator.current.style.left = `${scaledTimePx}px`;
     }
   };
@@ -156,7 +158,7 @@ const HomePage: React.FC = () => {
   const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
 
   const onDownloadJSONDataButtonClick = (): void => {
-    if (wordsDataFileData === null) {
+    if (isNull(wordsDataFileData)) {
       return;
     }
     const data = {
@@ -175,7 +177,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     // TODO Restore time position and scroll position after scaling
     const onScaleTimeline = (event: WheelEvent) => {
-      if (event.shiftKey || !event.altKey || !wavesurfer) {
+      if (event.shiftKey || !event.altKey || isNull(wavesurfer)) {
         return;
       }
       const delta = (event as any).wheelDeltaY;
@@ -200,37 +202,37 @@ const HomePage: React.FC = () => {
       });
     };
 
-    if (timelineRef.current) {
+    if (!isNull(timelineRef.current)) {
       timelineRef.current.addEventListener('wheel', onScaleTimeline);
     }
     return () => {
-      if (timelineRef.current) {
+      if (!isNull(timelineRef.current)) {
         timelineRef.current.removeEventListener('wheel', onScaleTimeline);
       }
     };
   }, [timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords]);
 
   useEffect(() => {
-    if (!waveFormContainerRef.current || !wordsDataContainerRef.current) {
+    if (isNull(waveFormContainerRef.current) || isNull(wordsDataContainerRef.current)) {
       return;
     }
     const onWordsDataContainerHScrollChange = (event: any) => {
-      if (waveFormContainerRef.current) {
+      if (!isNull(waveFormContainerRef.current)) {
         waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
     };
     const onWaveFormContainerScrollChange = (event: Event) => {
-      if (wordsDataContainerRef.current) {
+      if (!isNull(wordsDataContainerRef.current)) {
         wordsDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
       }
     };
     waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);
     wordsDataContainerRef.current.addEventListener('scroll', onWordsDataContainerHScrollChange);
     return () => {
-      if (waveFormContainerRef.current) {
+      if (!isNull(waveFormContainerRef.current)) {
         waveFormContainerRef.current.removeEventListener('scroll', onWaveFormContainerScrollChange);
       }
-      if (wordsDataContainerRef.current) {
+      if (!isNull(wordsDataContainerRef.current)) {
         wordsDataContainerRef.current.removeEventListener('scroll', onWordsDataContainerHScrollChange);
       }
     };
@@ -244,11 +246,11 @@ const HomePage: React.FC = () => {
       resizerType: ResizerType,
       phonemesMap: Record<string, Phoneme>,
     ) => {
-      if (!wavesurfer) {
+      if (isNull(wavesurfer)) {
         return;
       }
       const word = wordsMap[wordId];
-      if (word === undefined) {
+      if (isUndefined(word)) {
         return;
       }
       const wordIndex = words.indexOf(word);
@@ -256,7 +258,7 @@ const HomePage: React.FC = () => {
         return;
       }
       const phoneme = phonemesMap[phonemeId];
-      if (phoneme === undefined) {
+      if (isUndefined(phoneme)) {
         return;
       }
       const phonemes = word.phonemes;
@@ -275,7 +277,7 @@ const HomePage: React.FC = () => {
       const startWidthPercent = phoneme.widthPercent;
       const startLeftPercent = phoneme.leftPercent;
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
+        if (isNull(wavesurfer)) {
           return;
         }
         const duration = wavesurfer.getDuration();
@@ -344,11 +346,11 @@ const HomePage: React.FC = () => {
 
   const onPhonemeChainResizeStart = useCallback(
     (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => {
-      if (!wavesurfer) {
+      if (isNull(wavesurfer)) {
         return;
       }
       const word = wordsMap[wordId];
-      if (word === undefined) {
+      if (isUndefined(word)) {
         return;
       }
       const wordIndex = words.indexOf(word);
@@ -356,7 +358,7 @@ const HomePage: React.FC = () => {
         return;
       }
       const leftPhoneme = phonemesMap[phonemeId];
-      if (leftPhoneme === undefined) {
+      if (isUndefined(leftPhoneme)) {
         return;
       }
       const phonemes = word.phonemes;
@@ -365,7 +367,7 @@ const HomePage: React.FC = () => {
         return;
       }
       const rightPhoneme: Phoneme = phonemes[leftPhonemeIndex + 1];
-      if (rightPhoneme === undefined) {
+      if (isUndefined(rightPhoneme)) {
         return;
       }
       const startX = e.clientX;
@@ -374,7 +376,7 @@ const HomePage: React.FC = () => {
       const rightPhonemeStartWidthPercent = rightPhoneme.widthPercent;
       const rightPhonemeStartLeftPercent = rightPhoneme.leftPercent;
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
+        if (isNull(wavesurfer)) {
           return;
         }
         const duration = wavesurfer.getDuration();
@@ -423,11 +425,11 @@ const HomePage: React.FC = () => {
 
   const onWordResizeStart = useCallback(
     (e: MouseEvent, wordId: string, resizerType: ResizerType) => {
-      if (!wavesurfer) {
+      if (isNull(wavesurfer)) {
         return;
       }
       const word = wordsMap[wordId];
-      if (word === undefined) {
+      if (isUndefined(word)) {
         return;
       }
       const wordIndex = words.indexOf(word);
@@ -446,7 +448,7 @@ const HomePage: React.FC = () => {
       const startWidthPx = word.widthPx;
       const startLeftPx = word.leftPx;
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
+        if (isNull(wavesurfer)) {
           return;
         }
         const duration = wavesurfer.getDuration();
@@ -511,11 +513,11 @@ const HomePage: React.FC = () => {
 
   const onWordChainResizeStart = useCallback(
     (e: MouseEvent, wordId: string) => {
-      if (!wavesurfer) {
+      if (isNull(wavesurfer)) {
         return;
       }
       const leftWord = wordsMap[wordId];
-      if (leftWord === undefined) {
+      if (isUndefined(leftWord)) {
         return;
       }
       const leftWordIndex = words.indexOf(leftWord);
@@ -523,7 +525,7 @@ const HomePage: React.FC = () => {
         return;
       }
       const rightWord: Word = words[leftWordIndex + 1];
-      if (rightWord === undefined) {
+      if (isUndefined(rightWord)) {
         return;
       }
       const startX = e.clientX;
@@ -532,7 +534,7 @@ const HomePage: React.FC = () => {
       const rightWordStartWidthPx = rightWord.widthPx;
       const rightWordStartLeftPx = rightWord.leftPx;
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
+        if (isNull(wavesurfer)) {
           return;
         }
         const duration = wavesurfer.getDuration();
@@ -577,7 +579,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const handleKeyboardEvents = (event: KeyboardEvent) => {
-      if (event.code === 'Space' && wavesurfer) {
+      if (event.code === 'Space' && !isNull(wavesurfer)) {
         onPlayPause(wavesurfer);
       }
     };
