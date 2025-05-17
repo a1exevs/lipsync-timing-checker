@@ -9,7 +9,10 @@
     "url": "https://github.com/a1exevs/lipsync-timing-checker/issues"
   },
   "keywords": [
-    "lipsync"
+    "lipsync",
+    "audio wave",
+    "timeline",
+    "phonemes"
   ],
   "scripts": {
     "start": "yarn run set-env:prod && react-app-rewired start",

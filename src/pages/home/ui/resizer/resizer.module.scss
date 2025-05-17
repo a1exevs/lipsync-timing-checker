@@ -1,9 +1,10 @@
 $hover-color: var(--hover-color, blue);
 $z-index: var(--z-index, 1);
+$width: var(--width, 5px);
 
 .Resizer {
   display: flex;
-  width: 5px;
+  width: $width;
   height: 100%;
   position: absolute;
   background-color: transparent;
@@ -16,7 +17,12 @@ $z-index: var(--z-index, 1);
   &_right {
     top: 0;
     left: 100%;
-    transform: translateX(-5px);
+    transform: translateX(-100%);
+  }
+  &_chain {
+    top: 0;
+    left: 100%;
+    transform: translateX(-50%);
   }
   &:hover {
     background-color: $hover-color;

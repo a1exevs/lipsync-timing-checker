@@ -16,7 +16,7 @@ export type AudioTrackTextDataDTO = {
   words: WordDTO[];
 };
 
-export type ResizerSide = 'left' | 'right';
+export type ResizerType = 'left' | 'right' | 'chain';
 
 export type AudioTrackWordItemMetaData = {
   id: string;

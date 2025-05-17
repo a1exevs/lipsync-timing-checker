@@ -9,46 +9,21 @@
   cursor: pointer;
   white-space: nowrap;
   background-color: #add8e6;
+  &:hover {
+    background-color: #add8e6aa;
+    transition: 0.2s ease-in-out all;
+  }
   &_selected {
     opacity: 50%;
     border: 1px solid white;
   }
   &__WordTitle {
+    user-select: none;
     position: relative;
   }
   &__PhonemesContainer {
     display: flex;
     position: relative;
     height: 30px;
-  }
-}
-
-.LeftResizer {
-  display: flex;
-  width: 5px;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: transparent;
-  cursor: col-resize;
-  z-index: 1;
-  &:hover {
-    background-color: blue;
-  }
-}
-
-.RightResizer {
-  display: flex;
-  width: 5px;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 100%;
-  background-color: transparent;
-  transform: translateX(-5px);
-  cursor: col-resize;
-  &:hover {
-    background-color: red;
   }
 }
