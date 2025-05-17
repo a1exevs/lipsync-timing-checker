@@ -8,7 +8,7 @@ type Props = {
   onMouseDown: (_: MouseEvent) => void;
   color: string;
   zIndex: number;
-  width: string | number;
+  width: string;
 };
 
 const Resizer: React.FC<Props> = ({ onMouseDown, color, type, zIndex, width }) => {
