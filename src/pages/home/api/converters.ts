@@ -57,7 +57,7 @@ export function recalculateWordWithByNewTimelineWidth({
   };
 }
 
-function calculateWordWidthPx({
+export function calculateWordWidthPx({
   wordDTO,
   audioDuration,
   timelineWidth,
@@ -69,7 +69,7 @@ function calculateWordWidthPx({
   return ((wordDTO.end - wordDTO.start) / audioDuration) * timelineWidth;
 }
 
-function calculateWordLeftPositionPx({
+export function calculateWordLeftPositionPx({
   wordDTO,
   audioDuration,
   timelineWidth,
@@ -81,11 +81,11 @@ function calculateWordLeftPositionPx({
   return (wordDTO.start / audioDuration) * timelineWidth;
 }
 
-function calculatePhonemeWidthPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
+export function calculatePhonemeWidthPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
   return ((phonemeDTO.end - phonemeDTO.start) / (parentWordDTO.end - parentWordDTO.start)) * 100;
 }
 
-function calculatePhonemeLeftPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
+export function calculatePhonemeLeftPercent(phonemeDTO: PhonemeDTO, parentWordDTO: WordDTO): number {
   return ((phonemeDTO.start - parentWordDTO.start) / (parentWordDTO.end - parentWordDTO.start)) * 100;
 }
 

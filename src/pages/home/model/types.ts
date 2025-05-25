@@ -23,6 +23,7 @@ export type AudioTrackWordItemMetaData = {
   selected: boolean;
   widthPx: number;
   leftPx: number;
+  movingInProgress?: boolean;
 };
 
 export type AudioTrackPhonemeItemMetaData = {

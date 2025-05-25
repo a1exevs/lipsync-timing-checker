@@ -17,13 +17,15 @@ import WaveSurfer from 'wavesurfer.js';
 import { arrayToObject } from 'src/shared/helpers/arrays';
 import { getFileData } from 'src/shared/helpers/files';
 import {
+  calculateWordLeftPositionPx,
+  calculateWordWidthPx,
   convertWordDTOToWord,
   convertWordToWordDTO,
   recalculatePhonemesStartEnd,
   recalculateWordWithByNewTimelineWidth,
 } from 'src/pages/home/api/converters';
 import { PHONEME_MIN_WIDTH_PX } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import { WORD_MIN_WIDTH_PX } from 'src/pages/home/ui/word/word.consts';
+import { WORD_MIN_WIDTH_PX, WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';
 
 const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -244,6 +246,7 @@ const HomePage: React.FC = () => {
       resizerType: ResizerType,
       phonemesMap: Record<string, Phoneme>,
     ) => {
+      e.stopPropagation();
       if (!wavesurfer) {
         return;
       }
@@ -344,6 +347,7 @@ const HomePage: React.FC = () => {
 
   const onPhonemeChainResizeStart = useCallback(
     (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => {
+      e.stopPropagation();
       if (!wavesurfer) {
         return;
       }
@@ -423,6 +427,7 @@ const HomePage: React.FC = () => {
 
   const onWordResizeStart = useCallback(
     (e: MouseEvent, wordId: string, resizerType: ResizerType) => {
+      e.stopPropagation();
       if (!wavesurfer) {
         return;
       }
@@ -511,6 +516,7 @@ const HomePage: React.FC = () => {
 
   const onWordChainResizeStart = useCallback(
     (e: MouseEvent, wordId: string) => {
+      e.stopPropagation();
       if (!wavesurfer) {
         return;
       }
@@ -567,6 +573,81 @@ const HomePage: React.FC = () => {
         console.log('onMouseUp');
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
+      };
+      console.log('onMouseDown');
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    },
+    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  );
+
+  const onWordMoveStart = useCallback(
+    (e: MouseEvent, wordId: string) => {
+      e.stopPropagation();
+      if (!wavesurfer) {
+        return;
+      }
+      const word = wordsMap[wordId];
+      if (word === undefined) {
+        return;
+      }
+      const wordIndex = words.indexOf(word);
+      if (wordIndex === -1) {
+        return;
+      }
+      const duration = wavesurfer.getDuration();
+      const prevWord: Word = words[wordIndex - 1] ?? { widthPx: 0, leftPx: 0, start: 0, end: 0 };
+      const nextWord: Word = words[wordIndex + 1] ?? {
+        widthPx: 0,
+        leftPx: timelineWidth,
+        start: duration,
+        end: duration,
+      };
+      const startX = e.clientX;
+      const startWidthPx = word.widthPx;
+      const onMouseMove: EventListener = (moveEvent: Event) => {
+        if (!wavesurfer) {
+          return;
+        }
+        const duration = wavesurfer.getDuration();
+        const clientX = (moveEvent as unknown as MouseEvent).clientX;
+        const diffPx = clientX - startX;
+        const diff = (diffPx / timelineWidth) * duration * WORD_MOVING_SENSITIVITY;
+        const newWordStart = word.start + diff;
+        const newWordEnd = word.end + diff;
+        const width = (startWidthPx / timelineWidth) * duration;
+        if (prevWord && newWordStart < prevWord.end) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
+          word.start = prevWord.end;
+          word.end = prevWord.end + width;
+        } else if (nextWord && newWordEnd > nextWord.start) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
+          word.start = nextWord.start - width;
+          word.end = nextWord.start;
+        } else {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
+          word.start = word.start + diff;
+          word.end = word.end + diff;
+        }
+        word.movingInProgress = true;
+        word.widthPx = calculateWordWidthPx({ wordDTO: word, timelineWidth, audioDuration: duration });
+        word.leftPx = calculateWordLeftPositionPx({ wordDTO: word, timelineWidth, audioDuration: duration });
+
+        word.phonemes = recalculatePhonemesStartEnd(word);
+        words.splice(wordIndex, 1, word);
+        setWords([...words]);
+      };
+
+      const onMouseUp = () => {
+        console.log('onMouseUp');
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        word.movingInProgress = false;
+        words.splice(wordIndex, 1, word);
+        setWords([...words]);
       };
       console.log('onMouseDown');
       document.addEventListener('mousemove', onMouseMove);
@@ -650,6 +731,8 @@ const HomePage: React.FC = () => {
                   hideChainResizer={index === array.length - 1 || word.end !== array[index + 1]?.start}
                   onWordChainResizeStart={onWordChainResizeStart}
                   onPhonemeChainResizeStart={onPhonemeChainResizeStart}
+                  onWordMoveStart={onWordMoveStart}
+                  movingInProgress={!!word.movingInProgress}
                 />
               ))}
             </div>
