@@ -6,7 +6,7 @@
   box-sizing: border-box;
   border: 1px solid #000;
   border-radius: 4px;
-  cursor: pointer;
+  cursor: grab;
   white-space: nowrap;
   background-color: #add8e6;
   &:hover {
@@ -16,6 +16,12 @@
   &_selected {
     opacity: 50%;
     border: 1px solid white;
+  }
+  &_draggable {
+    box-shadow: 0 4px 8px 0 white;
+    transform: translateY(5px);
+    transition: 0.2s ease-in-out all;
+    cursor: grabbing;
   }
   &__WordTitle {
     user-select: none;
