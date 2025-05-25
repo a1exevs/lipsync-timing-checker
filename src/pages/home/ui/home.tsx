@@ -26,7 +26,7 @@ import {
   recalculatePhonemesStartEnd,
   recalculateWordWithByNewTimelineWidth,
 } from 'src/pages/home/api/converters';
-import { PHONEME_MIN_WIDTH_PX } from 'src/pages/home/ui/phoneme/phoneme.consts';
+import { PHONEME_MIN_WIDTH_PX, PHONEME_MOVING_SENSITIVITY } from 'src/pages/home/ui/phoneme/phoneme.consts';
 import { WORD_MIN_WIDTH_PX, WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';
 
 const HomePage: React.FC = () => {
@@ -708,7 +708,7 @@ const HomePage: React.FC = () => {
         const duration = wavesurfer.getDuration();
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         const diffPx = clientX - startX;
-        const diff = (diffPx / timelineWidth) * duration * 0.5;
+        const diff = (diffPx / timelineWidth) * duration * PHONEME_MOVING_SENSITIVITY;
         const newPhonemeStart = phoneme.start + diff;
         const newPhonemeEnd = phoneme.end + diff;
         const width = ((startWidthPercent * word.widthPx) / 100 / timelineWidth) * duration;
