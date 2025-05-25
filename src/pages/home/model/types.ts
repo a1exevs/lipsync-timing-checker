@@ -30,6 +30,7 @@ export type AudioTrackPhonemeItemMetaData = {
   id: string;
   widthPercent: number;
   leftPercent: number;
+  movingInProgress?: boolean;
 };
 
 export type Phoneme = {

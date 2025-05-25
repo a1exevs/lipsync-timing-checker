@@ -41,6 +41,7 @@ type Props = {
     phonemesMap: Record<string, Phoneme>,
   ) => void;
   onWordMoveStart: (event: MouseEvent, wordId: string) => void;
+  onPhonemeMoveStart: (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => void;
 };
 
 const Word: React.FC<Props> = React.memo(
@@ -60,6 +61,7 @@ const Word: React.FC<Props> = React.memo(
     onPhonemeChainResizeStart,
     onWordMoveStart,
     movingInProgress,
+    onPhonemeMoveStart,
   }) => {
     const [phonemesMap, setPhonemesMap] = useState<Record<string, Phoneme>>({});
     useEffect(() => {
@@ -102,9 +104,9 @@ const Word: React.FC<Props> = React.memo(
                   onPhonemeResizeStart(event, id, phonemeId, resizerType, phonemesMap)
                 }
                 hideChainResizer={index === array.length - 1 || phoneme.end !== array[index + 1]?.start}
-                onPhonemeChainResizeStart={(event, phonemeId) =>
-                  onPhonemeChainResizeStart(event, id, phonemeId, phonemesMap)
-                }
+                onChainResizeStart={(event, phonemeId) => onPhonemeChainResizeStart(event, id, phonemeId, phonemesMap)}
+                onMoveStart={(event, phonemeId) => onPhonemeMoveStart(event, id, phonemeId, phonemesMap)}
+                movingInProgress={!!phoneme.movingInProgress}
               />
             );
           })}

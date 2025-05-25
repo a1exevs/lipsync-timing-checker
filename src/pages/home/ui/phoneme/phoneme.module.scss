@@ -4,7 +4,7 @@
   text-align: center;
   border: 1px solid #000;
   border-radius: 4px;
-  cursor: pointer;
+  cursor: grab;
   white-space: nowrap;
   background-color: #ffff99;
   &__Title {
@@ -19,5 +19,11 @@
   }
   &_withoutRightBorder {
     border-right: none;
+  }
+  &_draggable {
+    box-shadow: 0 4px 8px 0 white;
+    transform: translateY(5px);
+    transition: 0.2s ease-in-out all;
+    cursor: grabbing;
   }
 }
