@@ -19,6 +19,7 @@ type Props = {
   widthPx: number;
   leftPx: number;
   word: string;
+  movingInProgress: boolean;
   phonemes: Phoneme[];
   selected: boolean;
   hideLeftResizer?: boolean;
@@ -39,6 +40,8 @@ type Props = {
     phonemeId: string,
     phonemesMap: Record<string, Phoneme>,
   ) => void;
+  onWordMoveStart: (event: MouseEvent, wordId: string) => void;
+  onPhonemeMoveStart: (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => void;
 };
 
 const Word: React.FC<Props> = React.memo(
@@ -56,6 +59,9 @@ const Word: React.FC<Props> = React.memo(
     onPhonemeResizeStart,
     onWordChainResizeStart,
     onPhonemeChainResizeStart,
+    onWordMoveStart,
+    movingInProgress,
+    onPhonemeMoveStart,
   }) => {
     const [phonemesMap, setPhonemesMap] = useState<Record<string, Phoneme>>({});
     useEffect(() => {
@@ -66,8 +72,10 @@ const Word: React.FC<Props> = React.memo(
       <div
         className={cn(classes.Word, {
           [classes.Word_selected]: selected,
+          [classes.Word_draggable]: movingInProgress,
         })}
         style={{ left: leftPx, width: widthPx }}
+        onMouseDown={e => onWordMoveStart(e, id)}
       >
         {!hideLeftResizer && (
           <Resizer
@@ -96,9 +104,9 @@ const Word: React.FC<Props> = React.memo(
                   onPhonemeResizeStart(event, id, phonemeId, resizerType, phonemesMap)
                 }
                 hideChainResizer={index === array.length - 1 || phoneme.end !== array[index + 1]?.start}
-                onPhonemeChainResizeStart={(event, phonemeId) =>
-                  onPhonemeChainResizeStart(event, id, phonemeId, phonemesMap)
-                }
+                onChainResizeStart={(event, phonemeId) => onPhonemeChainResizeStart(event, id, phonemeId, phonemesMap)}
+                onMoveStart={(event, phonemeId) => onPhonemeMoveStart(event, id, phonemeId, phonemesMap)}
+                movingInProgress={!!phoneme.movingInProgress}
               />
             );
           })}

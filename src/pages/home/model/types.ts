@@ -23,12 +23,14 @@ export type AudioTrackWordItemMetaData = {
   selected: boolean;
   widthPx: number;
   leftPx: number;
+  movingInProgress?: boolean;
 };
 
 export type AudioTrackPhonemeItemMetaData = {
   id: string;
   widthPercent: number;
   leftPercent: number;
+  movingInProgress?: boolean;
 };
 
 export type Phoneme = {

@@ -22,7 +22,9 @@ type Props = {
   withoutRightBorder?: boolean;
   onResizeStart: (event: MouseEvent, phonemeId: string, resizerType: ResizerType) => void;
   hideChainResizer?: boolean;
-  onPhonemeChainResizeStart: (event: MouseEvent, phonemeId: string) => void;
+  onChainResizeStart: (event: MouseEvent, phonemeId: string) => void;
+  onMoveStart: (event: MouseEvent, phonemeId: string) => void;
+  movingInProgress: boolean;
 };
 
 const Phoneme: React.FC<Props> = ({
@@ -34,15 +36,19 @@ const Phoneme: React.FC<Props> = ({
   withoutRightBorder,
   onResizeStart,
   hideChainResizer,
-  onPhonemeChainResizeStart,
+  onChainResizeStart,
+  onMoveStart,
+  movingInProgress,
 }) => {
   return (
     <div
       className={cn(classes.Phoneme, {
         [classes.Phoneme_withoutLeftBorder]: withoutLeftBorder,
         [classes.Phoneme_withoutRightBorder]: withoutRightBorder,
+        [classes.Phoneme_draggable]: movingInProgress,
       })}
       style={{ width: `${widthPercent}%`, left: `${leftPercent}%` }}
+      onMouseDown={e => onMoveStart(e, id)}
     >
       <Resizer
         type="left"
@@ -62,7 +68,7 @@ const Phoneme: React.FC<Props> = ({
       {!hideChainResizer && (
         <Resizer
           type="chain"
-          onMouseDown={e => onPhonemeChainResizeStart(e, id)}
+          onMouseDown={e => onChainResizeStart(e, id)}
           color={PHONEME_CHAIN_RESIZER_COLOR}
           zIndex={PHONEME_RESIZER_Z_INDEX}
           width={PHONEME_RESIZER_WIDTH}
