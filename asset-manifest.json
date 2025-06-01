@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/lipsync-timing-checker/static/css/main.a054e21c.css",
-    "main.js": "/lipsync-timing-checker/static/js/main.73864e3a.js",
+    "main.css": "/lipsync-timing-checker/static/css/main.f0461c53.css",
+    "main.js": "/lipsync-timing-checker/static/js/main.210c75ab.js",
     "index.html": "/lipsync-timing-checker/index.html",
-    "main.a054e21c.css.map": "/lipsync-timing-checker/static/css/main.a054e21c.css.map",
-    "main.73864e3a.js.map": "/lipsync-timing-checker/static/js/main.73864e3a.js.map"
+    "main.f0461c53.css.map": "/lipsync-timing-checker/static/css/main.f0461c53.css.map",
+    "main.210c75ab.js.map": "/lipsync-timing-checker/static/js/main.210c75ab.js.map"
   },
   "entrypoints": [
-    "static/css/main.a054e21c.css",
-    "static/js/main.73864e3a.js"
+    "static/css/main.f0461c53.css",
+    "static/js/main.210c75ab.js"
   ]
 }
