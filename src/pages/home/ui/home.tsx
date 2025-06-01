@@ -11,6 +11,7 @@ import {
   MAX_TIME_LINE_SCALE_COEFFICIENT,
   MIN_TIME_LINE_SCALE_COEFFICIENT,
   TIME_LINE_SCALE_COEFFICIENT_STEP,
+  TIME_SCALE_HEIGHT_PX,
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
@@ -29,6 +30,7 @@ import {
 import { PHONEME_MIN_WIDTH_PX, PHONEME_MOVING_SENSITIVITY } from 'src/pages/home/ui/phoneme/phoneme.consts';
 import { WORD_MIN_WIDTH_PX, WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';
 import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
+import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 
 const HomePage: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -37,6 +39,9 @@ const HomePage: React.FC = () => {
   const [wavesurfer, setWavesurfer] = useState<Nullable<WaveSurfer>>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
+
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(1000);
 
   const timelineRef = useRef<Nullable<HTMLElement>>(null);
   const waveFormContainerRef = useRef<Nullable<HTMLElement>>(null);
@@ -139,24 +144,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const onWordClick = (_: MouseEvent): void => {
-    // TODO Support moving functionality
-    // const wordElement = (event as any).target.closest(`.${wordClasses.Word}`);
-    // if (!wordElement) {
-    //   return;
-    // }
-    // const wordId = wordElement.dataset.id;
-    // if (!wordId) {
-    //   return;
-    // }
-    // const wordData = wordsMap[wordId];
-    // if (!wordData) {
-    //   return;
-    // }
-    // wordData.selected = !wordData.selected;
-    // setWords(structuredClone(words));
-  };
-
   const isLoadJSONDataButtonEnabled = (): boolean => audioUrl !== '';
   const isAudioPlayButtonEnabled = (): boolean => audioUrl !== '';
   const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
@@ -215,6 +202,33 @@ const HomePage: React.FC = () => {
       }
     };
   }, [timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords]);
+
+  useEffect(() => {
+    const updateViewportMetrics = () => {
+      if (waveFormContainerRef.current) {
+        setScrollLeft(waveFormContainerRef.current.scrollLeft);
+        setViewportWidth(waveFormContainerRef.current.clientWidth);
+      }
+    };
+
+    const onScroll = () => updateViewportMetrics();
+    const onResize = () => updateViewportMetrics();
+
+    const container = waveFormContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', onScroll);
+    }
+    window.addEventListener('resize', onResize);
+
+    updateViewportMetrics();
+
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', onScroll);
+      }
+      window.removeEventListener('resize', onResize);
+    };
+  }, [waveFormContainerRef]);
 
   useEffect(() => {
     if (isNull(waveFormContainerRef.current) || isNull(wordsDataContainerRef.current)) {
@@ -798,6 +812,15 @@ const HomePage: React.FC = () => {
         </button>
       </section>
       <section ref={timelineRef}>
+        <section className={classes.HomePage__TimeScale}>
+          <TimeScale
+            duration={wavesurfer?.getDuration() ?? 0}
+            timelineWidth={timelineWidth}
+            scrollLeft={scrollLeft}
+            viewportWidth={viewportWidth}
+            height={TIME_SCALE_HEIGHT_PX}
+          />
+        </section>
         <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
           {audioUrl && (
             <WavesurferPlayer
@@ -817,7 +840,7 @@ const HomePage: React.FC = () => {
         </section>
         <section>
           <div className={cn(classes.HomePage__WordsDataContainer)} ref={wordsDataContainerRef}>
-            <div className={classes.HomePage__WordsData} ref={wordsDataElementRef} onClick={onWordClick}>
+            <div className={classes.HomePage__WordsData} ref={wordsDataElementRef}>
               <div ref={wordsDataTimeIndicator} className={classes.HomePage__TimeIndicator}></div>
               {words.map((word: Word, index, array) => (
                 <WordComponent

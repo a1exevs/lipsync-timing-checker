@@ -16,6 +16,16 @@
     overflow-x: auto;
     overflow-y: hidden;
     border: 1px solid #ccc;
+    scrollbar-color: #505354 #707374;
+    scrollbar-width: none;
+  }
+  &__TimeScale {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid #ccc;
+    scrollbar-color: #505354 #707374;
+    scrollbar-width: none;
   }
   &__WordsDataContainer {
     position: relative;
