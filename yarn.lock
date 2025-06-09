@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@alexevs/prettier-config@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@alexevs/prettier-config/-/prettier-config-0.14.0.tgz#5a8da222cebec4b6b1e5b442aaf84700d01a1a0c"
+  integrity sha512-BNwSGhn5QO/PNBgA3raOwx5kwKe8emmKiwjM8wVsepbzllsYWv+cS8Lh7Q4rpSWb/QdTC49UJ+jniK2A2hwdJw==
+
 "@alexevs/ts-guards@1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@alexevs/ts-guards/-/ts-guards-1.0.5.tgz#21261be3d048015da513450225246fb735756f05"
