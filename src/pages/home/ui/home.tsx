@@ -1,9 +1,9 @@
-import React, { ChangeEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WavesurferPlayer from '@wavesurfer/react';
 import WordComponent from 'src/pages/home/ui/word/word';
 import classes from 'src/pages/home/ui/home.module.scss';
 import cn from 'classnames';
-import { AudioTrackTextDataDTO, Phoneme, ResizerType, Word } from 'src/pages/home/model/types';
+import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
 import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
@@ -18,17 +18,17 @@ import WaveSurfer from 'wavesurfer.js';
 import { arrayToObject } from 'src/shared/helpers/arrays';
 import { getFileData } from 'src/shared/helpers/files';
 import {
-  calculatePhonemeLeftPercent,
-  calculatePhonemeWidthPercent,
-  calculateWordLeftPositionPx,
-  calculateWordWidthPx,
   convertWordDTOToWord,
   convertWordToWordDTO,
-  recalculatePhonemesStartEnd,
   recalculateWordWithByNewTimelineWidth,
 } from 'src/pages/home/api/converters';
-import { PHONEME_MIN_WIDTH_PX, PHONEME_MOVING_SENSITIVITY } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import { WORD_MIN_WIDTH_PX, WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';
+
+import usePhonemeResizeStart from 'src/pages/home/api/hooks/use-phoneme-resize-start';
+import useWordResizeStart from 'src/pages/home/api/hooks/use-word-resize-start';
+import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-chain-resize-start';
+import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
+import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
+import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
 import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 
@@ -256,520 +256,52 @@ const HomePage: React.FC = () => {
     };
   }, [waveFormContainerRef, wordsDataContainerRef]);
 
-  const onPhonemeResizeStart = useCallback(
-    (
-      e: MouseEvent,
-      wordId: string,
-      phonemeId: string,
-      resizerType: ResizerType,
-      phonemesMap: Record<string, Phoneme>,
-    ) => {
-      e.stopPropagation();
-      if (isNull(wavesurfer)) {
-        return;
-      }
-      const word = wordsMap[wordId];
-      if (isUndefined(word)) {
-        return;
-      }
-      const wordIndex = words.indexOf(word);
-      if (wordIndex === -1) {
-        return;
-      }
-      const phoneme = phonemesMap[phonemeId];
-      if (isUndefined(phoneme)) {
-        return;
-      }
-      const phonemes = word.phonemes;
-      const phonemeIndex = phonemes.indexOf(phoneme);
-      if (phonemeIndex === -1) {
-        return;
-      }
-      const prevPhoneme: Phoneme = phonemes[phonemeIndex - 1] ?? {
-        widthPercent: 0,
-        leftPercent: 0,
-        start: word.start,
-        end: word.start,
-      };
-      const nextPhoneme: Phoneme = phonemes[phonemeIndex + 1] ?? {
-        widthPercent: 0,
-        leftPercent: 100,
-        start: word.end,
-        end: word.end,
-      };
-      const startX = e.clientX;
-      const startWidthPercent = phoneme.widthPercent;
-      const startLeftPercent = phoneme.leftPercent;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPercent = ((clientX - startX) / word.widthPx) * 100;
-        if (resizerType === 'left') {
-          const newWidthPercent = startWidthPercent - diffPercent;
-          const newLeftPercent = startLeftPercent + diffPercent;
-          const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
-          if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
-            // TODO toFixed(2) for start and end
-            const leftDiffPercent = prevPhonemeRightPercent - phoneme.leftPercent;
-            const newPhonemeStart = prevPhoneme.end;
-            // TODO calculate by 'start' and 'end' for calc improvement
-            phoneme.leftPercent = prevPhonemeRightPercent;
-            phoneme.start = newPhonemeStart;
-            phoneme.widthPercent = phoneme.widthPercent - leftDiffPercent;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            const newWidthPx = (newWidthPercent / 100) * word.widthPx;
-            if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
-              return;
-            }
-            phoneme.leftPercent = newLeftPercent;
-            const phonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
-            phoneme.start = word.start + (phonemeLeftPx / timelineWidth) * duration;
-            phoneme.widthPercent = newWidthPercent;
-          }
-        }
-        if (resizerType === 'right') {
-          const newWidthPercent = startWidthPercent + diffPercent;
-          if (nextPhoneme && phoneme.leftPercent + newWidthPercent > nextPhoneme.leftPercent) {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            phoneme.widthPercent = nextPhoneme.leftPercent - phoneme.leftPercent;
-            phoneme.end = nextPhoneme.start;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            const newWidthPx = (newWidthPercent / 100) * word.widthPx;
-            if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
-              return;
-            }
-            phoneme.widthPercent = newWidthPercent;
-            phoneme.end = phoneme.start + (newWidthPx / timelineWidth) * duration;
-          }
-        }
-        phonemes.splice(phonemeIndex, 1, phoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onPhonemeResizeStart = usePhonemeResizeStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
-  const onPhonemeChainResizeStart = useCallback(
-    (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => {
-      e.stopPropagation();
-      if (isNull(wavesurfer)) {
-        return;
-      }
-      const word = wordsMap[wordId];
-      if (isUndefined(word)) {
-        return;
-      }
-      const wordIndex = words.indexOf(word);
-      if (wordIndex === -1) {
-        return;
-      }
-      const leftPhoneme = phonemesMap[phonemeId];
-      if (isUndefined(leftPhoneme)) {
-        return;
-      }
-      const phonemes = word.phonemes;
-      const leftPhonemeIndex = phonemes.indexOf(leftPhoneme);
-      if (leftPhonemeIndex === -1) {
-        return;
-      }
-      const rightPhoneme: Phoneme = phonemes[leftPhonemeIndex + 1];
-      if (isUndefined(rightPhoneme)) {
-        return;
-      }
-      const startX = e.clientX;
-      const leftPhonemeStartWidthPercent = leftPhoneme.widthPercent;
-
-      const rightPhonemeStartWidthPercent = rightPhoneme.widthPercent;
-      const rightPhonemeStartLeftPercent = rightPhoneme.leftPercent;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPercent = ((clientX - startX) / word.widthPx) * 100;
-
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        const leftPhonemeNewWidthPercent = leftPhonemeStartWidthPercent + diffPercent;
-        const leftPhonemeWidthPx = (leftPhonemeNewWidthPercent / 100) * word.widthPx;
-        const rightPhonemeNewWidthPercent = rightPhonemeStartWidthPercent - diffPercent;
-        const rightPhonemeWidthPx = (rightPhonemeNewWidthPercent / 100) * word.widthPx;
-        if (leftPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX || rightPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX) {
-          return;
-        }
-
-        leftPhoneme.widthPercent = leftPhonemeNewWidthPercent;
-        leftPhoneme.end = leftPhoneme.start + (leftPhonemeWidthPx / timelineWidth) * duration;
-
-        const rightPhonemeNewLeftPercent = rightPhonemeStartLeftPercent + diffPercent;
-        const rightPhonemeLeftPx = (rightPhonemeNewLeftPercent / 100) * word.widthPx;
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        rightPhoneme.leftPercent = rightPhonemeNewLeftPercent;
-        rightPhoneme.start = word.start + (rightPhonemeLeftPx / timelineWidth) * duration;
-        rightPhoneme.widthPercent = rightPhonemeNewWidthPercent;
-
-        phonemes.splice(leftPhonemeIndex, 2, leftPhoneme, rightPhoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onPhonemeChainResizeStart = usePhonemeChainResizeStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
-  const onWordResizeStart = useCallback(
-    (e: MouseEvent, wordId: string, resizerType: ResizerType) => {
-      e.stopPropagation();
-      if (isNull(wavesurfer)) {
-        return;
-      }
-      const word = wordsMap[wordId];
-      if (isUndefined(word)) {
-        return;
-      }
-      const wordIndex = words.indexOf(word);
-      if (wordIndex === -1) {
-        return;
-      }
-      const duration = wavesurfer.getDuration();
-      const prevWord: Word = words[wordIndex - 1] ?? { widthPx: 0, leftPx: 0, start: 0, end: 0 };
-      const nextWord: Word = words[wordIndex + 1] ?? {
-        widthPx: 0,
-        leftPx: timelineWidth,
-        start: duration,
-        end: duration,
-      };
-      const startX = e.clientX;
-      const startWidthPx = word.widthPx;
-      const startLeftPx = word.leftPx;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-        if (resizerType === 'left') {
-          const newWidthPx = startWidthPx - diffPx;
-          const newLeftPx = startLeftPx + diffPx;
-          const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
-          if (prevWord && newLeftPx < prevWordRightPx) {
-            // TODO toFixed(2) for start and end
-            const leftDiffPx = prevWordRightPx - word.leftPx;
-            const newWordStart = prevWord.end;
-            // TODO calculate by 'start' and 'end' for calc improvement
-            word.leftPx = prevWordRightPx;
-            word.start = newWordStart;
-            word.widthPx = word.widthPx - leftDiffPx;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            if (newWidthPx <= WORD_MIN_WIDTH_PX) {
-              return;
-            }
-            word.leftPx = newLeftPx;
-            word.start = (newLeftPx / timelineWidth) * duration;
-            word.widthPx = newWidthPx;
-          }
-        }
-        if (resizerType === 'right') {
-          const newWidthPx = startWidthPx + diffPx;
-          if (nextWord && word.leftPx + newWidthPx > nextWord.leftPx) {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            word.widthPx = nextWord.leftPx - word.leftPx;
-            word.end = nextWord.start;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            if (newWidthPx <= WORD_MIN_WIDTH_PX) {
-              return;
-            }
-            word.widthPx = newWidthPx;
-            word.end = word.start + (newWidthPx / timelineWidth) * duration;
-          }
-        }
-        word.phonemes = recalculatePhonemesStartEnd(word);
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onWordResizeStart = useWordResizeStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
-  const onWordChainResizeStart = useCallback(
-    (e: MouseEvent, wordId: string) => {
-      e.stopPropagation();
-      if (isNull(wavesurfer)) {
-        return;
-      }
-      const leftWord = wordsMap[wordId];
-      if (isUndefined(leftWord)) {
-        return;
-      }
-      const leftWordIndex = words.indexOf(leftWord);
-      if (leftWordIndex === -1) {
-        return;
-      }
-      const rightWord: Word = words[leftWordIndex + 1];
-      if (isUndefined(rightWord)) {
-        return;
-      }
-      const startX = e.clientX;
-      const leftWordStartWidthPx = leftWord.widthPx;
-
-      const rightWordStartWidthPx = rightWord.widthPx;
-      const rightWordStartLeftPx = rightWord.leftPx;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        const leftWordNewWidthPx = leftWordStartWidthPx + diffPx;
-        const rightWordNewWidthPx = rightWordStartWidthPx - diffPx;
-        if (leftWordNewWidthPx <= WORD_MIN_WIDTH_PX || rightWordNewWidthPx <= WORD_MIN_WIDTH_PX) {
-          return;
-        }
-
-        leftWord.widthPx = leftWordNewWidthPx;
-        leftWord.end = leftWord.start + (leftWordNewWidthPx / timelineWidth) * duration;
-        leftWord.phonemes = recalculatePhonemesStartEnd(leftWord);
-
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        const rightWordNewLeftPx = rightWordStartLeftPx + diffPx;
-        rightWord.leftPx = rightWordNewLeftPx;
-        rightWord.start = (rightWordNewLeftPx / timelineWidth) * duration;
-        rightWord.widthPx = rightWordNewWidthPx;
-        rightWord.phonemes = recalculatePhonemesStartEnd(rightWord);
-
-        words.splice(leftWordIndex, 2, leftWord, rightWord);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onWordChainResizeStart = useWordChainResizeStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
-  const onWordMoveStart = useCallback(
-    (e: MouseEvent, wordId: string) => {
-      e.stopPropagation();
-      if (!wavesurfer) {
-        return;
-      }
-      const word = wordsMap[wordId];
-      if (word === undefined) {
-        return;
-      }
-      const wordIndex = words.indexOf(word);
-      if (wordIndex === -1) {
-        return;
-      }
-      const duration = wavesurfer.getDuration();
-      const prevWord: Word = words[wordIndex - 1] ?? { widthPx: 0, leftPx: 0, start: 0, end: 0 };
-      const nextWord: Word = words[wordIndex + 1] ?? {
-        widthPx: 0,
-        leftPx: timelineWidth,
-        start: duration,
-        end: duration,
-      };
-      const startX = e.clientX;
-      const startWidthPx = word.widthPx;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-        const diff = (diffPx / timelineWidth) * duration * WORD_MOVING_SENSITIVITY;
-        const newWordStart = word.start + diff;
-        const newWordEnd = word.end + diff;
-        const width = (startWidthPx / timelineWidth) * duration;
-        if (prevWord && newWordStart < prevWord.end) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = prevWord.end;
-          word.end = prevWord.end + width;
-        } else if (nextWord && newWordEnd > nextWord.start) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = nextWord.start - width;
-          word.end = nextWord.start;
-        } else {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = word.start + diff;
-          word.end = word.end + diff;
-        }
-        word.movingInProgress = true;
-        word.widthPx = calculateWordWidthPx({ wordDTO: word, timelineWidth, audioDuration: duration });
-        word.leftPx = calculateWordLeftPositionPx({ wordDTO: word, timelineWidth, audioDuration: duration });
-
-        word.phonemes = recalculatePhonemesStartEnd(word);
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        word.movingInProgress = false;
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onWordMoveStart = useWordMoveStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
-  const onPhonemeMoveStart = useCallback(
-    (e: MouseEvent, wordId: string, phonemeId: string, phonemesMap: Record<string, Phoneme>) => {
-      e.stopPropagation();
-      if (!wavesurfer) {
-        return;
-      }
-      const word = wordsMap[wordId];
-      if (word === undefined) {
-        return;
-      }
-      const wordIndex = words.indexOf(word);
-      if (wordIndex === -1) {
-        return;
-      }
-      const phoneme = phonemesMap[phonemeId];
-      if (phoneme === undefined) {
-        return;
-      }
-      const phonemes = word.phonemes;
-      const phonemeIndex = phonemes.indexOf(phoneme);
-      if (phonemeIndex === -1) {
-        return;
-      }
-      const prevPhoneme: Phoneme = phonemes[phonemeIndex - 1] ?? {
-        widthPercent: 0,
-        leftPercent: 100,
-        start: word.start,
-        end: word.start,
-      };
-      const nextPhoneme: Phoneme = phonemes[phonemeIndex + 1] ?? {
-        widthPercent: 0,
-        leftPercent: 100,
-        start: word.end,
-        end: word.end,
-      };
-      const startX = e.clientX;
-      const startWidthPercent = phoneme.widthPercent;
-      const startLeftPercent = phoneme.leftPercent;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-        const diff = (diffPx / timelineWidth) * duration * PHONEME_MOVING_SENSITIVITY;
-        const newPhonemeStart = phoneme.start + diff;
-        const newPhonemeEnd = phoneme.end + diff;
-        const width = ((startWidthPercent * word.widthPx) / 100 / timelineWidth) * duration;
-        if (prevPhoneme && newPhonemeStart < prevPhoneme.end) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = prevPhoneme.end;
-          phoneme.end = prevPhoneme.end + width;
-        } else if (nextPhoneme && newPhonemeEnd > nextPhoneme.start) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = nextPhoneme.start - width;
-          phoneme.end = nextPhoneme.start;
-        } else {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = phoneme.start + diff;
-          phoneme.end = phoneme.end + diff;
-        }
-
-        phoneme.movingInProgress = true;
-        phoneme.widthPercent = calculatePhonemeWidthPercent(phoneme, word);
-        phoneme.leftPercent = calculatePhonemeLeftPercent(phoneme, word);
-
-        phonemes.splice(phonemeIndex, 1, phoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-
-      const onMouseUp = () => {
-        console.log('onMouseUp');
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        phoneme.movingInProgress = false;
-        phonemes.splice(phonemeIndex, 1, phoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
-      };
-      console.log('onMouseDown');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    },
-    [words.length, Object.keys(wordsMap).length, wavesurfer, timelineWidth],
+  const onPhonemeMoveStart = usePhonemeMoveStart(
+    words,
+    wordsMap,
+    setWords,
+    wavesurfer,
+    timelineWidth,
   );
 
   useEffect(() => {
