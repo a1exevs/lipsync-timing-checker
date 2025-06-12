@@ -46,7 +46,6 @@
   "devDependencies": {
     "@alexevs/prettier-config": "1.0.0",
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "22.15.18",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
