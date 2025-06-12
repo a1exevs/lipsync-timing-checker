@@ -323,23 +323,42 @@ const HomePage: React.FC = () => {
   return (
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Lipsync Timing Checker</h1>
-      <section className={classes.HomePage__Controls}>
-        <label htmlFor="audio-file-upload">Load audio:</label>
-        <input type="file" id="audio-file-upload" accept="audio/*" onChange={onAudioFileChange} />
-        <label htmlFor="words-data-upload">Load JSON data:</label>
+      <section className="my-4 flex flex-wrap items-center gap-4 rounded-md bg-gray-800 p-4 shadow">
+        <label htmlFor="audio-file-upload" className="font-medium">
+          Load audio:
+        </label>
+        <input
+          className="rounded border border-gray-600 bg-gray-700 p-2 text-sm text-gray-200"
+          type="file"
+          id="audio-file-upload"
+          accept="audio/*"
+          onChange={onAudioFileChange}
+        />
+        <label htmlFor="words-data-upload" className="font-medium">
+          Load JSON data:
+        </label>
         <input
           id="words-data-upload"
           type="file"
+          className="rounded border border-gray-600 bg-gray-700 p-2 text-sm text-gray-200 disabled:opacity-50"
           disabled={!isLoadJSONDataButtonEnabled()}
           accept="application/json"
           onChange={onWordsDataFileChange}
         />
-        <button disabled={!isDownloadJSONDataButtonEnabled()} onClick={onDownloadJSONDataButtonClick}>
+        <button
+          className="rounded bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!isDownloadJSONDataButtonEnabled()}
+          onClick={onDownloadJSONDataButtonClick}
+        >
           Download JSON data
         </button>
       </section>
-      <section className={classes.HomePage__Controls}>
-        <button disabled={!isAudioPlayButtonEnabled()} onClick={() => onPlayPause(wavesurfer)}>
+      <section className="my-4 flex items-center gap-4 rounded-md bg-gray-800 p-4 shadow">
+        <button
+          className="rounded bg-blue-600 px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!isAudioPlayButtonEnabled()}
+          onClick={() => onPlayPause(wavesurfer)}
+        >
           {isPlaying ? 'Pause' : 'Play'}
         </button>
       </section>
