@@ -1,5 +1,5 @@
 import { Nullable } from '@alexevs/ts-guards';
-import { useCallback, Dispatch, SetStateAction } from 'react';
+import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { Word } from 'src/pages/home/model/types';
 import { WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';

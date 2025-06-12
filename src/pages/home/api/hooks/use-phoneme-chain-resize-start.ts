@@ -1,9 +1,8 @@
-import { useCallback, Dispatch, SetStateAction } from 'react';
+import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
 import { Phoneme, Word } from 'src/pages/home/model/types';
 import { PHONEME_MIN_WIDTH_PX } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
 
 const usePhonemeChainResizeStart = (
   words: Word[],

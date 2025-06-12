@@ -1,4 +1,4 @@
-import { useCallback, Dispatch, SetStateAction } from 'react';
+import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
 import { Word } from 'src/pages/home/model/types';
