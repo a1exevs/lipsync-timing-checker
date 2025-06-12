@@ -52,12 +52,18 @@ const useWordMoveStart = (
         const newWordEnd = word.end + diff;
         const width = (startWidthPx / timelineWidth) * duration;
         if (prevWord && newWordStart < prevWord.end) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           word.start = prevWord.end;
           word.end = prevWord.end + width;
         } else if (nextWord && newWordEnd > nextWord.start) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           word.start = nextWord.start - width;
           word.end = nextWord.start;
         } else {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           word.start = word.start + diff;
           word.end = word.end + diff;
         }

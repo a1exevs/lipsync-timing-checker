@@ -43,6 +43,8 @@ const useWordChainResizeStart = (
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         const diffPx = clientX - startX;
 
+        // TODO toFixed(2) for start and end
+        // TODO calculate by 'start' and 'end' for calc improvement
         const leftWordNewWidthPx = leftWordStartWidthPx + diffPx;
         const rightWordNewWidthPx = rightWordStartWidthPx - diffPx;
         if (leftWordNewWidthPx <= WORD_MIN_WIDTH_PX || rightWordNewWidthPx <= WORD_MIN_WIDTH_PX) {
@@ -53,6 +55,8 @@ const useWordChainResizeStart = (
         leftWord.end = leftWord.start + (leftWordNewWidthPx / timelineWidth) * duration;
         leftWord.phonemes = recalculatePhonemesStartEnd(leftWord);
 
+        // TODO toFixed(2) for start and end
+        // TODO calculate by 'start' and 'end' for calc improvement
         const rightWordNewLeftPx = rightWordStartLeftPx + diffPx;
         rightWord.leftPx = rightWordNewLeftPx;
         rightWord.start = (rightWordNewLeftPx / timelineWidth) * duration;

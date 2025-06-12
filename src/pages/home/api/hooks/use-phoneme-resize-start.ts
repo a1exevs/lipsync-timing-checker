@@ -67,12 +67,16 @@ const usePhonemeResizeStart = (
           const newLeftPercent = startLeftPercent + diffPercent;
           const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
           if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
+            // TODO toFixed(2) for start and end
             const leftDiffPercent = prevPhonemeRightPercent - phoneme.leftPercent;
             const newPhonemeStart = prevPhoneme.end;
+            // TODO calculate by 'start' and 'end' for calc improvement
             phoneme.leftPercent = prevPhonemeRightPercent;
             phoneme.start = newPhonemeStart;
             phoneme.widthPercent = phoneme.widthPercent - leftDiffPercent;
           } else {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             const newWidthPx = (newWidthPercent / 100) * word.widthPx;
             if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
               return;
@@ -86,9 +90,13 @@ const usePhonemeResizeStart = (
         if (resizerType === 'right') {
           const newWidthPercent = startWidthPercent + diffPercent;
           if (nextPhoneme && phoneme.leftPercent + newWidthPercent > nextPhoneme.leftPercent) {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             phoneme.widthPercent = nextPhoneme.leftPercent - phoneme.leftPercent;
             phoneme.end = nextPhoneme.start;
           } else {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             const newWidthPx = (newWidthPercent / 100) * word.widthPx;
             if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
               return;

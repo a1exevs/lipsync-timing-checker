@@ -49,12 +49,16 @@ const useWordResizeStart = (
           const newLeftPx = startLeftPx + diffPx;
           const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
           if (prevWord && newLeftPx < prevWordRightPx) {
+            // TODO toFixed(2) for start and end
             const leftDiffPx = prevWordRightPx - word.leftPx;
             const newWordStart = prevWord.end;
+            // TODO calculate by 'start' and 'end' for calc improvement
             word.leftPx = prevWordRightPx;
             word.start = newWordStart;
             word.widthPx = word.widthPx - leftDiffPx;
           } else {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             if (newWidthPx <= WORD_MIN_WIDTH_PX) {
               return;
             }
@@ -66,9 +70,13 @@ const useWordResizeStart = (
         if (resizerType === 'right') {
           const newWidthPx = startWidthPx + diffPx;
           if (nextWord && word.leftPx + newWidthPx > nextWord.leftPx) {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             word.widthPx = nextWord.leftPx - word.leftPx;
             word.end = nextWord.start;
           } else {
+            // TODO toFixed(2) for start and end
+            // TODO calculate by 'start' and 'end' for calc improvement
             if (newWidthPx <= WORD_MIN_WIDTH_PX) {
               return;
             }

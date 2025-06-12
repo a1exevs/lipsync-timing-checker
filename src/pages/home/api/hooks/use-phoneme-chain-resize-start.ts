@@ -51,6 +51,8 @@ const usePhonemeChainResizeStart = (
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         const diffPercent = ((clientX - startX) / word.widthPx) * 100;
 
+        // TODO toFixed(2) for start and end
+        // TODO calculate by 'start' and 'end' for calc improvement
         const leftPhonemeNewWidthPercent = leftPhonemeStartWidthPercent + diffPercent;
         const leftPhonemeWidthPx = (leftPhonemeNewWidthPercent / 100) * word.widthPx;
         const rightPhonemeNewWidthPercent = rightPhonemeStartWidthPercent - diffPercent;
@@ -64,6 +66,8 @@ const usePhonemeChainResizeStart = (
 
         const rightPhonemeNewLeftPercent = rightPhonemeStartLeftPercent + diffPercent;
         const rightPhonemeLeftPx = (rightPhonemeNewLeftPercent / 100) * word.widthPx;
+        // TODO toFixed(2) for start and end
+        // TODO calculate by 'start' and 'end' for calc improvement
         rightPhoneme.leftPercent = rightPhonemeNewLeftPercent;
         rightPhoneme.start = word.start + (rightPhonemeLeftPx / timelineWidth) * duration;
         rightPhoneme.widthPercent = rightPhonemeNewWidthPercent;

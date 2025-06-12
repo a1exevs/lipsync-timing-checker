@@ -62,12 +62,18 @@ const usePhonemeMoveStart = (
         const newPhonemeEnd = phoneme.end + diff;
         const width = ((startWidthPercent * word.widthPx) / 100 / timelineWidth) * duration;
         if (prevPhoneme && newPhonemeStart < prevPhoneme.end) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           phoneme.start = prevPhoneme.end;
           phoneme.end = prevPhoneme.end + width;
         } else if (nextPhoneme && newPhonemeEnd > nextPhoneme.start) {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           phoneme.start = nextPhoneme.start - width;
           phoneme.end = nextPhoneme.start;
         } else {
+          // TODO toFixed(2) for start and end
+          // TODO calculate by 'start' and 'end' for calc improvement
           phoneme.start = phoneme.start + diff;
           phoneme.end = phoneme.end + diff;
         }
