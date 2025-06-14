@@ -47,7 +47,7 @@
   "devDependencies": {
     "@alexevs/prettier-config": "1.0.0",
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@tailwindcss/postcss": "4.1.10",
+    "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "22.15.18",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
@@ -63,7 +63,7 @@
     "prettier": "3.2.5",
     "react-app-rewired": "2.2.1",
     "serve": "14.2.4",
-    "tailwindcss": "4.1.10",
+    "tailwindcss": "^4.1.10",
     "typescript": "5.8.3",
     "webpack-bundle-analyzer": "4.10.2"
   },

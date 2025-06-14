@@ -2007,7 +2007,7 @@
     "@tailwindcss/oxide-win32-arm64-msvc" "4.1.10"
     "@tailwindcss/oxide-win32-x64-msvc" "4.1.10"
 
-"@tailwindcss/postcss@4.1.10":
+"@tailwindcss/postcss@^4.1.10":
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/@tailwindcss/postcss/-/postcss-4.1.10.tgz#28e4edd9266a07e3fbfbdbf802563054c408d56b"
   integrity sha512-B+7r7ABZbkXJwpvt2VMnS6ujcDoR2OOcFaqrLIo1xbcdxje4Vf+VgJdBzNNbrAjBj/rLZ66/tlQ1knIGNLKOBQ==
@@ -9791,7 +9791,7 @@ symbol-tree@^3.2.4:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-tailwindcss@4.1.10:
+tailwindcss@4.1.10, tailwindcss@^4.1.10:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.1.10.tgz#515741b0a79316d1971d182f7fbc435b68679373"
   integrity sha512-P3nr6WkvKV/ONsTzj6Gb57sWPMX29EPNPopo7+FcpkQaNsrNpZ1pv8QmrYI2RqEKD7mlGqLnGovlcYnBK0IqUA==
