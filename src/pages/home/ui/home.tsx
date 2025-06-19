@@ -8,19 +8,11 @@ import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
   DEFAULT_WAVE_FORM_WIDTH,
-  MAX_TIME_LINE_SCALE_COEFFICIENT,
-  MIN_TIME_LINE_SCALE_COEFFICIENT,
-  TIME_LINE_SCALE_COEFFICIENT_STEP,
   TIME_SCALE_HEIGHT_PX,
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
-import {
-  convertWordDTOToWord,
-  convertWordToWordDTO,
-  recalculateWordWithByNewTimelineWidth,
-} from 'src/pages/home/api/converters';
-
+import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
 import usePhonemeResizeStart from 'src/pages/home/api/hooks/use-phoneme-resize-start';
 import useWordResizeStart from 'src/pages/home/api/hooks/use-word-resize-start';
 import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-chain-resize-start';
@@ -31,6 +23,8 @@ import { isNull, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import { Play, Pause, FileAudio, FileJson, Download } from 'lucide-react';
 import { FilePicker, Button, IconButton, getFileData, arrayToObject } from 'src/shared';
+import useTimelineScaling from 'src/pages/home/api/hooks/use-timeline-scaling';
+import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
@@ -165,43 +159,7 @@ const HomePage: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  useEffect(() => {
-    // TODO Restore time position and scroll position after scaling
-    const onScaleTimeline = (event: WheelEvent) => {
-      if (event.shiftKey || !event.altKey || isNull(wavesurfer)) {
-        return;
-      }
-      const delta = (event as any).wheelDeltaY;
-      setTimelineScaleCoefficients(prevCoefficient => {
-        const newCoefficient = prevCoefficient + (delta / Math.abs(delta)) * TIME_LINE_SCALE_COEFFICIENT_STEP;
-        if (newCoefficient < MIN_TIME_LINE_SCALE_COEFFICIENT || newCoefficient > MAX_TIME_LINE_SCALE_COEFFICIENT) {
-          return prevCoefficient;
-        }
-        const audioDuration = wavesurfer.getDuration();
-        const newTimelineWidth = audioDuration * newCoefficient;
-        setTimelineWidth(newTimelineWidth);
-        setWords(prevWords =>
-          prevWords.map(word =>
-            recalculateWordWithByNewTimelineWidth({
-              word,
-              newTimelineWidth,
-              audioDuration,
-            }),
-          ),
-        );
-        return newCoefficient;
-      });
-    };
-
-    if (!isNull(timelineRef.current)) {
-      timelineRef.current.addEventListener('wheel', onScaleTimeline);
-    }
-    return () => {
-      if (!isNull(timelineRef.current)) {
-        timelineRef.current.removeEventListener('wheel', onScaleTimeline);
-      }
-    };
-  }, [timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords]);
+  useTimelineScaling(timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords, setTimelineScaleCoefficients);
 
   useEffect(() => {
     const updateViewportMetrics = () => {
@@ -256,16 +214,11 @@ const HomePage: React.FC = () => {
     };
   }, [waveFormContainerRef, wordsDataContainerRef]);
 
-  const onPhonemeResizeStart = usePhonemeResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
-
-  const onPhonemeChainResizeStart = usePhonemeChainResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
-
   const onWordResizeStart = useWordResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
-
   const onWordChainResizeStart = useWordChainResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
-
   const onWordMoveStart = useWordMoveStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
-
+  const onPhonemeResizeStart = usePhonemeResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
+  const onPhonemeChainResizeStart = usePhonemeChainResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
   const onPhonemeMoveStart = usePhonemeMoveStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
   useEffect(() => {
@@ -287,32 +240,15 @@ const HomePage: React.FC = () => {
   return (
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Lipsync Timing Checker</h1>
-      <section className="flex flex-col md:flex-row md:justify-between items-center my-4 gap-4 rounded-md bg-gray-800 p-4 shadow">
-        <div className="flex flex-col gap-3 w-full md:w-1/2">
-          <FilePicker
-            fileName={audioFileData?.fileName}
-            text={'Load audio'}
-            icon={<FileAudio />}
-            accept="audio/*"
-            handleFileUpload={onAudioFileChange}
-          />
-          <FilePicker
-            fileName={wordsDataFileData?.fileName}
-            text={'Load JSON data'}
-            icon={<FileJson />}
-            accept="application/json"
-            disabled={!isLoadJSONDataButtonEnabled()}
-            handleFileUpload={onWordsDataFileChange}
-          />
-        </div>
-        <Button
-          variant="danger"
-          icon={<Download />}
-          text={'Download JSON data'}
-          onClick={onDownloadJSONDataButtonClick}
-          disabled={!isDownloadJSONDataButtonEnabled()}
-        />
-      </section>
+      <DataIOPanel
+        audioFileName={audioFileData?.fileName}
+        wordsDataFileName={wordsDataFileData?.fileName}
+        isLoadJSONDataButtonEnabled={isLoadJSONDataButtonEnabled()}
+        isDownloadJSONDataButtonEnabled={isDownloadJSONDataButtonEnabled()}
+        onAudioFileChange={onAudioFileChange}
+        onWordsDataFileChange={onWordsDataFileChange}
+        onDownloadJSONDataButtonClick={onDownloadJSONDataButtonClick}
+      ></DataIOPanel>
       <section className="flex items-center gap-4 my-4 rounded-md bg-gray-800 p-4 shadow">
         <IconButton
           title={isPlaying ? 'Pause' : 'Play'}
