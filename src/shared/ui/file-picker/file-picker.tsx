@@ -1,8 +1,7 @@
 import React, { ReactNode, useRef } from 'react';
 import Button from 'src/shared/ui/button/button';
-import { FileAudio } from 'lucide-react';
 import FileInput from 'src/shared/ui/file-input/file-input';
-import { Nullable, Optional } from '@alexevs/ts-guards';
+import { Nullable } from '@alexevs/ts-guards';
 
 type Props = {
   text: string;

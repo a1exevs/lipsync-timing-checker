@@ -15,8 +15,6 @@ import {
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
-import { arrayToObject } from 'src/shared/helpers/arrays';
-import { getFileData } from 'src/shared/helpers/files';
 import {
   convertWordDTOToWord,
   convertWordToWordDTO,
@@ -29,12 +27,10 @@ import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-cha
 import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
 import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
 import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
-import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
+import { isNull, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
-import Button from 'src/shared/ui/button/button';
-import IconButton from 'src/shared/ui/icon-button/icon-button';
 import { Play, Pause, FileAudio, FileJson, Download } from 'lucide-react';
-import FilePicker from 'src/shared/ui/file-picker/file-picker';
+import { FilePicker, Button, IconButton, getFileData, arrayToObject } from 'src/shared';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);

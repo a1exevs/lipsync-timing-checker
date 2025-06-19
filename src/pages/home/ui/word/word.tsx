@@ -8,11 +8,10 @@ import {
   WORD_CHAIN_RESIZER_COLOR,
   WORD_LEFT_RESIZER_COLOR,
   WORD_RESIZER_WIDTH,
-  WORD_RESIZER_WIDTH_PX,
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/word/word.consts';
-import { arrayToObject } from 'src/shared/helpers/arrays';
+import { arrayToObject } from 'src/shared';
 
 type Props = {
   id: string;

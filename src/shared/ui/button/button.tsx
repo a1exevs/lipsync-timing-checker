@@ -1,8 +1,7 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 import cn from 'classnames';
-
-type Variant = 'primary' | 'secondary' | 'danger';
-type IconPosition = 'left' | 'right';
+import { IconPosition, Variant } from 'src/shared/ui/button/button.types';
+import { variantStyles } from 'src/shared/ui/button/button.consts';
 
 type Props = {
   text: string;
@@ -13,12 +12,6 @@ type Props = {
   icon?: ReactNode;
   iconPosition?: IconPosition;
   additionalClasses?: string;
-};
-
-const variantStyles: Record<Variant, string> = {
-  primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-  secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300',
-  danger: 'bg-red-600 hover:bg-red-700 text-white',
 };
 
 const Button: React.FC<Props> = ({
