@@ -31,7 +31,6 @@ import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
 import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
 import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
-import FileInput from 'src/shared/ui/file-input/file-input';
 import Button from 'src/shared/ui/button/button';
 import IconButton from 'src/shared/ui/icon-button/icon-button';
 import { Play, Pause, FileAudio, FileJson, Download } from 'lucide-react';
@@ -293,9 +292,16 @@ const HomePage: React.FC = () => {
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Lipsync Timing Checker</h1>
       <section className="flex flex-col md:flex-row md:justify-between items-center my-4 gap-4 rounded-md bg-gray-800 p-4 shadow">
-        <div className="flex flex-col md:flex-row items-center gap-2">
-          <FilePicker text={'Load audio'} icon={<FileAudio />} accept="audio/*" handleFileUpload={onAudioFileChange} />
+        <div className="flex flex-col gap-3 w-full md:w-1/2">
           <FilePicker
+            fileName={audioFileData?.fileName}
+            text={'Load audio'}
+            icon={<FileAudio />}
+            accept="audio/*"
+            handleFileUpload={onAudioFileChange}
+          />
+          <FilePicker
+            fileName={wordsDataFileData?.fileName}
             text={'Load JSON data'}
             icon={<FileJson />}
             accept="application/json"

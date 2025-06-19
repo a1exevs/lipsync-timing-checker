@@ -23,8 +23,9 @@ const FilePicker: React.FC<Props> = ({
 }) => {
   const fileRef = useRef<Nullable<HTMLInputElement>>(null);
   return (
-    <div className="flex flex-col gap-1 w-48">
+    <div className="flex flex-row gap-2 items-center">
       <Button
+        additionalClasses="w-1/2"
         text={text}
         icon={icon}
         onClick={() => {
@@ -33,7 +34,7 @@ const FilePicker: React.FC<Props> = ({
         disabled={disabled}
       />
       {fileName && (
-        <span className="block w-full truncate text-sm text-gray-300" title={fileName}>
+        <span className="flex-1 block truncate text-sm text-gray-300" title={fileName}>
           {fileName}
         </span>
       )}

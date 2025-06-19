@@ -12,6 +12,7 @@ type Props = {
   variant?: Variant;
   icon?: ReactNode;
   iconPosition?: IconPosition;
+  additionalClasses?: string;
 };
 
 const variantStyles: Record<Variant, string> = {
@@ -28,6 +29,7 @@ const Button: React.FC<Props> = ({
   variant = 'primary',
   icon,
   iconPosition = 'left',
+  additionalClasses = '',
 }) => {
   return (
     <button
@@ -35,12 +37,13 @@ const Button: React.FC<Props> = ({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
         variantStyles[variant],
         {
           'w-full': widthFull,
           'flex-row-reverse': icon && iconPosition === 'right',
         },
+        additionalClasses,
       )}
     >
       {icon && <span>{icon}</span>}
