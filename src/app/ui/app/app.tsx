@@ -1,10 +1,9 @@
 import React from 'react';
-import classes from 'src/app/ui/app/app.module.scss';
 import { HomePage } from 'src/pages';
 
 const App: React.FC = () => {
   return (
-    <div className={classes.App}>
+    <div className="bg-[rgba(24,26,27,0.75)] mx-auto max-w-[1920px] min-h-screen p-0">
       <HomePage />
     </div>
   );

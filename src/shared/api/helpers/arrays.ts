@@ -1,4 +1,4 @@
-import { KeyOfValue } from 'src/shared/types/common';
+import { KeyOfValue } from 'src/shared/model';
 
 export function arrayToObject<T = Record<string, unknown>>(
   arr: T[],

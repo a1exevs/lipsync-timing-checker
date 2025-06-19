@@ -15,8 +15,6 @@ import {
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import WaveSurfer from 'wavesurfer.js';
-import { arrayToObject } from 'src/shared/helpers/arrays';
-import { getFileData } from 'src/shared/helpers/files';
 import {
   convertWordDTOToWord,
   convertWordToWordDTO,
@@ -29,11 +27,13 @@ import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-cha
 import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
 import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
 import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
-import { isNull, isUndefined, Nullable } from '@alexevs/ts-guards';
+import { isNull, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
+import { Play, Pause, FileAudio, FileJson, Download } from 'lucide-react';
+import { FilePicker, Button, IconButton, getFileData, arrayToObject } from 'src/shared';
 
 const HomePage: React.FC = () => {
-  const [audioUrl, setAudioUrl] = useState<string>('');
+  const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
   const [wordsDataFileData, setWordsDataFileData] = useState<Nullable<{ fileName: string; extension: string }>>(null);
 
   const [wavesurfer, setWavesurfer] = useState<Nullable<WaveSurfer>>(null);
@@ -79,7 +79,7 @@ const HomePage: React.FC = () => {
     }
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
-    setAudioUrl(url);
+    setAudioFileData({ fileName: file.name, fileUrl: url });
     event.target.blur();
   };
 
@@ -144,8 +144,8 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const isLoadJSONDataButtonEnabled = (): boolean => audioUrl !== '';
-  const isAudioPlayButtonEnabled = (): boolean => audioUrl !== '';
+  const isLoadJSONDataButtonEnabled = (): boolean => !isNull(audioFileData);
+  const isAudioPlayButtonEnabled = (): boolean => !isNull(audioFileData);
   const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
 
   const onDownloadJSONDataButtonClick = (): void => {
@@ -256,53 +256,17 @@ const HomePage: React.FC = () => {
     };
   }, [waveFormContainerRef, wordsDataContainerRef]);
 
-  const onPhonemeResizeStart = usePhonemeResizeStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onPhonemeResizeStart = usePhonemeResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
-  const onPhonemeChainResizeStart = usePhonemeChainResizeStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onPhonemeChainResizeStart = usePhonemeChainResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
-  const onWordResizeStart = useWordResizeStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onWordResizeStart = useWordResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
-  const onWordChainResizeStart = useWordChainResizeStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onWordChainResizeStart = useWordChainResizeStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
-  const onWordMoveStart = useWordMoveStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onWordMoveStart = useWordMoveStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
-  const onPhonemeMoveStart = usePhonemeMoveStart(
-    words,
-    wordsMap,
-    setWords,
-    wavesurfer,
-    timelineWidth,
-  );
+  const onPhonemeMoveStart = usePhonemeMoveStart(words, wordsMap, setWords, wavesurfer, timelineWidth);
 
   useEffect(() => {
     const handleKeyboardEvents = (event: KeyboardEvent) => {
@@ -323,25 +287,40 @@ const HomePage: React.FC = () => {
   return (
     <section className={classes.HomePage}>
       <h1 className={classes.HomePage__Title}>Lipsync Timing Checker</h1>
-      <section className={classes.HomePage__Controls}>
-        <label htmlFor="audio-file-upload">Load audio:</label>
-        <input type="file" id="audio-file-upload" accept="audio/*" onChange={onAudioFileChange} />
-        <label htmlFor="words-data-upload">Load JSON data:</label>
-        <input
-          id="words-data-upload"
-          type="file"
-          disabled={!isLoadJSONDataButtonEnabled()}
-          accept="application/json"
-          onChange={onWordsDataFileChange}
+      <section className="flex flex-col md:flex-row md:justify-between items-center my-4 gap-4 rounded-md bg-gray-800 p-4 shadow">
+        <div className="flex flex-col gap-3 w-full md:w-1/2">
+          <FilePicker
+            fileName={audioFileData?.fileName}
+            text={'Load audio'}
+            icon={<FileAudio />}
+            accept="audio/*"
+            handleFileUpload={onAudioFileChange}
+          />
+          <FilePicker
+            fileName={wordsDataFileData?.fileName}
+            text={'Load JSON data'}
+            icon={<FileJson />}
+            accept="application/json"
+            disabled={!isLoadJSONDataButtonEnabled()}
+            handleFileUpload={onWordsDataFileChange}
+          />
+        </div>
+        <Button
+          variant="danger"
+          icon={<Download />}
+          text={'Download JSON data'}
+          onClick={onDownloadJSONDataButtonClick}
+          disabled={!isDownloadJSONDataButtonEnabled()}
         />
-        <button disabled={!isDownloadJSONDataButtonEnabled()} onClick={onDownloadJSONDataButtonClick}>
-          Download JSON data
-        </button>
       </section>
-      <section className={classes.HomePage__Controls}>
-        <button disabled={!isAudioPlayButtonEnabled()} onClick={() => onPlayPause(wavesurfer)}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
+      <section className="flex items-center gap-4 my-4 rounded-md bg-gray-800 p-4 shadow">
+        <IconButton
+          title={isPlaying ? 'Pause' : 'Play'}
+          disabled={!isAudioPlayButtonEnabled()}
+          onClick={() => onPlayPause(wavesurfer)}
+        >
+          {isPlaying ? <Pause /> : <Play />}
+        </IconButton>
       </section>
       <section ref={timelineRef}>
         <section className={classes.HomePage__TimeScale}>
@@ -354,13 +333,13 @@ const HomePage: React.FC = () => {
           />
         </section>
         <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
-          {audioUrl && (
+          {audioFileData && (
             <WavesurferPlayer
               dragToSeek={true}
               height={WAVE_FORM_HEIGHT}
               width={timelineWidth || DEFAULT_WAVE_FORM_WIDTH}
               waveColor={DEFAULT_WAVE_FORM_COLOR}
-              url={audioUrl}
+              url={audioFileData.fileUrl}
               onReady={onReady}
               onDrag={(ws, relativeX) => updateWordsDataTimeIndicatorPosition(ws, relativeX * ws.getDuration())}
               onAudioprocess={updateWordsDataTimeIndicatorPosition}

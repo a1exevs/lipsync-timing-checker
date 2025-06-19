@@ -7,11 +7,9 @@ import {
   PHONEME_CHAIN_RESIZER_COLOR,
   PHONEME_LEFT_RESIZER_COLOR,
   PHONEME_RESIZER_WIDTH,
-  PHONEME_RESIZER_WIDTH_PX,
   PHONEME_RESIZER_Z_INDEX,
   PHONEME_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import { WORD_CHAIN_RESIZER_COLOR, WORD_RESIZER_Z_INDEX } from 'src/pages/home/ui/word/word.consts';
 
 type Props = {
   id: string;
