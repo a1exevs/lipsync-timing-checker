@@ -7,7 +7,7 @@ import Resizer from 'src/pages/home/ui/resizer/resizer';
 import {
   WORD_CHAIN_RESIZER_COLOR,
   WORD_LEFT_RESIZER_COLOR,
-  WORD_RESIZER_WIDTH,
+  WORD_RESIZER_WIDTH_PX,
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/word/word.consts';
@@ -82,7 +82,7 @@ const Word: React.FC<Props> = React.memo(
             onMouseDown={e => onWordResizeStart(e, id, 'left')}
             color={WORD_LEFT_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
-            width={WORD_RESIZER_WIDTH}
+            widthPx={WORD_RESIZER_WIDTH_PX}
           />
         )}
         <div className={classes.Word__WordTitle}>
@@ -116,7 +116,7 @@ const Word: React.FC<Props> = React.memo(
             onMouseDown={e => onWordResizeStart(e, id, 'right')}
             color={WORD_RIGHT_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
-            width={WORD_RESIZER_WIDTH}
+            widthPx={WORD_RESIZER_WIDTH_PX}
           />
         )}
         {!hideChainResizer && (
@@ -125,7 +125,7 @@ const Word: React.FC<Props> = React.memo(
             onMouseDown={e => onWordChainResizeStart(e, id)}
             color={WORD_CHAIN_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
-            width={WORD_RESIZER_WIDTH}
+            widthPx={WORD_RESIZER_WIDTH_PX}
           />
         )}
       </div>
