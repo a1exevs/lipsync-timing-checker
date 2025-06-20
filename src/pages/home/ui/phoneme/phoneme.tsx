@@ -6,7 +6,7 @@ import Resizer from 'src/pages/home/ui/resizer/resizer';
 import {
   PHONEME_CHAIN_RESIZER_COLOR,
   PHONEME_LEFT_RESIZER_COLOR,
-  PHONEME_RESIZER_WIDTH,
+  PHONEME_RESIZER_WIDTH_PX,
   PHONEME_RESIZER_Z_INDEX,
   PHONEME_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/phoneme/phoneme.consts';
@@ -53,7 +53,7 @@ const Phoneme: React.FC<Props> = ({
         onMouseDown={e => onResizeStart(e, id, 'left')}
         color={PHONEME_LEFT_RESIZER_COLOR}
         zIndex={PHONEME_RESIZER_Z_INDEX}
-        width={PHONEME_RESIZER_WIDTH}
+        widthPx={PHONEME_RESIZER_WIDTH_PX}
       />
       <div className={classes.Phoneme__Title}>{phoneme}</div>
       <Resizer
@@ -61,7 +61,7 @@ const Phoneme: React.FC<Props> = ({
         onMouseDown={e => onResizeStart(e, id, 'right')}
         color={PHONEME_RIGHT_RESIZER_COLOR}
         zIndex={PHONEME_RESIZER_Z_INDEX}
-        width={PHONEME_RESIZER_WIDTH}
+        widthPx={PHONEME_RESIZER_WIDTH_PX}
       />
       {!hideChainResizer && (
         <Resizer
@@ -69,7 +69,7 @@ const Phoneme: React.FC<Props> = ({
           onMouseDown={e => onChainResizeStart(e, id)}
           color={PHONEME_CHAIN_RESIZER_COLOR}
           zIndex={PHONEME_RESIZER_Z_INDEX}
-          width={PHONEME_RESIZER_WIDTH}
+          widthPx={PHONEME_RESIZER_WIDTH_PX}
         />
       )}
     </div>
