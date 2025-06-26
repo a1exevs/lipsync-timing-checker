@@ -11,7 +11,7 @@
   background-color: #add8e6;
   &:hover {
     background-color: #add8e6aa;
-    transition: 0.2s ease-in-out all;
+    transition: background-color 0.2s ease-in-out;
   }
   &_selected {
     opacity: 50%;
@@ -20,7 +20,9 @@
   &_draggable {
     box-shadow: 0 4px 8px 0 white;
     transform: translateY(5px);
-    transition: 0.2s ease-in-out all;
+    transition:
+      0.2s ease-in-out transform,
+      0.2s ease-in-out box-shadow;
     cursor: grabbing;
   }
   &__WordTitle {
