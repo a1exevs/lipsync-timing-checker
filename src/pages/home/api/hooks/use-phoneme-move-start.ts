@@ -2,8 +2,6 @@ import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { Nullable } from '@alexevs/ts-guards';
 import { Phoneme, Word } from 'src/pages/home/model/types';
-import { PHONEME_MOVING_SENSITIVITY } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import { calculatePhonemeLeftPercent, calculatePhonemeWidthPercent } from 'src/pages/home/api/converters';
 
 const usePhonemeMoveStart = (
   words: Word[],
@@ -37,7 +35,7 @@ const usePhonemeMoveStart = (
       }
       const prevPhoneme: Phoneme = phonemes[phonemeIndex - 1] ?? {
         widthPercent: 0,
-        leftPercent: 100,
+        leftPercent: 0,
         start: word.start,
         end: word.start,
       };
@@ -48,39 +46,39 @@ const usePhonemeMoveStart = (
         end: word.end,
       };
       const startX = e.clientX;
-      const startWidthPercent = phoneme.widthPercent;
       const startLeftPercent = phoneme.leftPercent;
       const onMouseMove: EventListener = (moveEvent: Event) => {
         if (!wavesurfer) {
           return;
         }
+        phoneme.movingInProgress = true;
         const duration = wavesurfer.getDuration();
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         const diffPx = clientX - startX;
-        const diff = (diffPx / timelineWidth) * duration * PHONEME_MOVING_SENSITIVITY;
-        const newPhonemeStart = phoneme.start + diff;
-        const newPhonemeEnd = phoneme.end + diff;
-        const width = ((startWidthPercent * word.widthPx) / 100 / timelineWidth) * duration;
-        if (prevPhoneme && newPhonemeStart < prevPhoneme.end) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = prevPhoneme.end;
-          phoneme.end = prevPhoneme.end + width;
-        } else if (nextPhoneme && newPhonemeEnd > nextPhoneme.start) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = nextPhoneme.start - width;
-          phoneme.end = nextPhoneme.start;
+        const diffPercent = (diffPx / word.widthPx) * 100;
+        const newLeftPercent = startLeftPercent + diffPercent;
+        const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
+        const newPhonemeRightPx = newLeftPercent + phoneme.widthPercent;
+        if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
+          const newPhonemeStart = prevPhoneme.end;
+          phoneme.leftPercent = prevPhonemeRightPercent;
+          const width = phoneme.end - phoneme.start;
+          phoneme.start = newPhonemeStart;
+          phoneme.end = newPhonemeStart + width;
+        } else if (nextPhoneme && newPhonemeRightPx > nextPhoneme.leftPercent) {
+          const newPhonemeEnd = nextPhoneme.start;
+          phoneme.leftPercent = nextPhoneme.leftPercent - phoneme.widthPercent;
+          const width = phoneme.end - phoneme.start;
+          phoneme.end = newPhonemeEnd;
+          phoneme.start = newPhonemeEnd - width;
         } else {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          phoneme.start = phoneme.start + diff;
-          phoneme.end = phoneme.end + diff;
+          phoneme.leftPercent = newLeftPercent;
+          const width = phoneme.end - phoneme.start;
+          const newPhonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
+          const newPhonemeStart = word.start + (newPhonemeLeftPx / timelineWidth) * duration;
+          phoneme.start = newPhonemeStart;
+          phoneme.end = newPhonemeStart + width;
         }
-
-        phoneme.movingInProgress = true;
-        phoneme.widthPercent = calculatePhonemeWidthPercent(phoneme, word);
-        phoneme.leftPercent = calculatePhonemeLeftPercent(phoneme, word);
 
         phonemes.splice(phonemeIndex, 1, phoneme);
         word.phonemes = [...phonemes];

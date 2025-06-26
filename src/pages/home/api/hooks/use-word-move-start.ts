@@ -2,12 +2,7 @@ import { Nullable } from '@alexevs/ts-guards';
 import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { Word } from 'src/pages/home/model/types';
-import { WORD_MOVING_SENSITIVITY } from 'src/pages/home/ui/word/word.consts';
-import {
-  calculateWordLeftPositionPx,
-  calculateWordWidthPx,
-  recalculatePhonemesStartEnd,
-} from 'src/pages/home/api/converters';
+import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
 
 const useWordMoveStart = (
   words: Word[],
@@ -39,39 +34,40 @@ const useWordMoveStart = (
         end: duration,
       };
       const startX = e.clientX;
-      const startWidthPx = word.widthPx;
+      const startLeftPx = word.leftPx;
       const onMouseMove: EventListener = (moveEvent: Event) => {
         if (!wavesurfer) {
           return;
         }
+        word.movingInProgress = true;
         const duration = wavesurfer.getDuration();
         const clientX = (moveEvent as unknown as MouseEvent).clientX;
         const diffPx = clientX - startX;
-        const diff = (diffPx / timelineWidth) * duration * WORD_MOVING_SENSITIVITY;
-        const newWordStart = word.start + diff;
-        const newWordEnd = word.end + diff;
-        const width = (startWidthPx / timelineWidth) * duration;
-        if (prevWord && newWordStart < prevWord.end) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = prevWord.end;
-          word.end = prevWord.end + width;
-        } else if (nextWord && newWordEnd > nextWord.start) {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = nextWord.start - width;
-          word.end = nextWord.start;
+        const newLeftPx = startLeftPx + diffPx;
+        const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
+        const newWordRightPx = newLeftPx + word.widthPx;
+        if (prevWord && newLeftPx < prevWordRightPx) {
+          const newWordStart = prevWord.end;
+          word.leftPx = prevWordRightPx;
+          const width = word.end - word.start;
+          word.start = newWordStart;
+          word.end = newWordStart + width;
+        } else if (nextWord && newWordRightPx > nextWord.leftPx) {
+          const newWordEnd = nextWord.start;
+          word.leftPx = nextWord.leftPx - word.widthPx;
+          const width = word.end - word.start;
+          word.end = newWordEnd;
+          word.start = newWordEnd - width;
         } else {
-          // TODO toFixed(2) for start and end
-          // TODO calculate by 'start' and 'end' for calc improvement
-          word.start = word.start + diff;
-          word.end = word.end + diff;
+          word.leftPx = newLeftPx;
+          const width = word.end - word.start;
+          const newWordStart = (newLeftPx / timelineWidth) * duration;
+          word.start = newWordStart;
+          word.end = newWordStart + width;
         }
-        word.movingInProgress = true;
-        word.widthPx = calculateWordWidthPx({ wordDTO: word, timelineWidth, audioDuration: duration });
-        word.leftPx = calculateWordLeftPositionPx({ wordDTO: word, timelineWidth, audioDuration: duration });
 
         word.phonemes = recalculatePhonemesStartEnd(word);
+
         words.splice(wordIndex, 1, word);
         setWords([...words]);
       };
