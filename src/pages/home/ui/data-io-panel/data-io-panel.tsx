@@ -21,7 +21,6 @@ const DataIOPanel: React.FC<Props> = ({
   isDownloadJSONDataButtonEnabled = true,
   onDownloadJSONDataButtonClick,
 }) => {
-  console.log('rerender');
   return (
     <section className="flex flex-col md:flex-row md:justify-between items-center my-4 gap-4 rounded-md bg-gray-800 p-4 shadow">
       <div className="flex flex-col gap-3 w-full md:w-1/2">
