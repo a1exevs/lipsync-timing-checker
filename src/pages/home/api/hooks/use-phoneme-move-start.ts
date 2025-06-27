@@ -47,47 +47,52 @@ const usePhonemeMoveStart = (
       };
       const startX = e.clientX;
       const startLeftPercent = phoneme.leftPercent;
-      const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
-          return;
-        }
-        phoneme.movingInProgress = true;
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-        const diffPercent = (diffPx / word.widthPx) * 100;
-        const newLeftPercent = startLeftPercent + diffPercent;
-        const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
-        const newPhonemeRightPx = newLeftPercent + phoneme.widthPercent;
-        if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
-          const newPhonemeStart = prevPhoneme.end;
-          phoneme.leftPercent = prevPhonemeRightPercent;
-          const width = phoneme.end - phoneme.start;
-          phoneme.start = newPhonemeStart;
-          phoneme.end = newPhonemeStart + width;
-        } else if (nextPhoneme && newPhonemeRightPx > nextPhoneme.leftPercent) {
-          const newPhonemeEnd = nextPhoneme.start;
-          phoneme.leftPercent = nextPhoneme.leftPercent - phoneme.widthPercent;
-          const width = phoneme.end - phoneme.start;
-          phoneme.end = newPhonemeEnd;
-          phoneme.start = newPhonemeEnd - width;
-        } else {
-          phoneme.leftPercent = newLeftPercent;
-          const width = phoneme.end - phoneme.start;
-          const newPhonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
-          const newPhonemeStart = word.start + (newPhonemeLeftPx / timelineWidth) * duration;
-          phoneme.start = newPhonemeStart;
-          phoneme.end = newPhonemeStart + width;
-        }
 
-        phonemes.splice(phonemeIndex, 1, phoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
+      let animationFrameId: number;
+
+      const onMouseMove: EventListener = (moveEvent: Event) => {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => {
+          if (!wavesurfer) {
+            return;
+          }
+          phoneme.movingInProgress = true;
+          const duration = wavesurfer.getDuration();
+          const clientX = (moveEvent as unknown as MouseEvent).clientX;
+          const diffPx = clientX - startX;
+          const diffPercent = (diffPx / word.widthPx) * 100;
+          const newLeftPercent = startLeftPercent + diffPercent;
+          const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
+          const newPhonemeRightPx = newLeftPercent + phoneme.widthPercent;
+          if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
+            const newPhonemeStart = prevPhoneme.end;
+            phoneme.leftPercent = prevPhonemeRightPercent;
+            const width = phoneme.end - phoneme.start;
+            phoneme.start = newPhonemeStart;
+            phoneme.end = newPhonemeStart + width;
+          } else if (nextPhoneme && newPhonemeRightPx > nextPhoneme.leftPercent) {
+            const newPhonemeEnd = nextPhoneme.start;
+            phoneme.leftPercent = nextPhoneme.leftPercent - phoneme.widthPercent;
+            const width = phoneme.end - phoneme.start;
+            phoneme.end = newPhonemeEnd;
+            phoneme.start = newPhonemeEnd - width;
+          } else {
+            phoneme.leftPercent = newLeftPercent;
+            const width = phoneme.end - phoneme.start;
+            const newPhonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
+            const newPhonemeStart = word.start + (newPhonemeLeftPx / timelineWidth) * duration;
+            phoneme.start = newPhonemeStart;
+            phoneme.end = newPhonemeStart + width;
+          }
+
+          phonemes.splice(phonemeIndex, 1, phoneme);
+          word.phonemes = [...phonemes];
+          words.splice(wordIndex, 1, word);
+          setWords([...words]);
+        });
       };
 
       const onMouseUp = () => {
-        console.log('onMouseUp');
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
         phoneme.movingInProgress = false;
@@ -96,7 +101,6 @@ const usePhonemeMoveStart = (
         words.splice(wordIndex, 1, word);
         setWords([...words]);
       };
-      console.log('onMouseDown');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },

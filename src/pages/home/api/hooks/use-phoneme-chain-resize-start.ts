@@ -43,48 +43,47 @@ const usePhonemeChainResizeStart = (
 
       const rightPhonemeStartWidthPercent = rightPhoneme.widthPercent;
       const rightPhonemeStartLeftPercent = rightPhoneme.leftPercent;
+
+      let animationFrameId: number;
+
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPercent = ((clientX - startX) / word.widthPx) * 100;
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => {
+          if (isNull(wavesurfer)) {
+            return;
+          }
+          const duration = wavesurfer.getDuration();
+          const clientX = (moveEvent as unknown as MouseEvent).clientX;
+          const diffPercent = ((clientX - startX) / word.widthPx) * 100;
+          const leftPhonemeNewWidthPercent = leftPhonemeStartWidthPercent + diffPercent;
+          const leftPhonemeWidthPx = (leftPhonemeNewWidthPercent / 100) * word.widthPx;
+          const rightPhonemeNewWidthPercent = rightPhonemeStartWidthPercent - diffPercent;
+          const rightPhonemeWidthPx = (rightPhonemeNewWidthPercent / 100) * word.widthPx;
+          if (leftPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX || rightPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX) {
+            return;
+          }
 
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        const leftPhonemeNewWidthPercent = leftPhonemeStartWidthPercent + diffPercent;
-        const leftPhonemeWidthPx = (leftPhonemeNewWidthPercent / 100) * word.widthPx;
-        const rightPhonemeNewWidthPercent = rightPhonemeStartWidthPercent - diffPercent;
-        const rightPhonemeWidthPx = (rightPhonemeNewWidthPercent / 100) * word.widthPx;
-        if (leftPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX || rightPhonemeWidthPx <= PHONEME_MIN_WIDTH_PX) {
-          return;
-        }
+          leftPhoneme.widthPercent = leftPhonemeNewWidthPercent;
+          leftPhoneme.end = leftPhoneme.start + (leftPhonemeWidthPx / timelineWidth) * duration;
 
-        leftPhoneme.widthPercent = leftPhonemeNewWidthPercent;
-        leftPhoneme.end = leftPhoneme.start + (leftPhonemeWidthPx / timelineWidth) * duration;
+          const rightPhonemeNewLeftPercent = rightPhonemeStartLeftPercent + diffPercent;
+          const rightPhonemeLeftPx = (rightPhonemeNewLeftPercent / 100) * word.widthPx;
+          rightPhoneme.leftPercent = rightPhonemeNewLeftPercent;
+          rightPhoneme.start = word.start + (rightPhonemeLeftPx / timelineWidth) * duration;
+          rightPhoneme.widthPercent = rightPhonemeNewWidthPercent;
 
-        const rightPhonemeNewLeftPercent = rightPhonemeStartLeftPercent + diffPercent;
-        const rightPhonemeLeftPx = (rightPhonemeNewLeftPercent / 100) * word.widthPx;
-        // TODO toFixed(2) for start and end
-        // TODO calculate by 'start' and 'end' for calc improvement
-        rightPhoneme.leftPercent = rightPhonemeNewLeftPercent;
-        rightPhoneme.start = word.start + (rightPhonemeLeftPx / timelineWidth) * duration;
-        rightPhoneme.widthPercent = rightPhonemeNewWidthPercent;
-
-        phonemes.splice(leftPhonemeIndex, 2, leftPhoneme, rightPhoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
+          phonemes.splice(leftPhonemeIndex, 2, leftPhoneme, rightPhoneme);
+          word.phonemes = [...phonemes];
+          words.splice(wordIndex, 1, word);
+          setWords([...words]);
+        });
       };
 
       const onMouseUp = () => {
-        console.log('onMouseUp');
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       };
 
-      console.log('onMouseDown');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
