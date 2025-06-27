@@ -21,8 +21,8 @@ import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
 import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
-import { Play, Pause, FileAudio, FileJson, Download } from 'lucide-react';
-import { FilePicker, Button, IconButton, getFileData, arrayToObject } from 'src/shared';
+import { Play, Pause } from 'lucide-react';
+import { IconButton, getFileData, arrayToObject } from 'src/shared';
 import useTimelineScaling from 'src/pages/home/api/hooks/use-timeline-scaling';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
 

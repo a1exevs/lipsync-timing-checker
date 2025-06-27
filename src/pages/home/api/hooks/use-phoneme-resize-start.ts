@@ -55,68 +55,64 @@ const usePhonemeResizeStart = (
       const startX = e.clientX;
       const startWidthPercent = phoneme.widthPercent;
       const startLeftPercent = phoneme.leftPercent;
+
+      let animationFrameId: number;
+
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (isNull(wavesurfer)) {
-          return;
-        }
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPercent = ((clientX - startX) / word.widthPx) * 100;
-        if (resizerType === 'left') {
-          const newWidthPercent = startWidthPercent - diffPercent;
-          const newLeftPercent = startLeftPercent + diffPercent;
-          const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
-          if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
-            // TODO toFixed(2) for start and end
-            const leftDiffPercent = prevPhonemeRightPercent - phoneme.leftPercent;
-            const newPhonemeStart = prevPhoneme.end;
-            // TODO calculate by 'start' and 'end' for calc improvement
-            phoneme.leftPercent = prevPhonemeRightPercent;
-            phoneme.start = newPhonemeStart;
-            phoneme.widthPercent = phoneme.widthPercent - leftDiffPercent;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            const newWidthPx = (newWidthPercent / 100) * word.widthPx;
-            if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
-              return;
-            }
-            phoneme.leftPercent = newLeftPercent;
-            const phonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
-            phoneme.start = word.start + (phonemeLeftPx / timelineWidth) * duration;
-            phoneme.widthPercent = newWidthPercent;
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => {
+          if (isNull(wavesurfer)) {
+            return;
           }
-        }
-        if (resizerType === 'right') {
-          const newWidthPercent = startWidthPercent + diffPercent;
-          if (nextPhoneme && phoneme.leftPercent + newWidthPercent > nextPhoneme.leftPercent) {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            phoneme.widthPercent = nextPhoneme.leftPercent - phoneme.leftPercent;
-            phoneme.end = nextPhoneme.start;
-          } else {
-            // TODO toFixed(2) for start and end
-            // TODO calculate by 'start' and 'end' for calc improvement
-            const newWidthPx = (newWidthPercent / 100) * word.widthPx;
-            if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
-              return;
+          const duration = wavesurfer.getDuration();
+          const clientX = (moveEvent as unknown as MouseEvent).clientX;
+          const diffPercent = ((clientX - startX) / word.widthPx) * 100;
+          if (resizerType === 'left') {
+            const newWidthPercent = startWidthPercent - diffPercent;
+            const newLeftPercent = startLeftPercent + diffPercent;
+            const prevPhonemeRightPercent = prevPhoneme.leftPercent + prevPhoneme.widthPercent;
+            if (prevPhoneme && newLeftPercent < prevPhonemeRightPercent) {
+              const leftDiffPercent = prevPhonemeRightPercent - phoneme.leftPercent;
+              const newPhonemeStart = prevPhoneme.end;
+              phoneme.leftPercent = prevPhonemeRightPercent;
+              phoneme.start = newPhonemeStart;
+              phoneme.widthPercent = phoneme.widthPercent - leftDiffPercent;
+            } else {
+              const newWidthPx = (newWidthPercent / 100) * word.widthPx;
+              if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
+                return;
+              }
+              phoneme.leftPercent = newLeftPercent;
+              const phonemeLeftPx = (newLeftPercent / 100) * word.widthPx;
+              phoneme.start = word.start + (phonemeLeftPx / timelineWidth) * duration;
+              phoneme.widthPercent = newWidthPercent;
             }
-            phoneme.widthPercent = newWidthPercent;
-            phoneme.end = phoneme.start + (newWidthPx / timelineWidth) * duration;
           }
-        }
-        phonemes.splice(phonemeIndex, 1, phoneme);
-        word.phonemes = [...phonemes];
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
+          if (resizerType === 'right') {
+            const newWidthPercent = startWidthPercent + diffPercent;
+            if (nextPhoneme && phoneme.leftPercent + newWidthPercent > nextPhoneme.leftPercent) {
+              phoneme.widthPercent = nextPhoneme.leftPercent - phoneme.leftPercent;
+              phoneme.end = nextPhoneme.start;
+            } else {
+              const newWidthPx = (newWidthPercent / 100) * word.widthPx;
+              if (newWidthPx <= PHONEME_MIN_WIDTH_PX) {
+                return;
+              }
+              phoneme.widthPercent = newWidthPercent;
+              phoneme.end = phoneme.start + (newWidthPx / timelineWidth) * duration;
+            }
+          }
+          phonemes.splice(phonemeIndex, 1, phoneme);
+          word.phonemes = [...phonemes];
+          words.splice(wordIndex, 1, word);
+          setWords([...words]);
+        });
       };
 
       const onMouseUp = () => {
-        console.log('onMouseUp');
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       };
-      console.log('onMouseDown');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },

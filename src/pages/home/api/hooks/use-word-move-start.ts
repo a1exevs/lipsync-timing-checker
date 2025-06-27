@@ -35,52 +35,56 @@ const useWordMoveStart = (
       };
       const startX = e.clientX;
       const startLeftPx = word.leftPx;
+
+      let animationFrameId: number;
+
       const onMouseMove: EventListener = (moveEvent: Event) => {
-        if (!wavesurfer) {
-          return;
-        }
-        word.movingInProgress = true;
-        const duration = wavesurfer.getDuration();
-        const clientX = (moveEvent as unknown as MouseEvent).clientX;
-        const diffPx = clientX - startX;
-        const newLeftPx = startLeftPx + diffPx;
-        const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
-        const newWordRightPx = newLeftPx + word.widthPx;
-        if (prevWord && newLeftPx < prevWordRightPx) {
-          const newWordStart = prevWord.end;
-          word.leftPx = prevWordRightPx;
-          const width = word.end - word.start;
-          word.start = newWordStart;
-          word.end = newWordStart + width;
-        } else if (nextWord && newWordRightPx > nextWord.leftPx) {
-          const newWordEnd = nextWord.start;
-          word.leftPx = nextWord.leftPx - word.widthPx;
-          const width = word.end - word.start;
-          word.end = newWordEnd;
-          word.start = newWordEnd - width;
-        } else {
-          word.leftPx = newLeftPx;
-          const width = word.end - word.start;
-          const newWordStart = (newLeftPx / timelineWidth) * duration;
-          word.start = newWordStart;
-          word.end = newWordStart + width;
-        }
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => {
+          if (!wavesurfer) {
+            return;
+          }
+          word.movingInProgress = true;
+          const duration = wavesurfer.getDuration();
+          const clientX = (moveEvent as unknown as MouseEvent).clientX;
+          const diffPx = clientX - startX;
+          const newLeftPx = startLeftPx + diffPx;
+          const prevWordRightPx = prevWord.leftPx + prevWord.widthPx;
+          const newWordRightPx = newLeftPx + word.widthPx;
+          if (prevWord && newLeftPx < prevWordRightPx) {
+            const newWordStart = prevWord.end;
+            word.leftPx = prevWordRightPx;
+            const width = word.end - word.start;
+            word.start = newWordStart;
+            word.end = newWordStart + width;
+          } else if (nextWord && newWordRightPx > nextWord.leftPx) {
+            const newWordEnd = nextWord.start;
+            word.leftPx = nextWord.leftPx - word.widthPx;
+            const width = word.end - word.start;
+            word.end = newWordEnd;
+            word.start = newWordEnd - width;
+          } else {
+            word.leftPx = newLeftPx;
+            const width = word.end - word.start;
+            const newWordStart = (newLeftPx / timelineWidth) * duration;
+            word.start = newWordStart;
+            word.end = newWordStart + width;
+          }
 
-        word.phonemes = recalculatePhonemesStartEnd(word);
+          word.phonemes = recalculatePhonemesStartEnd(word);
 
-        words.splice(wordIndex, 1, word);
-        setWords([...words]);
+          words.splice(wordIndex, 1, word);
+          setWords([...words]);
+        });
       };
 
       const onMouseUp = () => {
-        console.log('onMouseUp');
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
         word.movingInProgress = false;
         words.splice(wordIndex, 1, word);
         setWords([...words]);
       };
-      console.log('onMouseDown');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
