@@ -74,7 +74,7 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### `yarn run predeploy`
-Runs prettier, linter, then builds the app (via `yarn run build:prod`). Needs for deployment.
+Runs prettier, linter, then builds the app (via `yarn run build`). Needs for deployment.
 
 ### `yarn run deploy`
 Deploys app on Github Pages.
