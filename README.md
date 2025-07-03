@@ -24,60 +24,23 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 In the project directory, you can run:
 
-### `yarn run start`
-This script does the following:
-1. Runs `yarn run set-env:prod` to update the `.env` file with production settings.
-2. Runs `react-scripts start` to start the application in production mode.
-To start the application in production mode, run:
-yarn run start
+### `yarn run dev`
+Starts the application in development mode using `react-app-rewired start`.
 
-You will see any lint errors in the console.
-
-Runs the app in the production mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-The page will reload if you make edits.\
-
-### `yarn run start:dev`
-This script does the following:
-1. Runs `npm run set-env:dev` to update the `.env` file with development settings.
-2. Runs `react-scripts start` to start the application in development mode.
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-The page will reload if you make edits.\
-
-### `yarn run set-env:prod`
-This script runs the `update-env.js` script with the `prod` argument. It updates the `.env` file with the production configuration settings from `config.json`.
-
-### `yarn run set-env:dev`
-This script runs the `update-env.js` script with the `dev` argument. It updates the `.env` file with the development configuration settings from `config.json`.
-
-### `yarn run serve`
-Serves a static site (after app building via 'yarn run build:dev').
+### `yarn run build:local`
+Builds the application locally with an empty `PUBLIC_URL`.
 
 ### `yarn run build`
-Builds the app for delivery to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-The build is minified and the filenames include the hashes.\
-
-### `yarn run build:delivery`
-Prepares your React app for delivery (via yarn run build) by formatting code, fixing lint errors, and creating an optimized build.
-1. Formatting: Runs yarn run format.
-2. Linting: Executes yarn run lint:fix.
-3. Production Build: Uses react-scripts build for a minified, optimized bundle.
-
-### `yarn run build:prod`
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Creates an optimized production build using `react-app-rewired build`.
 
 ### `yarn run predeploy`
-Runs prettier, linter, then builds the app (via `yarn run build`). Needs for deployment.
+Formats sources, runs lint checks and builds the project before deployment.
 
 ### `yarn run deploy`
-Deploys app on Github Pages.
+Deploys the contents of the `build` folder to GitHub Pages.
+
+### `yarn run serve`
+Serves the static files from the `build` directory.
 
 ### `yarn run check-deps`
 ### `yarn run upgrade-deps`
