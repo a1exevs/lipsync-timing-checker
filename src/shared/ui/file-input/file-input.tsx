@@ -1,5 +1,5 @@
-import { Nullable, Optional } from '@alexevs/ts-guards';
 import React, { forwardRef } from 'react';
+import { Nullable, Optional } from '@alexevs/ts-guards';
 
 type Props = {
   accept: Optional<string>;

@@ -1,9 +1,8 @@
 import { Nullable } from '@alexevs/ts-guards';
-import { Dispatch, MouseEvent, SetStateAction, useCallback } from 'react';
+import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-
-import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
 import { Word } from 'src/pages/home/model/types';
+import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
 
 const useWordMoveStart = (
   words: Word[],

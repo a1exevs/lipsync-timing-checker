@@ -1,6 +1,5 @@
+import React, { useRef, useEffect } from 'react';
 import { isNull, Nullable } from '@alexevs/ts-guards';
-import React, { useEffect, useRef } from 'react';
-
 import {
   HALF_SECOND_TICK_X_OFFSET,
   SUB_SECOND_TICK_X_OFFSET,

@@ -1,7 +1,8 @@
-import cn from 'classnames';
+import classes from 'src/pages/home/ui/phoneme/phoneme.module.scss';
 import React, { MouseEvent } from 'react';
-
+import cn from 'classnames';
 import { ResizerType } from 'src/pages/home/model/types';
+import Resizer from 'src/pages/home/ui/resizer/resizer';
 import {
   PHONEME_CHAIN_RESIZER_COLOR,
   PHONEME_LEFT_RESIZER_COLOR,
@@ -9,8 +10,6 @@ import {
   PHONEME_RESIZER_Z_INDEX,
   PHONEME_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import classes from 'src/pages/home/ui/phoneme/phoneme.module.scss';
-import Resizer from 'src/pages/home/ui/resizer/resizer';
 
 type Props = {
   id: string;

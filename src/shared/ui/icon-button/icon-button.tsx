@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { sizes, variants } from 'src/shared/ui/icon-button/icon-button.consts';
 import { Size, Variant } from 'src/shared/ui/icon-button/icon-button.types';
 

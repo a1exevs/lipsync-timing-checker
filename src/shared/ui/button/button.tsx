@@ -1,8 +1,7 @@
-import cn from 'classnames';
 import React, { MouseEventHandler, ReactNode } from 'react';
-
-import { variantStyles } from 'src/shared/ui/button/button.consts';
+import cn from 'classnames';
 import { IconPosition, Variant } from 'src/shared/ui/button/button.types';
+import { variantStyles } from 'src/shared/ui/button/button.consts';
 
 type Props = {
   text: string;

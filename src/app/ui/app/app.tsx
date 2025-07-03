@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { HomePage } from 'src/pages';
 
 const App: React.FC = () => {

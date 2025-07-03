@@ -1,6 +1,6 @@
+import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
+import classes from 'src/pages/home/ui/word/word.module.scss';
 import cn from 'classnames';
-import React, { MouseEvent, useEffect, useState } from 'react';
-
 import { Phoneme, ResizerType } from 'src/pages/home/model/types';
 import PhonemeComponent from 'src/pages/home/ui/phoneme/phoneme';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
@@ -11,7 +11,6 @@ import {
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/word/word.consts';
-import classes from 'src/pages/home/ui/word/word.module.scss';
 import { arrayToObject } from 'src/shared';
 
 type Props = {
