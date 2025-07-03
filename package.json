@@ -18,7 +18,7 @@
     "dev": "react-app-rewired start",
     "build:local": "set PUBLIC_URL= && react-app-rewired build",
     "build": "react-app-rewired build",
-    "predeploy": "yarn run format && yarn run lint && yarn run build:prod",
+    "predeploy": "yarn run format && yarn run lint && yarn run build",
     "deploy": "gh-pages -d build",
     "serve": "serve -s build",
     "check-deps": "yarn outdated",

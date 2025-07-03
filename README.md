@@ -92,7 +92,7 @@ Runs ESLint for static code analysis on TypeScript and TSX files.
 ### `yarn run lint:fix`
 Fixes errors found by ESLint in TypeScript and TSX files.
 
-### `yarn run prepare`
+### `yarn run postinstall`
 Automatically runs after dependencies installation to set up git hooks through husky.
 
 ## Repository
