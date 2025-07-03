@@ -1,6 +1,7 @@
-import { useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
-import WaveSurfer from 'wavesurfer.js';
 import { Nullable } from '@alexevs/ts-guards';
+import { Dispatch, MouseEvent, SetStateAction, useCallback } from 'react';
+import WaveSurfer from 'wavesurfer.js';
+
 import { Phoneme, Word } from 'src/pages/home/model/types';
 
 const usePhonemeMoveStart = (

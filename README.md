@@ -4,7 +4,12 @@
 Application for calibrating viseme according to Audio track.
 
 ## Yarn version
-v1.22.19
+v4.9.0
+```bash
+npm install -g corepack@0.31.0
+corepack enable
+yarn install
+```
 
 ## Node version
 v20.9.0. Use NVM:
