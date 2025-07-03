@@ -28,13 +28,13 @@
     "check-deps": "yarn outdated",
     "upgrade-deps": "yarn upgrade --latest",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,scss}\"",
-    "lint": "echo 'linting...'",
-    "lint:fix": "echo 'linting...'",
+    "lint": "eslint --config eslint.config.ts \"{src,.storybook,linter,tests,scripts}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,.storybook,linter,tests,scripts}/**/*.{ts,tsx}\" --fix",
     "prepare": "husky"
   },
   "dependencies": {
     "@alexevs/ts-guards": "1.0.5",
-    "@wavesurfer/react": "^1.0.9",
+    "@wavesurfer/react": "1.0.9",
     "classnames": "2.5.1",
     "lucide-react": "0.515.0",
     "react": "18.3.1",
@@ -47,15 +47,27 @@
   "devDependencies": {
     "@alexevs/prettier-config": "1.0.0",
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "@eslint/js": "9.23.0",
     "@tailwindcss/postcss": "4.1.10",
     "@types/node": "22.15.18",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
+    "@typescript-eslint/eslint-plugin": "8.35.1",
     "autoprefixer": "10.4.21",
     "dotenv": "16.4.5",
+    "eslint": "9.23.0",
+    "eslint-config-prettier": "10.1.1",
+    "eslint-import-resolver-typescript": "4.2.2",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-prettier": "5.2.3",
+    "eslint-plugin-storybook": "0.11.6",
+    "eslint-plugin-tsdoc": "0.4.0",
+    "eslint-plugin-unused-imports": "4.1.4",
     "fs": "0.0.1-security",
     "gh-pages": "6.1.1",
+    "globals": "16.2.0",
     "husky": "9.0.11",
+    "jiti": "2.4.2",
     "lint-staged": "15.2.2",
     "path": "0.12.7",
     "postcss-import": "16.1.1",
@@ -63,7 +75,8 @@
     "prettier": "3.2.5",
     "react-app-rewired": "2.2.1",
     "serve": "14.2.4",
-    "typescript": "5.8.3",
+    "typescript": "5.6.2",
+    "typescript-eslint": "8.27.0",
     "webpack-bundle-analyzer": "4.10.2"
   },
   "browserslist": {
@@ -77,5 +90,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "packageManager": "yarn@4.9.0"
 }

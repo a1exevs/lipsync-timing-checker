@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from 'react';
-import { Button, FilePicker } from 'src/shared';
 import { Download, FileAudio, FileJson } from 'lucide-react';
+import React, { ChangeEvent } from 'react';
+
+import { Button, FilePicker } from 'src/shared';
 
 type Props = {
   audioFileName?: string;

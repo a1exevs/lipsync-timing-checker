@@ -1,9 +1,18 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import WordComponent from 'src/pages/home/ui/word/word';
-import classes from 'src/pages/home/ui/home.module.scss';
 import cn from 'classnames';
-import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
+import { Pause, Play } from 'lucide-react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import WaveSurfer from 'wavesurfer.js';
+
+import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
+import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-chain-resize-start';
+import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
+import usePhonemeResizeStart from 'src/pages/home/api/hooks/use-phoneme-resize-start';
+import useTimelineScaling from 'src/pages/home/api/hooks/use-timeline-scaling';
+import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
+import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
+import useWordResizeStart from 'src/pages/home/api/hooks/use-word-resize-start';
 import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
@@ -11,20 +20,12 @@ import {
   TIME_SCALE_HEIGHT_PX,
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
-import WaveSurfer from 'wavesurfer.js';
-import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
-import usePhonemeResizeStart from 'src/pages/home/api/hooks/use-phoneme-resize-start';
-import useWordResizeStart from 'src/pages/home/api/hooks/use-word-resize-start';
-import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-chain-resize-start';
-import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
-import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
-import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
-import { isNull, Nullable } from '@alexevs/ts-guards';
-import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
-import { Play, Pause } from 'lucide-react';
-import { IconButton, getFileData, arrayToObject } from 'src/shared';
-import useTimelineScaling from 'src/pages/home/api/hooks/use-timeline-scaling';
+import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
+import classes from 'src/pages/home/ui/home.module.scss';
+import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
+import WordComponent from 'src/pages/home/ui/word/word';
+import { arrayToObject, getFileData, IconButton } from 'src/shared';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
@@ -102,7 +103,7 @@ const HomePage: React.FC = () => {
         );
         setWords(words);
         setWordsDataFileData({ fileName, extension });
-      } catch (error) {
+      } catch {
         setWords([]);
         setWordsDataFileData(null);
         alert(`Something went wrong while ${extension}-file loading.`);
@@ -192,14 +193,14 @@ const HomePage: React.FC = () => {
     if (isNull(waveFormContainerRef.current) || isNull(wordsDataContainerRef.current)) {
       return;
     }
-    const onWordsDataContainerHScrollChange = (event: any) => {
+    const onWordsDataContainerHScrollChange = (event: Event) => {
       if (!isNull(waveFormContainerRef.current)) {
-        waveFormContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+        waveFormContainerRef.current.scrollLeft = (event.target as EventTarget & { scrollLeft: number }).scrollLeft;
       }
     };
     const onWaveFormContainerScrollChange = (event: Event) => {
       if (!isNull(wordsDataContainerRef.current)) {
-        wordsDataContainerRef.current.scrollLeft = (event as any).target.scrollLeft;
+        wordsDataContainerRef.current.scrollLeft = (event.target as EventTarget & { scrollLeft: number }).scrollLeft;
       }
     };
     waveFormContainerRef.current.addEventListener('scroll', onWaveFormContainerScrollChange);

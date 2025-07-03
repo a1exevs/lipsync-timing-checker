@@ -33,7 +33,7 @@ export function convertWordToWordDTO(word: Word): WordDTO {
     word: word.word,
     start: word.start,
     end: word.end,
-    phonemes: word.phonemes.map((phoneme, index) => {
+    phonemes: word.phonemes.map((phoneme, _index) => {
       // TODO toFixed(2) for start and end
       return { phoneme: phoneme.phoneme, start: phoneme.start, end: phoneme.end };
     }),
