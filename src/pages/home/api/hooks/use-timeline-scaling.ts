@@ -1,12 +1,13 @@
-import { Dispatch, RefObject, SetStateAction, useEffect } from 'react';
 import { isNull, Nullable } from '@alexevs/ts-guards';
+import { Dispatch, RefObject, SetStateAction, useEffect } from 'react';
+import WaveSurfer from 'wavesurfer.js';
+
+import { recalculateWordWithByNewTimelineWidth } from 'src/pages/home/api/converters';
 import {
   MAX_TIME_LINE_SCALE_COEFFICIENT,
   MIN_TIME_LINE_SCALE_COEFFICIENT,
   TIME_LINE_SCALE_COEFFICIENT_STEP,
 } from 'src/pages/home/model/consts';
-import { recalculateWordWithByNewTimelineWidth } from 'src/pages/home/api/converters';
-import WaveSurfer from 'wavesurfer.js';
 import { Word } from 'src/pages/home/model/types';
 
 const useTimelineScaling = (
@@ -23,7 +24,7 @@ const useTimelineScaling = (
       if (event.shiftKey || !event.altKey || isNull(wavesurfer)) {
         return;
       }
-      const delta = (event as any).wheelDeltaY;
+      const delta = (event as WheelEvent & { wheelDeltaY: number }).wheelDeltaY;
       setTimelineScaleCoefficients(prevCoefficient => {
         const newCoefficient = prevCoefficient + (delta / Math.abs(delta)) * TIME_LINE_SCALE_COEFFICIENT_STEP;
         if (newCoefficient < MIN_TIME_LINE_SCALE_COEFFICIENT || newCoefficient > MAX_TIME_LINE_SCALE_COEFFICIENT) {
