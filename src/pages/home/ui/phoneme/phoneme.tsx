@@ -9,7 +9,6 @@ import {
   PHONEME_RESIZER_Z_INDEX,
   PHONEME_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/phoneme/phoneme.consts';
-import classes from 'src/pages/home/ui/phoneme/phoneme.module.scss';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
 
 type Props = {
@@ -41,11 +40,15 @@ const Phoneme: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={cn(classes.Phoneme, {
-        [classes.Phoneme_withoutLeftBorder]: withoutLeftBorder,
-        [classes.Phoneme_withoutRightBorder]: withoutRightBorder,
-        [classes.Phoneme_draggable]: movingInProgress,
-      })}
+      className={cn(
+        'absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out',
+        {
+          'border-l-0': withoutLeftBorder,
+          'border-r-0': withoutRightBorder,
+          'shadow-[0_4px_8px_0_white] translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200 ease-in-out':
+            movingInProgress,
+        },
+      )}
       style={{ width: `${widthPercent}%`, left: `${leftPercent}%` }}
       onMouseDown={e => onMoveStart(e, id)}
     >
@@ -56,7 +59,7 @@ const Phoneme: React.FC<Props> = ({
         zIndex={PHONEME_RESIZER_Z_INDEX}
         widthPx={PHONEME_RESIZER_WIDTH_PX}
       />
-      <div className={classes.Phoneme__Title}>{phoneme}</div>
+      <div className="select-none">{phoneme}</div>
       <Resizer
         type="right"
         onMouseDown={e => onResizeStart(e, id, 'right')}
