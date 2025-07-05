@@ -23,3 +23,17 @@ body {
   line-height: 1.5rem;
   color: #e8e6e3;
 }
+
+// below define additional styles for Tailwind issues fix
+///////////////////////////////////////////////////////////
+// translate utilities
+$translate-values: 5px; // can add additional values
+@each $val in $translate-values {
+  .u-translate-y-\[#{unquote(inspect($val))}\] {
+    transform: translateY(#{$val});
+  }
+  .u-translate-x-\[#{unquote(inspect($val))}\] {
+    transform: translateX(#{$val});
+  }
+}
+///////////////////////////////////////////////////////////
