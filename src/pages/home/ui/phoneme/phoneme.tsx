@@ -45,7 +45,7 @@ const Phoneme: React.FC<Props> = ({
         {
           'border-l-0': withoutLeftBorder,
           'border-r-0': withoutRightBorder,
-          'shadow-[0_4px_8px_0_white] translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200 ease-in-out':
+          'shadow-[0_4px_8px_0_white] u-translate-y-[5px] cursor-grabbing transition-transform transition-shadow duration-200 ease-in-out':
             movingInProgress,
         },
       )}
