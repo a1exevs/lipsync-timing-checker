@@ -28,12 +28,7 @@ const FilePicker: React.FC<Props> = ({
         additionalClasses="w-1/2"
         text={text}
         icon={icon}
-        onClick={e => {
-          fileRef.current?.click();
-          if (e.detail !== 0) {
-            e.currentTarget.blur();
-          }
-        }}
+        onClick={() => fileRef.current?.click()}
         disabled={disabled}
       />
       {fileName && (

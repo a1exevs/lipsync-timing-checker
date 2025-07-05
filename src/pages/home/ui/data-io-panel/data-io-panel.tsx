@@ -45,12 +45,7 @@ const DataIOPanel: React.FC<Props> = ({
         variant="danger"
         icon={<Download />}
         text={'Download JSON data'}
-        onClick={e => {
-          onDownloadJSONDataButtonClick();
-          if (e.detail !== 0) {
-            e.currentTarget.blur();
-          }
-        }}
+        onClick={onDownloadJSONDataButtonClick}
         disabled={!isDownloadJSONDataButtonEnabled}
       />
     </section>
