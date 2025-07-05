@@ -11,7 +11,6 @@ import {
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/word/word.consts';
-import classes from 'src/pages/home/ui/word/word.module.scss';
 import { arrayToObject } from 'src/shared';
 
 type Props = {
@@ -21,7 +20,6 @@ type Props = {
   word: string;
   movingInProgress: boolean;
   phonemes: Phoneme[];
-  selected: boolean;
   hideLeftResizer?: boolean;
   hideRightResizer?: boolean;
   hideChainResizer?: boolean;
@@ -52,7 +50,6 @@ const Word: React.FC<Props> = React.memo(
     onWordResizeStart,
     id,
     phonemes,
-    selected,
     hideLeftResizer,
     hideRightResizer,
     hideChainResizer,
@@ -70,10 +67,13 @@ const Word: React.FC<Props> = React.memo(
 
     return (
       <div
-        className={cn(classes.Word, {
-          [classes.Word_selected]: selected,
-          [classes.Word_draggable]: movingInProgress,
-        })}
+        className={cn(
+          'absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200',
+          {
+            'shadow-[0_4px_8px_0_white] u-translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200':
+              movingInProgress,
+          },
+        )}
         style={{ left: leftPx, width: widthPx }}
         onMouseDown={e => onWordMoveStart(e, id)}
       >
@@ -86,10 +86,10 @@ const Word: React.FC<Props> = React.memo(
             widthPx={WORD_RESIZER_WIDTH_PX}
           />
         )}
-        <div className={classes.Word__WordTitle}>
+        <div className="relative select-none">
           <span>{word}</span>
         </div>
-        <div className={classes.Word__PhonemesContainer}>
+        <div className="relative flex h-[30px]">
           {phonemes.map((phoneme: Phoneme, index, array) => {
             return (
               <PhonemeComponent

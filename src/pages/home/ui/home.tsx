@@ -309,7 +309,6 @@ const HomePage: React.FC = () => {
                   widthPx={word.widthPx}
                   leftPx={word.leftPx}
                   word={word.word}
-                  selected={word.selected}
                   phonemes={word.phonemes}
                   onWordResizeStart={onWordResizeStart}
                   onPhonemeResizeStart={onPhonemeResizeStart}

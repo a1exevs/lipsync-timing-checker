@@ -20,7 +20,6 @@ export type ResizerType = 'left' | 'right' | 'chain';
 
 export type AudioTrackWordItemMetaData = {
   id: string;
-  selected: boolean;
   widthPx: number;
   leftPx: number;
   movingInProgress?: boolean;
