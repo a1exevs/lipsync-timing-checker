@@ -20,10 +20,17 @@ const IconButton: React.FC<Props> = ({
   size = 'md',
   disabled = false,
 }) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.();
+    if (e.detail !== 0) {
+      e.currentTarget.blur();
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       title={title}
       disabled={disabled}
       className={`rounded-full transition ${sizes[size]} ${variants[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
