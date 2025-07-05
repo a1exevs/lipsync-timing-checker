@@ -20,7 +20,6 @@ type Props = {
   word: string;
   movingInProgress: boolean;
   phonemes: Phoneme[];
-  selected: boolean;
   hideLeftResizer?: boolean;
   hideRightResizer?: boolean;
   hideChainResizer?: boolean;
@@ -51,7 +50,6 @@ const Word: React.FC<Props> = React.memo(
     onWordResizeStart,
     id,
     phonemes,
-    selected,
     hideLeftResizer,
     hideRightResizer,
     hideChainResizer,
@@ -72,8 +70,7 @@ const Word: React.FC<Props> = React.memo(
         className={cn(
           'absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200',
           {
-            'opacity-50 border-white': selected,
-            'shadow-[0_4px_8px_0_white] translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200':
+            'shadow-[0_4px_8px_0_white] u-translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200':
               movingInProgress,
           },
         )}
