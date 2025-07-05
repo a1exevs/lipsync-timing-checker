@@ -1,6 +1,5 @@
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import cn from 'classnames';
 import { Pause, Play } from 'lucide-react';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
@@ -22,7 +21,6 @@ import {
 } from 'src/pages/home/model/consts';
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
-import classes from 'src/pages/home/ui/home.module.scss';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home/ui/word/word';
 import { arrayToObject, getFileData, IconButton } from 'src/shared';
@@ -239,8 +237,8 @@ const HomePage: React.FC = () => {
   }, [words]);
 
   return (
-    <section className={classes.HomePage}>
-      <h1 className={classes.HomePage__Title}>Lipsync Timing Checker</h1>
+    <section className="flex flex-col">
+      <h1 className="text-center">Lipsync Timing Checker</h1>
       <DataIOPanel
         audioFileName={audioFileData?.fileName}
         wordsDataFileName={wordsDataFileData?.fileName}
@@ -260,7 +258,10 @@ const HomePage: React.FC = () => {
         </IconButton>
       </section>
       <section ref={timelineRef}>
-        <section className={classes.HomePage__TimeScale}>
+        <section
+          className="flex overflow-x-auto overflow-y-hidden border border-gray-300"
+          style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'none' }}
+        >
           <TimeScale
             duration={wavesurfer?.getDuration() ?? 0}
             timelineWidth={timelineWidth}
@@ -269,7 +270,11 @@ const HomePage: React.FC = () => {
             height={TIME_SCALE_HEIGHT_PX}
           />
         </section>
-        <section className={classes.HomePage__Waveform} ref={waveFormContainerRef}>
+        <section
+          className="flex h-[200px] overflow-x-auto overflow-y-hidden border border-gray-300"
+          style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'none' }}
+          ref={waveFormContainerRef}
+        >
           {audioFileData && (
             <WavesurferPlayer
               dragToSeek={true}
@@ -287,9 +292,16 @@ const HomePage: React.FC = () => {
           )}
         </section>
         <section>
-          <div className={cn(classes.HomePage__WordsDataContainer)} ref={wordsDataContainerRef}>
-            <div className={classes.HomePage__WordsData} ref={wordsDataElementRef}>
-              <div ref={wordsDataTimeIndicator} className={classes.HomePage__TimeIndicator}></div>
+          <div
+            className="relative h-[100px] border border-gray-300 overflow-x-auto overflow-y-hidden"
+            style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'thin' }}
+            ref={wordsDataContainerRef}
+          >
+            <div className="relative h-[100px]" ref={wordsDataElementRef}>
+              <div
+                ref={wordsDataTimeIndicator}
+                className="absolute top-0 h-full w-[2px] bg-red-500 pointer-events-none z-10"
+              ></div>
               {words.map((word: Word, index, array) => (
                 <WordComponent
                   key={word.id}
