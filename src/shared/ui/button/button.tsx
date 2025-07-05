@@ -6,7 +6,7 @@ import { IconPosition, Variant } from 'src/shared/ui/button/button.types';
 
 type Props = {
   text: string;
-  onClick: MouseEventHandler;
+  onClick: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   widthFull?: boolean;
   variant?: Variant;
@@ -25,11 +25,18 @@ const Button: React.FC<Props> = ({
   iconPosition = 'left',
   additionalClasses = '',
 }) => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
+    onClick(e);
+    // TODO improve accessibility (prevent space-handler play-stop)
+    if (e.detail !== 0) {
+      e.currentTarget.blur();
+    }
+  };
   return (
     <button
       type="button"
       disabled={disabled}
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
         variantStyles[variant],

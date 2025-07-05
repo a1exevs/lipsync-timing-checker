@@ -28,9 +28,7 @@ const FilePicker: React.FC<Props> = ({
         additionalClasses="w-1/2"
         text={text}
         icon={icon}
-        onClick={() => {
-          fileRef.current?.click();
-        }}
+        onClick={() => fileRef.current?.click()}
         disabled={disabled}
       />
       {fileName && (
