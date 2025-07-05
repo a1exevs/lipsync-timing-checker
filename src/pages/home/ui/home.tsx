@@ -21,6 +21,7 @@ import {
 } from 'src/pages/home/model/consts';
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
+import { wordsDataContainerStyles } from 'src/pages/home/ui/home.consts';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home/ui/word/word';
 import { arrayToObject, getFileData, IconButton } from 'src/shared';
@@ -260,7 +261,7 @@ const HomePage: React.FC = () => {
       <section ref={timelineRef}>
         <section
           className="flex overflow-x-auto overflow-y-hidden border border-gray-300"
-          style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'none' }}
+          style={{ scrollbarWidth: 'none' }}
         >
           <TimeScale
             duration={wavesurfer?.getDuration() ?? 0}
@@ -272,7 +273,7 @@ const HomePage: React.FC = () => {
         </section>
         <section
           className="flex h-[200px] overflow-x-auto overflow-y-hidden border border-gray-300"
-          style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'none' }}
+          style={{ scrollbarWidth: 'none' }}
           ref={waveFormContainerRef}
         >
           {audioFileData && (
@@ -294,7 +295,7 @@ const HomePage: React.FC = () => {
         <section>
           <div
             className="relative h-[100px] border border-gray-300 overflow-x-auto overflow-y-hidden"
-            style={{ scrollbarColor: '#505354 #707374', scrollbarWidth: 'thin' }}
+            style={wordsDataContainerStyles}
             ref={wordsDataContainerRef}
           >
             <div className="relative h-[100px]" ref={wordsDataElementRef}>
