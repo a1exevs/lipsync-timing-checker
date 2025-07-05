@@ -1,6 +1,6 @@
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import { Pause, Play } from 'lucide-react';
+import { MapPin, Pause, Play } from 'lucide-react';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
@@ -34,6 +34,9 @@ const HomePage: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
 
+  const [isCaretLocked, setIsCaretLocked] = useState(false);
+  const [lockedCaretPosition, setLockedCaretPosition] = useState(0);
+
   const [scrollLeft, setScrollLeft] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(1000);
 
@@ -53,6 +56,7 @@ const HomePage: React.FC = () => {
   const onReady = (ws: WaveSurfer) => {
     setWavesurfer(ws);
     setIsPlaying(false);
+    setLockedCaretPosition(0);
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
@@ -64,7 +68,13 @@ const HomePage: React.FC = () => {
     if (isNull(wavesurfer)) {
       return;
     }
+    if (!isPlaying && isCaretLocked) {
+      wavesurfer.setTime(lockedCaretPosition);
+    }
     wavesurfer.playPause();
+    if (isPlaying && isCaretLocked) {
+      wavesurfer.setTime(lockedCaretPosition);
+    }
   };
 
   const onAudioFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -257,6 +267,13 @@ const HomePage: React.FC = () => {
         >
           {isPlaying ? <Pause /> : <Play />}
         </IconButton>
+        <IconButton
+          title="Фиксация каретки"
+          variant={isCaretLocked ? 'primary' : 'secondary'}
+          onClick={() => setIsCaretLocked(prev => !prev)}
+        >
+          <MapPin />
+        </IconButton>
       </section>
       <section ref={timelineRef}>
         <section
@@ -284,9 +301,16 @@ const HomePage: React.FC = () => {
               waveColor={DEFAULT_WAVE_FORM_COLOR}
               url={audioFileData.fileUrl}
               onReady={onReady}
-              onDrag={(ws, relativeX) => updateWordsDataTimeIndicatorPosition(ws, relativeX * ws.getDuration())}
+              onDrag={(ws, relativeX) => {
+                const time = relativeX * ws.getDuration();
+                setLockedCaretPosition(time);
+                updateWordsDataTimeIndicatorPosition(ws, time);
+              }}
               onAudioprocess={updateWordsDataTimeIndicatorPosition}
-              onSeeking={updateWordsDataTimeIndicatorPosition}
+              onSeeking={(ws, time) => {
+                setLockedCaretPosition(time);
+                updateWordsDataTimeIndicatorPosition(ws, time);
+              }}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
