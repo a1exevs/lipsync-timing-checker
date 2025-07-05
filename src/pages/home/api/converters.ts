@@ -14,7 +14,6 @@ export function convertWordDTOToWord({
   return {
     ...wordDTO,
     id: wordId,
-    selected: false,
     widthPx: calculateWordWidthPx({ wordDTO, audioDuration, timelineWidth }),
     leftPx: calculateWordLeftPositionPx({ wordDTO, audioDuration, timelineWidth }),
     phonemes: wordDTO.phonemes.map<Phoneme>((phonemeDTO, index) => {
