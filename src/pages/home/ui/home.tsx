@@ -1,6 +1,6 @@
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import { MapPin, Pause, Play } from 'lucide-react';
+import { Pause, Pin, Play } from 'lucide-react';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
@@ -68,13 +68,10 @@ const HomePage: React.FC = () => {
     if (isNull(wavesurfer)) {
       return;
     }
-    if (!isPlaying && isCaretLocked) {
-      wavesurfer.setTime(lockedCaretPosition);
-    }
-    wavesurfer.playPause();
     if (isPlaying && isCaretLocked) {
       wavesurfer.setTime(lockedCaretPosition);
     }
+    wavesurfer.playPause();
   };
 
   const onAudioFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -150,6 +147,7 @@ const HomePage: React.FC = () => {
 
   const isLoadJSONDataButtonEnabled = (): boolean => !isNull(audioFileData);
   const isAudioPlayButtonEnabled = (): boolean => !isNull(audioFileData);
+  const isPinCaretButtonEnabled = (): boolean => !isNull(audioFileData);
   const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
 
   const onDownloadJSONDataButtonClick = (): void => {
@@ -167,6 +165,25 @@ const HomePage: React.FC = () => {
     a.download = `${wordsDataFileData.fileName}.export.${wordsDataFileData.extension}`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const onLockCaretButtonClick = (wavesurfer: Nullable<WaveSurfer>): void => {
+    if (wavesurfer) {
+      const time = wavesurfer.getCurrentTime();
+      setLockedCaretPosition(time);
+    }
+    setIsCaretLocked(prev => !prev);
+  };
+
+  const onWFDragPosition = (ws: WaveSurfer): void => {
+    const time = ws.getCurrentTime();
+    setLockedCaretPosition(time);
+    updateWordsDataTimeIndicatorPosition(ws, time);
+  };
+
+  const onWFSeekPosition = (ws: WaveSurfer, time: number) => {
+    setLockedCaretPosition(time);
+    updateWordsDataTimeIndicatorPosition(ws, time);
   };
 
   useTimelineScaling(timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords, setTimelineScaleCoefficients);
@@ -241,7 +258,7 @@ const HomePage: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyboardEvents);
     };
-  }, [wavesurfer]);
+  }, [wavesurfer, isPlaying, isCaretLocked, lockedCaretPosition]);
 
   useEffect(() => {
     setWordsMap(arrayToObject(words, 'id'));
@@ -268,11 +285,12 @@ const HomePage: React.FC = () => {
           {isPlaying ? <Pause /> : <Play />}
         </IconButton>
         <IconButton
-          title="Фиксация каретки"
+          title={isCaretLocked ? 'Unlock caret position' : 'Lock caret position'}
           variant={isCaretLocked ? 'primary' : 'secondary'}
-          onClick={() => setIsCaretLocked(prev => !prev)}
+          disabled={!isPinCaretButtonEnabled()}
+          onClick={() => onLockCaretButtonClick(wavesurfer)}
         >
-          <MapPin />
+          <Pin />
         </IconButton>
       </section>
       <section ref={timelineRef}>
@@ -301,16 +319,9 @@ const HomePage: React.FC = () => {
               waveColor={DEFAULT_WAVE_FORM_COLOR}
               url={audioFileData.fileUrl}
               onReady={onReady}
-              onDrag={(ws, relativeX) => {
-                const time = relativeX * ws.getDuration();
-                setLockedCaretPosition(time);
-                updateWordsDataTimeIndicatorPosition(ws, time);
-              }}
+              onDrag={onWFDragPosition}
               onAudioprocess={updateWordsDataTimeIndicatorPosition}
-              onSeeking={(ws, time) => {
-                setLockedCaretPosition(time);
-                updateWordsDataTimeIndicatorPosition(ws, time);
-              }}
+              onSeeking={onWFSeekPosition}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
