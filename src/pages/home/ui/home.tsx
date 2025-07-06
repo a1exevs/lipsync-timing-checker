@@ -1,7 +1,7 @@
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import { Pause, Pin, Play } from 'lucide-react';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { Ear, Pause, Pin, Play } from 'lucide-react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
 import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
@@ -32,6 +32,7 @@ const HomePage: React.FC = () => {
 
   const [wavesurfer, setWavesurfer] = useState<Nullable<WaveSurfer>>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playDuringDrag, setPlayDuringDrag] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
 
   const [isCaretLocked, setIsCaretLocked] = useState(false);
@@ -45,6 +46,8 @@ const HomePage: React.FC = () => {
   const wordsDataContainerRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataElementRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataTimeIndicator = useRef<Nullable<HTMLDivElement>>(null);
+  const lastDragPositionRef = useRef(0);
+  const rafIdRef = useRef<number>();
 
   const [words, setWords] = useState<Word[]>([]);
   const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
@@ -57,6 +60,7 @@ const HomePage: React.FC = () => {
     setWavesurfer(ws);
     setIsPlaying(false);
     setLockedCaretPosition(0);
+    lastDragPositionRef.current = 0;
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
@@ -177,6 +181,20 @@ const HomePage: React.FC = () => {
 
   const onWFDragPosition = (ws: WaveSurfer): void => {
     const time = ws.getCurrentTime();
+    if (playDuringDrag && wavesurfer) {
+      const playSegment = () => {
+        const prev = lastDragPositionRef.current;
+        const curr = time;
+        if (curr > prev) {
+          wavesurfer.play(prev, curr);
+        }
+        lastDragPositionRef.current = curr;
+      };
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+      rafIdRef.current = requestAnimationFrame(playSegment);
+    }
     setLockedCaretPosition(time);
     updateWordsDataTimeIndicatorPosition(ws, time);
   };
@@ -185,6 +203,15 @@ const HomePage: React.FC = () => {
     setLockedCaretPosition(time);
     updateWordsDataTimeIndicatorPosition(ws, time);
   };
+
+  const onWFDragEnd = useCallback(() => {
+    lastDragPositionRef.current = lockedCaretPosition;
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = undefined;
+    }
+    wavesurfer?.pause();
+  }, [lockedCaretPosition, wavesurfer]);
 
   useTimelineScaling(timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords, setTimelineScaleCoefficients);
 
@@ -261,6 +288,15 @@ const HomePage: React.FC = () => {
   }, [wavesurfer, isPlaying, isCaretLocked, lockedCaretPosition]);
 
   useEffect(() => {
+    window.addEventListener('mouseup', onWFDragEnd);
+    window.addEventListener('touchend', onWFDragEnd);
+    return () => {
+      window.removeEventListener('mouseup', onWFDragEnd);
+      window.removeEventListener('touchend', onWFDragEnd);
+    };
+  }, [onWFDragEnd]);
+
+  useEffect(() => {
     setWordsMap(arrayToObject(words, 'id'));
   }, [words]);
 
@@ -291,6 +327,12 @@ const HomePage: React.FC = () => {
           onClick={() => onLockCaretButtonClick(wavesurfer)}
         >
           <Pin />
+        </IconButton>
+        <IconButton
+          onClick={() => setPlayDuringDrag(!playDuringDrag)}
+          variant={playDuringDrag ? 'primary' : 'secondary'}
+        >
+          <Ear />
         </IconButton>
       </section>
       <section ref={timelineRef}>
