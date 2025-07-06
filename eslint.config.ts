@@ -34,6 +34,7 @@ export default tsEslint.config(
     rules: {
       'eslint-plugin-tsdoc/syntax': 'error',
       'no-restricted-imports': 'off',
+      '@typescript-eslint/no-this-alias': 'off',
     },
   },
   {
