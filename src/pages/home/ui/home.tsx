@@ -16,7 +16,9 @@ import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
   DEFAULT_WAVE_FORM_WIDTH,
+  PLAY_DURING_DRAG_THROTTLE_TIME_SEC,
   TIME_SCALE_HEIGHT_PX,
+  WAVE_FORM_CLONE_HEIGHT,
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
@@ -25,12 +27,14 @@ import { wordsDataContainerStyles } from 'src/pages/home/ui/home.consts';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home/ui/word/word';
 import { arrayToObject, getFileData, IconButton } from 'src/shared';
+import { throttleTime } from 'src/shared/api/helpers/intervals';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
   const [wordsDataFileData, setWordsDataFileData] = useState<Nullable<{ fileName: string; extension: string }>>(null);
 
   const [wavesurfer, setWavesurfer] = useState<Nullable<WaveSurfer>>(null);
+  const [wavesurferClone, setWavesurferClone] = useState<Nullable<WaveSurfer>>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playDuringDrag, setPlayDuringDrag] = useState(false);
   const [timelineWidth, setTimelineWidth] = useState<number>(0);
@@ -46,8 +50,8 @@ const HomePage: React.FC = () => {
   const wordsDataContainerRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataElementRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataTimeIndicator = useRef<Nullable<HTMLDivElement>>(null);
-  const lastDragPositionRef = useRef(0);
-  const rafIdRef = useRef<number>();
+  const lastDragPositionRef = useRef<Nullable<number>>(null);
+  const rafIdRef = useRef<Nullable<number>>(null);
 
   const [words, setWords] = useState<Word[]>([]);
   const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
@@ -56,11 +60,15 @@ const HomePage: React.FC = () => {
     DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   );
 
-  const onReady = (ws: WaveSurfer) => {
+  const onWSCloneReady = (ws: WaveSurfer) => {
+    setWavesurferClone(ws);
+  };
+
+  const onWSReady = (ws: WaveSurfer) => {
     setWavesurfer(ws);
     setIsPlaying(false);
     setLockedCaretPosition(0);
-    lastDragPositionRef.current = 0;
+    lastDragPositionRef.current = null;
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
@@ -152,6 +160,7 @@ const HomePage: React.FC = () => {
   const isLoadJSONDataButtonEnabled = (): boolean => !isNull(audioFileData);
   const isAudioPlayButtonEnabled = (): boolean => !isNull(audioFileData);
   const isPinCaretButtonEnabled = (): boolean => !isNull(audioFileData);
+  const isPlayDuringDragButtonEnabled = (): boolean => !isNull(audioFileData);
   const isDownloadJSONDataButtonEnabled = (): boolean => words.length !== 0;
 
   const onDownloadJSONDataButtonClick = (): void => {
@@ -179,39 +188,44 @@ const HomePage: React.FC = () => {
     setIsCaretLocked(prev => !prev);
   };
 
-  const onWFDragPosition = (ws: WaveSurfer): void => {
-    const time = ws.getCurrentTime();
-    if (playDuringDrag && wavesurfer) {
-      const playSegment = () => {
-        const prev = lastDragPositionRef.current;
-        const curr = time;
-        if (curr > prev) {
-          wavesurfer.play(prev, curr);
-        }
-        lastDragPositionRef.current = curr;
+  const onDragEnd = () => {
+    if (!isNull(rafIdRef.current)) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    setTimeout(() => {
+      wavesurferClone?.pause();
+    }, PLAY_DURING_DRAG_THROTTLE_TIME_SEC);
+  };
+
+  const onPlayDuringDragThrottled = useCallback(
+    throttleTime((ws: WaveSurfer, relativeX: number) => {
+      if (!playDuringDrag || isNull(wavesurferClone)) {
+        return;
+      }
+      const playSegment = async () => {
+        const curr = ws.getDuration() * relativeX;
+        wavesurferClone.play(curr - PLAY_DURING_DRAG_THROTTLE_TIME_SEC, curr);
       };
-      if (rafIdRef.current) {
+      if (!isNull(rafIdRef.current)) {
         cancelAnimationFrame(rafIdRef.current);
       }
       rafIdRef.current = requestAnimationFrame(playSegment);
-    }
+    }, PLAY_DURING_DRAG_THROTTLE_TIME_SEC * 1000),
+    [playDuringDrag, wavesurferClone],
+  );
+
+  const onWSDragPosition = (ws: WaveSurfer, relativeX: number): void => {
+    const time = ws.getCurrentTime();
+    setLockedCaretPosition(time);
+    updateWordsDataTimeIndicatorPosition(ws, time);
+    onPlayDuringDragThrottled(ws, relativeX);
+  };
+
+  const onWSSeekPosition = (ws: WaveSurfer, time: number) => {
     setLockedCaretPosition(time);
     updateWordsDataTimeIndicatorPosition(ws, time);
   };
-
-  const onWFSeekPosition = (ws: WaveSurfer, time: number) => {
-    setLockedCaretPosition(time);
-    updateWordsDataTimeIndicatorPosition(ws, time);
-  };
-
-  const onWFDragEnd = useCallback(() => {
-    lastDragPositionRef.current = lockedCaretPosition;
-    if (rafIdRef.current) {
-      cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = undefined;
-    }
-    wavesurfer?.pause();
-  }, [lockedCaretPosition, wavesurfer]);
 
   useTimelineScaling(timelineRef, timelineWidth, wavesurfer, setTimelineWidth, setWords, setTimelineScaleCoefficients);
 
@@ -288,17 +302,14 @@ const HomePage: React.FC = () => {
   }, [wavesurfer, isPlaying, isCaretLocked, lockedCaretPosition]);
 
   useEffect(() => {
-    window.addEventListener('mouseup', onWFDragEnd);
-    window.addEventListener('touchend', onWFDragEnd);
-    return () => {
-      window.removeEventListener('mouseup', onWFDragEnd);
-      window.removeEventListener('touchend', onWFDragEnd);
-    };
-  }, [onWFDragEnd]);
-
-  useEffect(() => {
     setWordsMap(arrayToObject(words, 'id'));
   }, [words]);
+
+  useEffect(() => {
+    if (!playDuringDrag) {
+      setWavesurferClone(null);
+    }
+  }, [playDuringDrag, setWavesurferClone]);
 
   return (
     <section className="flex flex-col">
@@ -312,7 +323,7 @@ const HomePage: React.FC = () => {
         onWordsDataFileChange={onWordsDataFileChange}
         onDownloadJSONDataButtonClick={onDownloadJSONDataButtonClick}
       ></DataIOPanel>
-      <section className="flex items-center gap-4 my-4 rounded-md bg-gray-800 p-4 shadow">
+      <section className="flex items-center gap-6 my-4 rounded-md bg-gray-800 p-4 shadow">
         <IconButton
           title={isPlaying ? 'Pause' : 'Play'}
           disabled={!isAudioPlayButtonEnabled()}
@@ -320,20 +331,24 @@ const HomePage: React.FC = () => {
         >
           {isPlaying ? <Pause /> : <Play />}
         </IconButton>
-        <IconButton
-          title={isCaretLocked ? 'Unlock caret position' : 'Lock caret position'}
-          variant={isCaretLocked ? 'primary' : 'secondary'}
-          disabled={!isPinCaretButtonEnabled()}
-          onClick={() => onLockCaretButtonClick(wavesurfer)}
-        >
-          <Pin />
-        </IconButton>
-        <IconButton
-          onClick={() => setPlayDuringDrag(!playDuringDrag)}
-          variant={playDuringDrag ? 'primary' : 'secondary'}
-        >
-          <Ear />
-        </IconButton>
+        <section className="flex items-center gap-2">
+          <IconButton
+            title={isCaretLocked ? 'Unlock caret position' : 'Lock caret position'}
+            variant={isCaretLocked ? 'primary' : 'secondary'}
+            disabled={!isPinCaretButtonEnabled()}
+            onClick={() => onLockCaretButtonClick(wavesurfer)}
+          >
+            <Pin />
+          </IconButton>
+          <IconButton
+            title={playDuringDrag ? 'Disable audio while dragging' : 'Enable audio while dragging'}
+            disabled={!isPlayDuringDragButtonEnabled()}
+            onClick={() => setPlayDuringDrag(prev => !prev)}
+            variant={playDuringDrag ? 'primary' : 'secondary'}
+          >
+            <Ear />
+          </IconButton>
+        </section>
       </section>
       <section ref={timelineRef}>
         <section
@@ -360,12 +375,23 @@ const HomePage: React.FC = () => {
               width={timelineWidth || DEFAULT_WAVE_FORM_WIDTH}
               waveColor={DEFAULT_WAVE_FORM_COLOR}
               url={audioFileData.fileUrl}
-              onReady={onReady}
-              onDrag={onWFDragPosition}
+              onReady={onWSReady}
+              onDrag={onWSDragPosition}
+              onDragend={onDragEnd}
               onAudioprocess={updateWordsDataTimeIndicatorPosition}
-              onSeeking={onWFSeekPosition}
+              onSeeking={onWSSeekPosition}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
+            />
+          )}
+          {audioFileData && playDuringDrag && (
+            <WavesurferPlayer
+              dragToSeek={true}
+              height={WAVE_FORM_CLONE_HEIGHT}
+              width={timelineWidth || DEFAULT_WAVE_FORM_WIDTH}
+              waveColor={DEFAULT_WAVE_FORM_COLOR}
+              url={audioFileData.fileUrl}
+              onReady={onWSCloneReady}
             />
           )}
         </section>
