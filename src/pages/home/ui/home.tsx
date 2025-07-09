@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
     }
     setTimeout(() => {
       wavesurferClone?.pause();
-    }, PLAY_DURING_DRAG_THROTTLE_TIME_SEC);
+    }, PLAY_DURING_DRAG_THROTTLE_TIME_SEC * 1000);
   };
 
   const onPlayDuringDragThrottled = useCallback(
