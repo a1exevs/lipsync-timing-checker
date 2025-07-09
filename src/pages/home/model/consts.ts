@@ -4,8 +4,10 @@ export const TIME_LINE_SCALE_COEFFICIENT_STEP = 100;
 export const MAX_TIME_LINE_SCALE_COEFFICIENT = 5000;
 
 export const WAVE_FORM_HEIGHT = 200;
+export const WAVE_FORM_CLONE_HEIGHT = 0;
 export const DEFAULT_WAVE_FORM_WIDTH = '100%';
 export const DEFAULT_WAVE_FORM_COLOR = 'violet';
+export const PLAY_DURING_DRAG_THROTTLE_TIME_SEC = 0.2;
 
 export const TIME_SCALE_HEIGHT_PX = 50;
 export const TIME_SCALE_TICK_COLOR = 'white';
