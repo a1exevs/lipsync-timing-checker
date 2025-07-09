@@ -214,7 +214,7 @@ const HomePage: React.FC = () => {
   );
 
   const onWSDragPosition = (ws: WaveSurfer, relativeX: number): void => {
-    const time = ws.getCurrentTime();
+    const time = ws.getDuration() * relativeX;
     setLockedCaretPosition(time);
     updateWordsDataTimeIndicatorPosition(ws, time);
     onPlayDuringDragThrottled(ws, relativeX);
