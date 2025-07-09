@@ -50,7 +50,6 @@ const HomePage: React.FC = () => {
   const wordsDataContainerRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataElementRef = useRef<Nullable<HTMLDivElement>>(null);
   const wordsDataTimeIndicator = useRef<Nullable<HTMLDivElement>>(null);
-  const lastDragPositionRef = useRef<Nullable<number>>(null);
   const rafIdRef = useRef<Nullable<number>>(null);
 
   const [words, setWords] = useState<Word[]>([]);
@@ -68,7 +67,6 @@ const HomePage: React.FC = () => {
     setWavesurfer(ws);
     setIsPlaying(false);
     setLockedCaretPosition(0);
-    lastDragPositionRef.current = null;
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
