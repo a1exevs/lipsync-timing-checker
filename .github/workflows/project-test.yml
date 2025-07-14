@@ -1,4 +1,4 @@
-name: Project build
+name: Project test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ develop, testing, main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,10 +25,8 @@ jobs:
           corepack enable
           yarn install
 
-      - name: Styling
-        run: |
-          yarn format
-          yarn lint
+      - name: Unit tests
+        run: yarn test:unit
 
-      - name: Project build
-        run: yarn build
+      - name: Snapshot tests
+        run: yarn test:snap

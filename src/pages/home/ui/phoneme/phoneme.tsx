@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import React, { MouseEvent } from 'react';
 
-import { ResizerType } from 'src/pages/home/model/types';
 import {
   PHONEME_CHAIN_RESIZER_COLOR,
   PHONEME_LEFT_RESIZER_COLOR,
@@ -10,6 +9,7 @@ import {
   PHONEME_RIGHT_RESIZER_COLOR,
 } from 'src/pages/home/ui/phoneme/phoneme.consts';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
+import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 
 type Props = {
   id: string;

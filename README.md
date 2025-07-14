@@ -55,6 +55,30 @@ Runs ESLint for static code analysis on TypeScript and TSX files.
 ### `yarn run lint:fix`
 Fixes errors found by ESLint in TypeScript and TSX files.
 
+### `yarn test:unit`
+Runs unit tests using the Jest configuration.
+
+### `yarn test:unit-cov`
+Runs unit tests with coverage calculation option.
+
+### `yarn test:snap`
+Runs snapshot tests using the Jest configuration.
+
+### `yarn test:snap-cov`
+Runs snapshot tests with coverage calculation option.
+
+### `yarn test:snap-update`
+Updates snap-data of snapshot tests.
+
+### `yarn test:e2e`
+Executes e2e tests (Playwright)
+
+### `yarn test`
+Sequentially executes unit tests, snapshot tests, integration tests, e2e tests.
+
+### `yarn e2e:install`
+Installs Playwright deps.
+
 ### `yarn run postinstall`
 Automatically runs after dependencies installation to set up git hooks through husky.
 

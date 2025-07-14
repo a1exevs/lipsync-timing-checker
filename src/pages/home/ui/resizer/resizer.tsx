@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { CSSProperties, MouseEvent } from 'react';
 
-import { ResizerType } from 'src/pages/home/model/types';
+import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 
 type Props = {
   type: ResizerType;

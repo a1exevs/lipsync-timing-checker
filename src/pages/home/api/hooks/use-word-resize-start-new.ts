@@ -3,7 +3,8 @@ import { Dispatch, MouseEvent, RefObject, SetStateAction, useCallback } from 're
 import WaveSurfer from 'wavesurfer.js';
 
 import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
-import { ResizerType, Word } from 'src/pages/home/model/types';
+import { Word } from 'src/pages/home/model/types';
+import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 import { WORD_MIN_WIDTH_PX } from 'src/pages/home/ui/word/word.consts';
 
 /**

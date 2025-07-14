@@ -1,9 +1,10 @@
 import cn from 'classnames';
 import React, { MouseEvent, useEffect, useState } from 'react';
 
-import { Phoneme, ResizerType } from 'src/pages/home/model/types';
+import { Phoneme } from 'src/pages/home/model/types';
 import PhonemeComponent from 'src/pages/home/ui/phoneme/phoneme';
 import Resizer from 'src/pages/home/ui/resizer/resizer';
+import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 import {
   WORD_CHAIN_RESIZER_COLOR,
   WORD_LEFT_RESIZER_COLOR,
