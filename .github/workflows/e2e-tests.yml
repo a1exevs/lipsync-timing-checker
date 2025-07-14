@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [ develop, testing, main ]
 jobs:
-  ete-tests:
+  e2e-tests:
     timeout-minutes: 60
     runs-on: windows-latest
     steps:
