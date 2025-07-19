@@ -79,6 +79,27 @@ Sequentially executes unit tests, snapshot tests, integration tests, e2e tests.
 ### `yarn docs`
 Generates comprehensive documentation using TypeDoc.
 
+### `yarn version:major`
+Increments the major version in `package.json` and `src/app/manifest.json`.  
+For example, changes `"version": "1.2.3"` to `"version": "2.0.0"`.
+
+### `yarn version:minor`
+Increments the minor version in `package.json` and `src/app/manifest.json`.  
+For example, changes `"version": "1.2.3"` to `"version": "1.3.0"`.
+
+### `yarn version:patch`
+Increments the patch version in `package.json` and `src/app/manifest.json`.  
+For example, changes `"version": "1.2.3"` to `"version": "1.2.4"`.
+
+### `yarn update-version:major`
+Automates the process of merging branches, increasing the major-version in the package.json file and manifest file, and committing the changes to the designated branch. This ensures the version is updated consistently and the changes are easily trackable in the repository.
+
+### `yarn update-version:minor`
+Automates the process of merging branches, increasing the minor-version in the package.json file and manifest file, and committing the changes to the designated branch. This ensures the version is updated consistently and the changes are easily trackable in the repository.
+
+### `yarn update-version:patch`
+Automates the process of merging branches, increasing the patch-version in the package.json file and manifest file, and committing the changes to the designated branch. This ensures the version is updated consistently and the changes are easily trackable in the repository.
+
 ### `yarn e2e:install`
 Installs Playwright deps.
 

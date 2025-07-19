@@ -33,6 +33,13 @@
     "test:snap-update": "jest --updateSnapshot --config tests/snap/config/config.ts",
     "test:e2e": "playwright test --config=tests/e2e/config/config.ts",
     "test": "yarn test:unit && yarn test:snap && yarn test:e2e",
+    "docs": "typedoc",
+    "version:major": "ts-node -P tsconfig.scripts.json scripts/increase-version.ts major",
+    "version:minor": "ts-node -P tsconfig.scripts.json scripts/increase-version.ts minor",
+    "version:patch": "ts-node -P tsconfig.scripts.json scripts/increase-version.ts patch",
+    "update-version:major": "./scripts/update-version.sh major",
+    "update-version:minor": "./scripts/update-version.sh minor",
+    "update-version:patch": "./scripts/update-version.sh patch",
     "e2e:install": "playwright install --with-deps",
     "postinstall": "husky"
   },
