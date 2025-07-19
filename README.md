@@ -76,6 +76,9 @@ Executes e2e tests (Playwright)
 ### `yarn test`
 Sequentially executes unit tests, snapshot tests, integration tests, e2e tests.
 
+### `yarn docs`
+Generates comprehensive documentation using TypeDoc.
+
 ### `yarn e2e:install`
 Installs Playwright deps.
 
