@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TimeScale matches snapshot (default) 1`] = `
+<div>
+  <canvas
+    height="50"
+    style="display: block; width: 500px; height: 50px;"
+    width="500"
+  />
+</div>
+`;
+
+exports[`TimeScale matches snapshot (scrolled) 1`] = `
+<div>
+  <canvas
+    height="50"
+    style="display: block; width: 500px; height: 50px;"
+    width="500"
+  />
+</div>
+`;
