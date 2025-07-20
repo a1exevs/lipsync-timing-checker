@@ -7,10 +7,13 @@ import Resizer from 'src/pages/home/ui/resizer/resizer';
 import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 import {
   WORD_CHAIN_RESIZER_COLOR,
+  WORD_CHAIN_RESIZER_TEST_ID,
   WORD_LEFT_RESIZER_COLOR,
+  WORD_LEFT_RESIZER_TEST_ID,
   WORD_RESIZER_WIDTH_PX,
   WORD_RESIZER_Z_INDEX,
   WORD_RIGHT_RESIZER_COLOR,
+  WORD_RIGHT_RESIZER_TEST_ID,
 } from 'src/pages/home/ui/word/word.consts';
 import { arrayToObject } from 'src/shared';
 
@@ -85,6 +88,7 @@ const Word: React.FC<Props> = React.memo(
             color={WORD_LEFT_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
             widthPx={WORD_RESIZER_WIDTH_PX}
+            dataTestId={WORD_LEFT_RESIZER_TEST_ID}
           />
         )}
         <div className="relative select-none">
@@ -119,6 +123,7 @@ const Word: React.FC<Props> = React.memo(
             color={WORD_RIGHT_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
             widthPx={WORD_RESIZER_WIDTH_PX}
+            dataTestId={WORD_RIGHT_RESIZER_TEST_ID}
           />
         )}
         {!hideChainResizer && (
@@ -128,6 +133,7 @@ const Word: React.FC<Props> = React.memo(
             color={WORD_CHAIN_RESIZER_COLOR}
             zIndex={WORD_RESIZER_Z_INDEX}
             widthPx={WORD_RESIZER_WIDTH_PX}
+            dataTestId={WORD_CHAIN_RESIZER_TEST_ID}
           />
         )}
       </div>
