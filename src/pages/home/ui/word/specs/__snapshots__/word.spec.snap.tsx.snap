@@ -1,0 +1,366 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Word matches snapshot (default) 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200"
+    style="left: 10px; width: 100px;"
+  >
+    <div
+      class="absolute top-0 h-full cursor-col-resize left-0"
+      data-testid="word-left-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="relative select-none"
+    >
+      <span>
+        test
+      </span>
+    </div>
+    <div
+      class="relative flex h-[30px]"
+    >
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-l-0"
+        style="width: 50%; left: 0%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          a
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="absolute top-0 h-full cursor-col-resize"
+          style="z-index: 2; width: 5px; right: -2.5px;"
+        />
+      </div>
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-r-0"
+        style="width: 50%; left: 50%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          b
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+      </div>
+    </div>
+    <div
+      class="absolute top-0 h-full cursor-col-resize right-0"
+      data-testid="word-right-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="absolute top-0 h-full cursor-col-resize"
+      data-testid="word-chain-resizer"
+      style="z-index: 1; width: 5px; right: -2.5px;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Word matches snapshot (hideChainResizer) 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200"
+    style="left: 10px; width: 100px;"
+  >
+    <div
+      class="absolute top-0 h-full cursor-col-resize left-0"
+      data-testid="word-left-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="relative select-none"
+    >
+      <span>
+        test
+      </span>
+    </div>
+    <div
+      class="relative flex h-[30px]"
+    >
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-l-0"
+        style="width: 50%; left: 0%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          a
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="absolute top-0 h-full cursor-col-resize"
+          style="z-index: 2; width: 5px; right: -2.5px;"
+        />
+      </div>
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-r-0"
+        style="width: 50%; left: 50%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          b
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+      </div>
+    </div>
+    <div
+      class="absolute top-0 h-full cursor-col-resize right-0"
+      data-testid="word-right-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Word matches snapshot (hideLeftResizer) 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200"
+    style="left: 10px; width: 100px;"
+  >
+    <div
+      class="relative select-none"
+    >
+      <span>
+        test
+      </span>
+    </div>
+    <div
+      class="relative flex h-[30px]"
+    >
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-l-0"
+        style="width: 50%; left: 0%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          a
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="absolute top-0 h-full cursor-col-resize"
+          style="z-index: 2; width: 5px; right: -2.5px;"
+        />
+      </div>
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-r-0"
+        style="width: 50%; left: 50%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          b
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+      </div>
+    </div>
+    <div
+      class="absolute top-0 h-full cursor-col-resize right-0"
+      data-testid="word-right-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="absolute top-0 h-full cursor-col-resize"
+      data-testid="word-chain-resizer"
+      style="z-index: 1; width: 5px; right: -2.5px;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Word matches snapshot (hideRightResizer) 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200"
+    style="left: 10px; width: 100px;"
+  >
+    <div
+      class="absolute top-0 h-full cursor-col-resize left-0"
+      data-testid="word-left-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="relative select-none"
+    >
+      <span>
+        test
+      </span>
+    </div>
+    <div
+      class="relative flex h-[30px]"
+    >
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-l-0"
+        style="width: 50%; left: 0%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          a
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="absolute top-0 h-full cursor-col-resize"
+          style="z-index: 2; width: 5px; right: -2.5px;"
+        />
+      </div>
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-r-0"
+        style="width: 50%; left: 50%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          b
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+      </div>
+    </div>
+    <div
+      class="absolute top-0 h-full cursor-col-resize"
+      data-testid="word-chain-resizer"
+      style="z-index: 1; width: 5px; right: -2.5px;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Word matches snapshot (movingInProgress) 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute flex flex-col text-black box-border border border-black rounded cursor-grab whitespace-nowrap bg-[#add8e6] hover:bg-[#add8e6aa] transition-colors duration-200 shadow-[0_4px_8px_0_white] u-translate-y-[5px] cursor-grabbing transition-shadow transition-transform duration-200"
+    style="left: 10px; width: 100px;"
+  >
+    <div
+      class="absolute top-0 h-full cursor-col-resize left-0"
+      data-testid="word-left-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="relative select-none"
+    >
+      <span>
+        test
+      </span>
+    </div>
+    <div
+      class="relative flex h-[30px]"
+    >
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-l-0"
+        style="width: 50%; left: 0%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          a
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="absolute top-0 h-full cursor-col-resize"
+          style="z-index: 2; width: 5px; right: -2.5px;"
+        />
+      </div>
+      <div
+        class="absolute text-black text-center border border-black rounded cursor-grab whitespace-nowrap bg-[#ffff99] hover:bg-[#ffff99aa] transition-colors duration-200 ease-in-out border-r-0"
+        style="width: 50%; left: 50%;"
+      >
+        <div
+          class="absolute top-0 h-full cursor-col-resize left-0"
+          style="z-index: 2; width: 5px;"
+        />
+        <div
+          class="select-none"
+        >
+          b
+        </div>
+        <div
+          class="absolute top-0 h-full cursor-col-resize right-0"
+          style="z-index: 2; width: 5px;"
+        />
+      </div>
+    </div>
+    <div
+      class="absolute top-0 h-full cursor-col-resize right-0"
+      data-testid="word-right-resizer"
+      style="z-index: 1; width: 5px;"
+    />
+    <div
+      class="absolute top-0 h-full cursor-col-resize"
+      data-testid="word-chain-resizer"
+      style="z-index: 1; width: 5px; right: -2.5px;"
+    />
+  </div>
+</DocumentFragment>
+`;
