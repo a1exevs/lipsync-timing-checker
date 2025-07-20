@@ -1,6 +1,10 @@
 import { Download, FileAudio, FileJson } from 'lucide-react';
 import React, { ChangeEvent } from 'react';
 
+import {
+  AUDIO_FILE_INPUT_TEST_ID,
+  JSON_FILE_INPUT_TEST_ID,
+} from 'src/pages/home/ui/data-io-panel/data-io-panel.consts';
 import { Button, FilePicker } from 'src/shared';
 
 type Props = {
@@ -31,6 +35,7 @@ const DataIOPanel: React.FC<Props> = ({
           icon={<FileAudio />}
           accept="audio/*"
           handleFileUpload={onAudioFileChange}
+          fileInputTestId={AUDIO_FILE_INPUT_TEST_ID}
         />
         <FilePicker
           fileName={wordsDataFileName}
@@ -39,6 +44,7 @@ const DataIOPanel: React.FC<Props> = ({
           accept="application/json"
           disabled={!isLoadJSONDataButtonEnabled}
           handleFileUpload={onWordsDataFileChange}
+          fileInputTestId={JSON_FILE_INPUT_TEST_ID}
         />
       </div>
       <Button
