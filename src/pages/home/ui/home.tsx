@@ -1,6 +1,5 @@
 import { isNull, Nullable } from '@alexevs/ts-guards';
 import WavesurferPlayer from '@wavesurfer/react';
-import { Ear, Pause, Pin, Play } from 'lucide-react';
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
@@ -22,11 +21,12 @@ import {
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
+import ControlPanel from 'src/pages/home/ui/control-panel/control-panel';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
 import { wordsDataContainerStyles } from 'src/pages/home/ui/home.consts';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home/ui/word/word';
-import { arrayToObject, getFileData, IconButton } from 'src/shared';
+import { arrayToObject, getFileData } from 'src/shared';
 import { throttleTime } from 'src/shared/api/helpers/intervals';
 
 const HomePage: React.FC = () => {
@@ -321,33 +321,17 @@ const HomePage: React.FC = () => {
         onWordsDataFileChange={onWordsDataFileChange}
         onDownloadJSONDataButtonClick={onDownloadJSONDataButtonClick}
       ></DataIOPanel>
-      <section className="flex items-center gap-6 my-4 rounded-md bg-gray-800 p-4 shadow">
-        <IconButton
-          title={isPlaying ? 'Pause' : 'Play'}
-          disabled={!isAudioPlayButtonEnabled()}
-          onClick={() => onPlayPause(wavesurfer)}
-        >
-          {isPlaying ? <Pause /> : <Play />}
-        </IconButton>
-        <section className="flex items-center gap-2">
-          <IconButton
-            title={isCaretLocked ? 'Unlock caret position' : 'Lock caret position'}
-            variant={isCaretLocked ? 'primary' : 'secondary'}
-            disabled={!isPinCaretButtonEnabled()}
-            onClick={() => onLockCaretButtonClick(wavesurfer)}
-          >
-            <Pin />
-          </IconButton>
-          <IconButton
-            title={playDuringDrag ? 'Disable audio while dragging' : 'Enable audio while dragging'}
-            disabled={!isPlayDuringDragButtonEnabled()}
-            onClick={() => setPlayDuringDrag(prev => !prev)}
-            variant={playDuringDrag ? 'primary' : 'secondary'}
-          >
-            <Ear />
-          </IconButton>
-        </section>
-      </section>
+      <ControlPanel
+        isPlaying={isPlaying}
+        isAudioPlayButtonEnabled={isAudioPlayButtonEnabled()}
+        onPlayPause={() => onPlayPause(wavesurfer)}
+        isCaretLocked={isCaretLocked}
+        isPinCaretButtonEnabled={isPinCaretButtonEnabled()}
+        onLockCaretButtonClick={() => onLockCaretButtonClick(wavesurfer)}
+        playDuringDrag={playDuringDrag}
+        isPlayDuringDragButtonEnabled={isPlayDuringDragButtonEnabled()}
+        setPlayDuringDrag={setPlayDuringDrag}
+      />
       <section ref={timelineRef}>
         <section
           className="flex overflow-x-auto overflow-y-hidden border border-gray-300"
