@@ -1,8 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import Resizer from '../resizer';
-import { ResizerType } from '../resizer.types';
+import Resizer from 'src/pages/home/ui/resizer/resizer';
+import { ResizerType } from 'src/pages/home/ui/resizer/resizer.types';
 
 describe('Resizer', () => {
   const baseProps = {
@@ -57,5 +57,10 @@ describe('Resizer', () => {
     expect(div.style.backgroundColor).toBe('red');
     fireEvent.mouseLeave(div);
     expect(div.style.backgroundColor).toBe('transparent');
+  });
+
+  it('sets data-testid if provided', () => {
+    const { getByTestId } = render(<Resizer {...baseProps} type="left" dataTestId="custom-resizer" />);
+    expect(getByTestId('custom-resizer')).toBeInTheDocument();
   });
 });
