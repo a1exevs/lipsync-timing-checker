@@ -5,7 +5,7 @@ import {
   AUDIO_FILE_INPUT_TEST_ID,
   JSON_FILE_INPUT_TEST_ID,
 } from 'src/pages/home/ui/data-io-panel/data-io-panel.consts';
-import { Button, FilePicker } from 'src/shared';
+import { Button, currentLang, FilePicker } from 'src/shared';
 
 type Props = {
   audioFileName?: string;
@@ -31,7 +31,7 @@ const DataIOPanel: React.FC<Props> = ({
       <div className="flex flex-col gap-3 w-full md:w-1/2">
         <FilePicker
           fileName={audioFileName}
-          text={'Load audio'}
+          text={currentLang.labels.LOAD_AUDIO}
           icon={<FileAudio />}
           accept="audio/*"
           handleFileUpload={onAudioFileChange}
@@ -39,7 +39,7 @@ const DataIOPanel: React.FC<Props> = ({
         />
         <FilePicker
           fileName={wordsDataFileName}
-          text={'Load JSON data'}
+          text={currentLang.labels.LOAD_JSON_DATA}
           icon={<FileJson />}
           accept="application/json"
           disabled={!isLoadJSONDataButtonEnabled}
@@ -50,7 +50,7 @@ const DataIOPanel: React.FC<Props> = ({
       <Button
         variant="danger"
         icon={<Download />}
-        text={'Download JSON data'}
+        text={currentLang.labels.DOWNLOAD_JSON_DATA}
         onClick={onDownloadJSONDataButtonClick}
         disabled={!isDownloadJSONDataButtonEnabled}
       />

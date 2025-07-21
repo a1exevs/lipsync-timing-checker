@@ -6,6 +6,7 @@ import {
   AUDIO_FILE_INPUT_TEST_ID,
   JSON_FILE_INPUT_TEST_ID,
 } from 'src/pages/home/ui/data-io-panel/data-io-panel.consts';
+import { currentLang } from 'src/shared';
 
 describe('DataIOPanel', () => {
   const defaultProps = {
@@ -24,20 +25,20 @@ describe('DataIOPanel', () => {
 
   it('renders FilePicker and Button components with correct props', () => {
     render(<DataIOPanel {...defaultProps} />);
-    expect(screen.getByText('Load audio')).toBeInTheDocument();
-    expect(screen.getByText('Load JSON data')).toBeInTheDocument();
-    expect(screen.getByText('Download JSON data')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Load audio' })).not.toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Load JSON data' })).not.toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Download JSON data' })).not.toBeDisabled();
+    expect(screen.getByText(currentLang.labels.LOAD_AUDIO)).toBeInTheDocument();
+    expect(screen.getByText(currentLang.labels.LOAD_JSON_DATA)).toBeInTheDocument();
+    expect(screen.getByText(currentLang.labels.DOWNLOAD_JSON_DATA)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: currentLang.labels.LOAD_AUDIO })).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: currentLang.labels.LOAD_JSON_DATA })).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: currentLang.labels.DOWNLOAD_JSON_DATA })).not.toBeDisabled();
   });
 
   it('disables Load JSON data and Download JSON data buttons when props are false', () => {
     render(
       <DataIOPanel {...defaultProps} isLoadJSONDataButtonEnabled={false} isDownloadJSONDataButtonEnabled={false} />,
     );
-    expect(screen.getByRole('button', { name: 'Load JSON data' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Download JSON data' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: currentLang.labels.LOAD_JSON_DATA })).toBeDisabled();
+    expect(screen.getByRole('button', { name: currentLang.labels.DOWNLOAD_JSON_DATA })).toBeDisabled();
   });
 
   it('calls onAudioFileChange when audio file is selected', () => {
@@ -56,7 +57,7 @@ describe('DataIOPanel', () => {
 
   it('calls onDownloadJSONDataButtonClick when Download JSON data button is clicked', () => {
     render(<DataIOPanel {...defaultProps} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Download JSON data' }));
+    fireEvent.click(screen.getByRole('button', { name: currentLang.labels.DOWNLOAD_JSON_DATA }));
     expect(defaultProps.onDownloadJSONDataButtonClick).toHaveBeenCalled();
   });
 });
