@@ -26,8 +26,7 @@ import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
 import { wordsDataContainerStyles } from 'src/pages/home/ui/home.consts';
 import TimeScale from 'src/pages/home/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home/ui/word/word';
-import { arrayToObject, getFileData } from 'src/shared';
-import { throttleTime } from 'src/shared/api/helpers/intervals';
+import { arrayToObject, capitalizeLabel, currentLang, getFileData, throttleTime } from 'src/shared';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
@@ -311,7 +310,7 @@ const HomePage: React.FC = () => {
 
   return (
     <section className="flex flex-col">
-      <h1 className="text-center">Lipsync Timing Checker</h1>
+      <h1 className="text-center">{capitalizeLabel(currentLang.labels.APP_NAME)}</h1>
       <DataIOPanel
         audioFileName={audioFileData?.fileName}
         wordsDataFileName={wordsDataFileData?.fileName}
