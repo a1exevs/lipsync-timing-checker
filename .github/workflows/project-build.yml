@@ -32,3 +32,6 @@ jobs:
 
       - name: Project build
         run: yarn build
+
+      - name: Storybook build
+        run: yarn build-storybook
