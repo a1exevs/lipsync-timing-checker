@@ -9,7 +9,7 @@ export {
   capitalize,
   capitalizeLabel,
   throttleTime,
-} from 'src/shared/api';
+} from 'src/shared/model';
 
 // model
 export type { KeyOfValue } from 'src/shared/model';

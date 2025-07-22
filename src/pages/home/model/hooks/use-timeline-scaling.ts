@@ -2,12 +2,12 @@ import { isNull, Nullable } from '@alexevs/ts-guards';
 import { Dispatch, RefObject, SetStateAction, useEffect } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
-import { recalculateWordWithByNewTimelineWidth } from 'src/pages/home/api/converters';
 import {
   MAX_TIME_LINE_SCALE_COEFFICIENT,
   MIN_TIME_LINE_SCALE_COEFFICIENT,
   TIME_LINE_SCALE_COEFFICIENT_STEP,
 } from 'src/pages/home/model/consts';
+import { recalculateWordWithByNewTimelineWidth } from 'src/pages/home/model/converters';
 import { Word } from 'src/pages/home/model/types';
 
 const useTimelineScaling = (

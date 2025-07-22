@@ -3,14 +3,6 @@ import WavesurferPlayer from '@wavesurfer/react';
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
-import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/api/converters';
-import usePhonemeChainResizeStart from 'src/pages/home/api/hooks/use-phoneme-chain-resize-start';
-import usePhonemeMoveStart from 'src/pages/home/api/hooks/use-phoneme-move-start';
-import usePhonemeResizeStart from 'src/pages/home/api/hooks/use-phoneme-resize-start';
-import useTimelineScaling from 'src/pages/home/api/hooks/use-timeline-scaling';
-import useWordChainResizeStart from 'src/pages/home/api/hooks/use-word-chain-resize-start';
-import useWordMoveStart from 'src/pages/home/api/hooks/use-word-move-start';
-import useWordResizeStart from 'src/pages/home/api/hooks/use-word-resize-start';
 import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
@@ -20,6 +12,14 @@ import {
   WAVE_FORM_CLONE_HEIGHT,
   WAVE_FORM_HEIGHT,
 } from 'src/pages/home/model/consts';
+import { convertWordDTOToWord, convertWordToWordDTO } from 'src/pages/home/model/converters';
+import usePhonemeChainResizeStart from 'src/pages/home/model/hooks/use-phoneme-chain-resize-start';
+import usePhonemeMoveStart from 'src/pages/home/model/hooks/use-phoneme-move-start';
+import usePhonemeResizeStart from 'src/pages/home/model/hooks/use-phoneme-resize-start';
+import useTimelineScaling from 'src/pages/home/model/hooks/use-timeline-scaling';
+import useWordChainResizeStart from 'src/pages/home/model/hooks/use-word-chain-resize-start';
+import useWordMoveStart from 'src/pages/home/model/hooks/use-word-move-start';
+import useWordResizeStart from 'src/pages/home/model/hooks/use-word-resize-start';
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home/model/types';
 import ControlPanel from 'src/pages/home/ui/control-panel/control-panel';
 import DataIOPanel from 'src/pages/home/ui/data-io-panel/data-io-panel';
