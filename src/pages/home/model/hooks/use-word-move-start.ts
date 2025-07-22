@@ -2,7 +2,7 @@ import { Nullable } from '@alexevs/ts-guards';
 import { Dispatch, MouseEvent, SetStateAction, useCallback } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
-import { recalculatePhonemesStartEnd } from 'src/pages/home/api/converters';
+import { recalculatePhonemesStartEnd } from 'src/pages/home/model/converters';
 import { Word } from 'src/pages/home/model/types';
 
 const useWordMoveStart = (

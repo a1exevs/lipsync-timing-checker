@@ -7,7 +7,7 @@ import {
   convertWordToWordDTO,
   recalculatePhonemesStartEnd,
   recalculateWordWithByNewTimelineWidth,
-} from 'src/pages/home/api/converters';
+} from 'src/pages/home/model/converters';
 import { Phoneme, PhonemeDTO, Word, WordDTO } from 'src/pages/home/model/types';
 
 const wordId = 'w1';
