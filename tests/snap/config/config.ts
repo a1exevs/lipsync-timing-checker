@@ -20,6 +20,7 @@ const config: Config = {
   rootDir,
   testRegex: `.*/${TESTS_DIR_NAME}/.*.${SNAPSHOT_TESTS_POSTFIX}.[jt]sx?$`,
   testEnvironment: 'jsdom',
+  transformIgnorePatterns: ['/node_modules/(?!(@wavesurfer/react|wavesurfer.js)/)'],
   setupFiles: [setupTestsEnvPath],
   setupFilesAfterEnv: [setupTestingLibraryPath],
   transform: {
