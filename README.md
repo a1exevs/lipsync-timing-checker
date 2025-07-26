@@ -76,6 +76,15 @@ Executes e2e tests (Playwright)
 ### `yarn test`
 Sequentially executes unit tests, snapshot tests, integration tests, e2e tests.
 
+### `yarn storybook`
+Runs Storybook in development mode on port 6006.
+
+### `yarn build-storybook`
+Builds a static version of Storybook for deployment.
+
+### `yarn chromatic`
+Runs Chromatic to check for visual changes in components and exits with a code 0 even if changes are detected.
+
 ### `yarn docs`
 Generates comprehensive documentation using TypeDoc.
 

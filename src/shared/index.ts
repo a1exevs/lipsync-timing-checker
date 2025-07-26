@@ -13,4 +13,10 @@ export {
 
 // model
 export type { KeyOfValue } from 'src/shared/model';
-export { currentLang } from 'src/shared/model';
+export {
+  currentLang,
+  DESKTOP_4K_SCREEN_WIDTH_PX,
+  DESKTOP_SCREEN_WIDTH_PX,
+  TABLET_SCREEN_WIDTH_PX,
+  MOBILE_SCREEN_WIDTH_PX,
+} from 'src/shared/model';

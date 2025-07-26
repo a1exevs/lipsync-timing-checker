@@ -25,6 +25,9 @@
     "paths": {
       "src/*": [
         "src/*"
+      ],
+      "storybook-dir/*": [
+        "./.storybook/*"
       ]
     }
   },
@@ -32,6 +35,7 @@
     "node_modules",
     "dist",
     "build",
-    "coverage"
+    "coverage",
+    "storybook-static"
   ]
 }

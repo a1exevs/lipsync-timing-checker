@@ -1,18 +1,20 @@
-name: Project build
+name: "Chromatic"
 
 on:
   push:
-    branches: [ develop, testing, main ]
+    branches: [ testing ]
   pull_request:
-    branches: [ develop, testing, main ]
+    branches: [ testing ]
 
 jobs:
-  build:
+  chromatic:
+    name: Run Chromatic
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -25,13 +27,7 @@ jobs:
           corepack enable
           yarn install
 
-      - name: Styling
-        run: |
-          yarn format
-          yarn lint
-
-      - name: Project build
-        run: yarn build
-
-      - name: Storybook build
-        run: yarn build-storybook
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
