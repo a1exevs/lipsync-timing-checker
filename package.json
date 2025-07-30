@@ -106,6 +106,7 @@
     "react-app-rewired": "2.2.1",
     "serve": "14.2.4",
     "storybook": "8.4.6",
+    "storybook-addon-pseudo-states": "4.0.3",
     "ts-jest": "29.4.0",
     "ts-loader": "^9.5.2",
     "ts-node": "10.9.2",

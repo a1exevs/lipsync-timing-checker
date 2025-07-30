@@ -1,0 +1,300 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IconButton snapshots renders danger variant 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-red-600 hover:bg-red-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders default 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders disabled 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    disabled=""
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders primary variant 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders secondary variant 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders with size lg 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-3 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders with size md 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders with size sm 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-1 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;
+
+exports[`IconButton snapshots renders with title 1`] = `
+<DocumentFragment>
+  <button
+    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    title="Test title"
+    type="button"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-audio"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.5 22h.5a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"
+      />
+      <path
+        d="M14 2v4a2 2 0 0 0 2 2h4"
+      />
+      <path
+        d="M2 19a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 1 1-4 0v-1a2 2 0 1 1 4 0"
+      />
+    </svg>
+  </button>
+</DocumentFragment>
+`;

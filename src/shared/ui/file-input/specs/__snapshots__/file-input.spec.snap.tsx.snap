@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`FileInput snapshots renders default 1`] = `
+<DocumentFragment>
+  <input
+    accept=".txt"
+    data-testid="file-input"
+    style="display: none;"
+    type="file"
+  />
+</DocumentFragment>
+`;
+
+exports[`FileInput snapshots renders with different accept 1`] = `
+<DocumentFragment>
+  <input
+    accept=".jpg,.png"
+    data-testid="file-input"
+    style="display: none;"
+    type="file"
+  />
+</DocumentFragment>
+`;
+
+exports[`FileInput snapshots renders with no dataTestId 1`] = `
+<DocumentFragment>
+  <input
+    accept=".txt"
+    style="display: none;"
+    type="file"
+  />
+</DocumentFragment>
+`;
