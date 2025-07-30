@@ -4,7 +4,7 @@ import { FileAudio } from 'lucide-react';
 import { IconButton } from 'src/shared';
 import { buildDesktopStoryObj } from 'storybook-dir/helpers';
 
-const storyTitle = 'Shared/UI/Icon Button';
+const storyTitle = 'Shared/Icon Button';
 
 const meta = {
   title: storyTitle,
@@ -14,47 +14,67 @@ const meta = {
 export default meta;
 
 export const Default = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
+  args: {
+    children: <FileAudio />,
+  },
 });
 export const Primary = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'primary',
+  args: {
+    children: <FileAudio />,
+    variant: 'primary',
+  },
 });
 export const Secondary = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'secondary',
+  args: {
+    children: <FileAudio />,
+    variant: 'secondary',
+  },
 });
 export const Danger = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'danger',
+  args: {
+    children: <FileAudio />,
+    variant: 'danger',
+  },
 });
 export const PrimaryDisabled = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'primary',
-  disabled: true,
+  args: {
+    children: <FileAudio />,
+    variant: 'primary',
+    disabled: true,
+  },
 });
 export const SecondaryDisabled = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'secondary',
-  disabled: true,
+  args: {
+    children: <FileAudio />,
+    variant: 'secondary',
+    disabled: true,
+  },
 });
 export const DangerDisabled = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'danger',
-  disabled: true,
+  args: {
+    children: <FileAudio />,
+    variant: 'danger',
+    disabled: true,
+  },
 });
 export const PrimarySm = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'primary',
-  size: 'sm',
+  args: {
+    children: <FileAudio />,
+    variant: 'primary',
+    size: 'sm',
+  },
 });
 export const PrimaryMd = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'primary',
-  size: 'md',
+  args: {
+    children: <FileAudio />,
+    variant: 'primary',
+    size: 'md',
+  },
 });
 export const PrimaryLg = buildDesktopStoryObj<typeof meta>({
-  children: <FileAudio />,
-  variant: 'primary',
-  size: 'lg',
+  args: {
+    children: <FileAudio />,
+    variant: 'primary',
+    size: 'lg',
+  },
 });

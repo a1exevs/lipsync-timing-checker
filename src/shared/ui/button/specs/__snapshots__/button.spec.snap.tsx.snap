@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Button snapshots renders danger variant 1`] = `[Function]`;
+
+exports[`Button snapshots renders default 1`] = `[Function]`;
+
+exports[`Button snapshots renders disabled 1`] = `[Function]`;
+
+exports[`Button snapshots renders primary variant 1`] = `[Function]`;
+
+exports[`Button snapshots renders secondary variant 1`] = `[Function]`;
+
+exports[`Button snapshots renders with additionalClasses 1`] = `[Function]`;
+
+exports[`Button snapshots renders with icon 1`] = `[Function]`;
+
+exports[`Button snapshots renders with icon on the right 1`] = `[Function]`;
+
+exports[`Button snapshots renders with widthFull 1`] = `[Function]`;

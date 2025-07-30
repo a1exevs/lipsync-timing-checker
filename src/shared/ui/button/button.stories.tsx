@@ -4,7 +4,7 @@ import { FileAudio } from 'lucide-react';
 import Button from 'src/shared/ui/button/button';
 import { buildDesktopStoryObj } from 'storybook-dir/helpers';
 
-const storyTitle = 'Shared/UI/Button';
+const storyTitle = 'Shared/Button';
 
 const meta = {
   title: storyTitle,
@@ -18,36 +18,78 @@ const defaultProps = {
   onClick: () => {},
 };
 
-export const Default = buildDesktopStoryObj<typeof meta>(defaultProps);
-export const Primary = buildDesktopStoryObj<typeof meta>({ ...defaultProps, variant: 'primary' });
-export const Secondary = buildDesktopStoryObj<typeof meta>({ ...defaultProps, variant: 'secondary' });
-export const Danger = buildDesktopStoryObj<typeof meta>({ ...defaultProps, variant: 'danger' });
-export const DefaultDisabled = buildDesktopStoryObj<typeof meta>({ ...defaultProps, disabled: true });
+export const Default = buildDesktopStoryObj<typeof meta>({
+  args: defaultProps,
+});
+export const Primary = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    variant: 'primary',
+  },
+});
+export const Secondary = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    variant: 'secondary',
+  },
+});
+export const Danger = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    variant: 'danger',
+  },
+});
+export const DefaultDisabled = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    disabled: true,
+  },
+});
 export const PrimaryDisabled = buildDesktopStoryObj<typeof meta>({
-  ...defaultProps,
-  variant: 'primary',
-  disabled: true,
+  args: {
+    ...defaultProps,
+    variant: 'primary',
+    disabled: true,
+  },
 });
 export const SecondaryDisabled = buildDesktopStoryObj<typeof meta>({
-  ...defaultProps,
-  variant: 'secondary',
-  disabled: true,
+  args: {
+    ...defaultProps,
+    variant: 'secondary',
+    disabled: true,
+  },
 });
 export const DangerDisabled = buildDesktopStoryObj<typeof meta>({
-  ...defaultProps,
-  variant: 'danger',
-  disabled: true,
+  args: {
+    ...defaultProps,
+    variant: 'danger',
+    disabled: true,
+  },
 });
-export const DefaultWidthFull = buildDesktopStoryObj<typeof meta>({ ...defaultProps, widthFull: true });
-export const DefaultWithIcon = buildDesktopStoryObj<typeof meta>({ ...defaultProps, icon: <FileAudio /> });
+export const DefaultWidthFull = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    widthFull: true,
+  },
+});
+export const DefaultWithIcon = buildDesktopStoryObj<typeof meta>({
+  args: {
+    ...defaultProps,
+    icon: <FileAudio />,
+  },
+});
 export const DefaultWithRightIcon = buildDesktopStoryObj<typeof meta>({
-  ...defaultProps,
-  iconPosition: 'right',
-  icon: <FileAudio />,
+  args: {
+    ...defaultProps,
+    iconPosition: 'right',
+    icon: <FileAudio />,
+  },
 });
 export const DefaultWithAdditionalClasses = buildDesktopStoryObj<typeof meta>({
-  ...defaultProps,
-  iconPosition: 'right',
-  icon: <FileAudio />,
-  additionalClasses: 'w-1/2',
+  args: {
+    ...defaultProps,
+    iconPosition: 'right',
+    icon: <FileAudio />,
+    additionalClasses: 'w-1/2',
+  },
 });
