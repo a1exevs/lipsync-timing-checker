@@ -3174,7 +3174,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.53.2":
+"@playwright/test@npm:1.53.2":
   version: 1.53.2
   resolution: "@playwright/test@npm:1.53.2"
   dependencies:
@@ -6993,6 +6993,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chromatic@npm:13.1.2":
+  version: 13.1.2
+  resolution: "chromatic@npm:13.1.2"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
+    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 10c0/291456ebf98300efcea0287e2bd1f65429f3fb92233ba3abb6eae29617c6fff76d8825f6a24428d34d2850ba926d80e3b41356a6b754026dc586c5a05a9ba8df
+  languageName: node
+  linkType: hard
+
 "chromatic@npm:^11.15.0":
   version: 11.29.0
   resolution: "chromatic@npm:11.29.0"
@@ -7009,25 +7028,6 @@ __metadata:
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
   checksum: 10c0/4c26e00a170cb40b38f837358fbcab51ab0bdf3644a396b166074cd167696be6a34eeb5583e65425f4392845c8a3052f6d538ea9fb0d09a903100c52d858b4f9
-  languageName: node
-  linkType: hard
-
-"chromatic@npm:^13.1.2":
-  version: 13.1.2
-  resolution: "chromatic@npm:13.1.2"
-  peerDependencies:
-    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
-    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
-  peerDependenciesMeta:
-    "@chromatic-com/cypress":
-      optional: true
-    "@chromatic-com/playwright":
-      optional: true
-  bin:
-    chroma: dist/bin.js
-    chromatic: dist/bin.js
-    chromatic-cli: dist/bin.js
-  checksum: 10c0/291456ebf98300efcea0287e2bd1f65429f3fb92233ba3abb6eae29617c6fff76d8825f6a24428d34d2850ba926d80e3b41356a6b754026dc586c5a05a9ba8df
   languageName: node
   linkType: hard
 
@@ -12865,7 +12865,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": "npm:7.21.11"
     "@chromatic-com/storybook": "npm:3.2.2"
     "@eslint/js": "npm:9.23.0"
-    "@playwright/test": "npm:^1.53.2"
+    "@playwright/test": "npm:1.53.2"
     "@storybook/addon-essentials": "npm:8.4.6"
     "@storybook/addon-interactions": "npm:8.4.6"
     "@storybook/blocks": "npm:8.4.6"
@@ -12884,7 +12884,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:8.35.1"
     "@wavesurfer/react": "npm:1.0.9"
     autoprefixer: "npm:10.4.21"
-    chromatic: "npm:^13.1.2"
+    chromatic: "npm:13.1.2"
     classnames: "npm:2.5.1"
     dotenv: "npm:16.4.5"
     eslint: "npm:9.23.0"
@@ -12918,7 +12918,7 @@ __metadata:
     storybook: "npm:8.4.6"
     storybook-addon-pseudo-states: "npm:4.0.3"
     ts-jest: "npm:29.4.0"
-    ts-loader: "npm:^9.5.2"
+    ts-loader: "npm:9.5.2"
     ts-node: "npm:10.9.2"
     typedoc: "npm:0.28.7"
     typescript: "npm:5.6.2"
@@ -17898,7 +17898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:^9.5.2":
+"ts-loader@npm:9.5.2":
   version: 9.5.2
   resolution: "ts-loader@npm:9.5.2"
   dependencies:
