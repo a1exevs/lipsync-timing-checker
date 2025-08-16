@@ -6,6 +6,7 @@ const enLabels = {
   APP_NAME: 'Lipsync timing checker',
   LOAD_AUDIO: 'Load audio',
   LOAD_JSON_DATA: 'Load JSON data',
+  LOAD_EXAMPLE: 'Load example',
   DOWNLOAD_JSON_DATA: 'Download JSON data',
   PLAY: 'Play',
   PAUSE: 'Pause',

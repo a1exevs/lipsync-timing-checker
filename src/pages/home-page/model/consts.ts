@@ -19,3 +19,8 @@ export const TICK_STEP_THRESHOLD_HALF_SECOND = 200;
 export const WHOLE_SECOND__TICK_X_OFFSET = 15;
 export const HALF_SECOND_TICK_X_OFFSET = 20;
 export const SUB_SECOND_TICK_X_OFFSET = 20;
+
+export const EXAMPLE_AUDIO_FILE_NAME = `audio_calibration_1.mp3`;
+export const EXAMPLE_AUDIO_FILE_PATH = `${process.env.PUBLIC_URL}/example-1/${EXAMPLE_AUDIO_FILE_NAME}`;
+export const EXAMPLE_WORDS_DATA_FILE_NAME = `phonemes_timing_calibration_1_ru.json`;
+export const EXAMPLE_WORDS_DATA_FILE_PATH = `${process.env.PUBLIC_URL}/example-1/${EXAMPLE_WORDS_DATA_FILE_NAME}`;

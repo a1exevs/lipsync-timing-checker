@@ -16,6 +16,7 @@ describe('DataIOPanel', () => {
     isLoadJSONDataButtonEnabled: true,
     isDownloadJSONDataButtonEnabled: true,
     onDownloadJSONDataClick: jest.fn(),
+    onLoadExampleClick: jest.fn(),
   };
 
   afterEach(() => {
@@ -26,6 +27,7 @@ describe('DataIOPanel', () => {
     render(<DataIOPanel {...defaultProps} />);
     expect(screen.getByText('Load audio')).toBeInTheDocument();
     expect(screen.getByText('Load JSON data')).toBeInTheDocument();
+    expect(screen.getByText('Load example')).toBeInTheDocument();
     expect(screen.getByText('Download JSON data')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Load audio' })).not.toBeDisabled();
     expect(screen.getByRole('button', { name: 'Load JSON data' })).not.toBeDisabled();
@@ -58,5 +60,11 @@ describe('DataIOPanel', () => {
     render(<DataIOPanel {...defaultProps} />);
     fireEvent.click(screen.getByRole('button', { name: 'Download JSON data' }));
     expect(defaultProps.onDownloadJSONDataClick).toHaveBeenCalled();
+  });
+
+  it('calls onLoadExampleClick when Load example button is clicked', () => {
+    render(<DataIOPanel {...defaultProps} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Load example' }));
+    expect(defaultProps.onLoadExampleClick).toHaveBeenCalled();
   });
 });

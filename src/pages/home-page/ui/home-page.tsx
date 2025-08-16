@@ -7,6 +7,10 @@ import {
   DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
   DEFAULT_WAVE_FORM_COLOR,
   DEFAULT_WAVE_FORM_WIDTH,
+  EXAMPLE_AUDIO_FILE_NAME,
+  EXAMPLE_AUDIO_FILE_PATH,
+  EXAMPLE_WORDS_DATA_FILE_NAME,
+  EXAMPLE_WORDS_DATA_FILE_PATH,
   PLAY_DURING_DRAG_THROTTLE_TIME_SEC,
   TIME_SCALE_HEIGHT_PX,
   WAVE_FORM_CLONE_HEIGHT,
@@ -53,6 +57,7 @@ const HomePage: React.FC = () => {
 
   const [words, setWords] = useState<Word[]>([]);
   const [wordsMap, setWordsMap] = useState<Record<string, Word>>({});
+  const [pendingWordsDataDTO, setPendingWordsDataDTO] = useState<Nullable<AudioTrackTextDataDTO>>(null);
 
   const [timelineScaleCoefficients, setTimelineScaleCoefficients] = useState<number>(
     DEFAULT_TIME_LINE_SCALE_COEFFICIENT,
@@ -125,6 +130,29 @@ const HomePage: React.FC = () => {
       }
     };
     reader.readAsText(file);
+  };
+
+  const onLoadExampleClick = async (): Promise<void> => {
+    try {
+      const audioPath = EXAMPLE_AUDIO_FILE_PATH;
+      const jsonPath = EXAMPLE_WORDS_DATA_FILE_PATH;
+
+      setAudioFileData({ fileName: EXAMPLE_AUDIO_FILE_NAME, fileUrl: audioPath });
+
+      const response = await fetch(jsonPath);
+      if (!response.ok) {
+        throw new Error('Failed to load example JSON');
+      }
+      const dataDTO: AudioTrackTextDataDTO = await response.json();
+      setPendingWordsDataDTO(dataDTO);
+      setWordsDataFileData({ fileName: EXAMPLE_WORDS_DATA_FILE_NAME, extension: 'json' });
+    } catch {
+      setAudioFileData(null);
+      setPendingWordsDataDTO(null);
+      setWordsDataFileData(null);
+      // TODO implement toaster
+      alert('Failed to load example data.');
+    }
   };
 
   const setupContainersWidth = (width: number): void => {
@@ -303,6 +331,21 @@ const HomePage: React.FC = () => {
   }, [words]);
 
   useEffect(() => {
+    if (pendingWordsDataDTO && wavesurfer) {
+      const converted: Word[] = pendingWordsDataDTO.words.map((wordDTO, index) =>
+        convertWordDTOToWord({
+          wordDTO,
+          wordId: String(index),
+          audioDuration: wavesurfer.getDuration(),
+          timelineWidth,
+        }),
+      );
+      setWords(converted);
+      setPendingWordsDataDTO(null);
+    }
+  }, [pendingWordsDataDTO, wavesurfer, timelineWidth]);
+
+  useEffect(() => {
     if (!playDuringDrag) {
       setWavesurferClone(null);
     }
@@ -319,6 +362,7 @@ const HomePage: React.FC = () => {
         onAudioFileChange={onAudioFileChange}
         onWordsDataFileChange={onWordsDataFileChange}
         onDownloadJSONDataClick={onDownloadJSONDataClick}
+        onLoadExampleClick={onLoadExampleClick}
       ></DataIOPanel>
       <ControlPanel
         isPlaying={isPlaying}
