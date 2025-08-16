@@ -1,4 +1,4 @@
-import { Download, FileAudio, FileJson } from 'lucide-react';
+import { Download, FileAudio, FileJson, Rocket } from 'lucide-react';
 import React, { ChangeEvent } from 'react';
 
 import {
@@ -16,6 +16,7 @@ type Props = {
   isLoadJSONDataButtonEnabled?: boolean;
   isDownloadJSONDataButtonEnabled?: boolean;
   onDownloadJSONDataClick?: () => void;
+  onLoadExampleClick?: () => void;
 };
 
 const DataIOPanel: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const DataIOPanel: React.FC<Props> = ({
   isLoadJSONDataButtonEnabled = true,
   isDownloadJSONDataButtonEnabled = true,
   onDownloadJSONDataClick = () => {},
+  onLoadExampleClick = () => {},
 }) => {
   return (
     <section className="flex flex-col md:flex-row md:justify-between items-center my-4 gap-4 rounded-md bg-gray-800 p-4 shadow">
@@ -50,13 +52,23 @@ const DataIOPanel: React.FC<Props> = ({
           fileInputTestId={JSON_FILE_INPUT_TEST_ID}
         />
       </div>
-      <Button
-        variant="danger"
-        icon={<Download />}
-        text={currentLang.labels.DOWNLOAD_JSON_DATA}
-        onClick={onDownloadJSONDataClick}
-        disabled={!isDownloadJSONDataButtonEnabled}
-      />
+      <div className="flex flex-col gap-3 w-full md:w-auto">
+        <Button
+          variant="secondary"
+          icon={<Rocket />}
+          text={currentLang.labels.LOAD_EXAMPLE}
+          onClick={onLoadExampleClick}
+          widthFull
+        />
+        <Button
+          variant="danger"
+          icon={<Download />}
+          text={currentLang.labels.DOWNLOAD_JSON_DATA}
+          onClick={onDownloadJSONDataClick}
+          disabled={!isDownloadJSONDataButtonEnabled}
+          widthFull
+        />
+      </div>
     </section>
   );
 };

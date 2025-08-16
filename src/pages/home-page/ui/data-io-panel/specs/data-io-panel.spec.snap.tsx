@@ -12,6 +12,7 @@ describe('DataIOPanel', () => {
     isLoadJSONDataButtonEnabled: true,
     isDownloadJSONDataButtonEnabled: true,
     onDownloadJSONDataClick: jest.fn(),
+    onLoadExampleClick: jest.fn(),
   };
 
   it('matches snapshot (default)', () => {
