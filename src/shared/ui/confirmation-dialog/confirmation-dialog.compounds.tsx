@@ -32,7 +32,8 @@ export const Header: React.FC<{ title: string; handleCancel: () => void }> = ({ 
 };
 
 export const Content: React.FC<{ message?: string }> = ({ message = '' }) => {
-  const contentWrapperClasses = 'max-h-[calc(80vh-7rem)] overflow-y-auto px-4 py-4 text-gray-800';
+  const contentWrapperClasses =
+    'break-all max-h-[calc(80vh-7rem)] overflow-y-auto overflow-x-hidden px-4 py-4 text-gray-800';
   return <div className={contentWrapperClasses}>{message}</div>;
 };
 

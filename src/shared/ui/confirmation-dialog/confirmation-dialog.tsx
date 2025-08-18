@@ -1,5 +1,7 @@
 import { Nullable } from '@alexevs/ts-guards';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { RemoveScroll } from 'react-remove-scroll';
 
 import { DialogActionsContext } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.actions';
 import {
@@ -70,11 +72,29 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
   useDialogHotkeys({ isOpen, onConfirm: handleConfirm, onCancel: handleCancel });
   useFocusTrap({ isOpen, containerRef, initialFocusRef });
 
+  // Portal container
+  const portalContainerRef = useRef<Nullable<HTMLDivElement>>(null);
+  useEffect(() => {
+    if (!portalContainerRef.current) {
+      const el = document.createElement('div');
+      el.setAttribute('data-dialog-portal', '');
+      document.body.appendChild(el);
+      portalContainerRef.current = el;
+    }
+    return () => {
+      const el = portalContainerRef.current;
+      if (el && el.parentNode) {
+        el.parentNode.removeChild(el);
+      }
+      portalContainerRef.current = null;
+    };
+  }, []);
+
   if (!isOpen) {
     return null;
   }
 
-  return (
+  const dialogTree = (
     <div className={overlayClasses} onMouseDown={handleOutsideClick}>
       <DialogActionsContext.Provider value={actions}>
         <div
@@ -93,6 +113,17 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
       </DialogActionsContext.Provider>
     </div>
   );
+
+  const withScrollLock = (
+    <RemoveScroll enabled={isOpen} inert>
+      {dialogTree}
+    </RemoveScroll>
+  );
+
+  if (!portalContainerRef.current) {
+    return withScrollLock;
+  }
+  return createPortal(withScrollLock, portalContainerRef.current);
 };
 
 export default ConfirmationDialog;
