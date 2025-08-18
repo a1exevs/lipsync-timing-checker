@@ -7,11 +7,13 @@ const useHeaderNode = ({
   renderMaybe,
   header,
   title,
+  titleId,
   handleCancel,
 }: {
   renderMaybe: (node?: MaybeRenderProp) => React.ReactNode;
   header?: MaybeRenderProp;
   title: string;
+  titleId: string;
   handleCancel: () => void;
 }): React.ReactNode => {
   return useMemo(() => {
@@ -19,8 +21,8 @@ const useHeaderNode = ({
     if (custom) {
       return custom;
     }
-    return <Header title={title} handleCancel={handleCancel} />;
-  }, [renderMaybe, header, title, handleCancel]);
+    return <Header title={title} titleId={titleId} handleCancel={handleCancel} />;
+  }, [renderMaybe, header, title, titleId, handleCancel]);
 };
 
 export default useHeaderNode;

@@ -8,19 +8,21 @@ const useContentNode = ({
   content,
   message,
   title,
+  descriptionId,
 }: {
   renderMaybe: (node?: MaybeRenderProp) => React.ReactNode;
   content?: MaybeRenderProp;
   message?: string;
   title: string;
+  descriptionId: string;
 }): React.ReactNode => {
   return useMemo(() => {
     const custom = renderMaybe(content);
     if (custom) {
       return custom;
     }
-    return <Content message={message} />;
-  }, [renderMaybe, content, message, title]);
+    return <Content message={message} descriptionId={descriptionId} />;
+  }, [renderMaybe, content, message, title, descriptionId]);
 };
 
 export default useContentNode;

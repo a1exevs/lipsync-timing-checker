@@ -58,8 +58,10 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     [actions],
   );
 
-  const headerNode = useHeaderNode({ renderMaybe, header, title, handleCancel });
-  const contentNode = useContentNode({ renderMaybe, content, message, title });
+  const titleId = 'confirmation-dialog-title';
+  const descriptionId = 'confirmation-dialog-description';
+  const headerNode = useHeaderNode({ renderMaybe, header, title, titleId, handleCancel });
+  const contentNode = useContentNode({ renderMaybe, content, message, title, descriptionId });
   const footerNode = useFooterNode({
     renderMaybe,
     footer,
@@ -101,7 +103,8 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
           ref={containerRef}
           role="dialog"
           aria-modal={modal}
-          aria-labelledby="confirmation-dialog-title"
+          aria-labelledby={titleId}
+          aria-describedby={message ? descriptionId : undefined}
           className={dialogContainerClasses}
           onMouseDown={e => e.stopPropagation()}
           tabIndex={-1}

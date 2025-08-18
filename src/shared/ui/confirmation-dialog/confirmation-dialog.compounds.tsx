@@ -15,13 +15,17 @@ export const CancelButton: React.FC<{ text?: string }> = ({ text = 'Cancel' }) =
   return <Button text={text} variant="secondary" onClick={cancel} />;
 };
 
-export const Header: React.FC<{ title: string; handleCancel: () => void }> = ({ title, handleCancel }) => {
+export const Header: React.FC<{ title: string; titleId: string; handleCancel: () => void }> = ({
+  title,
+  titleId,
+  handleCancel,
+}) => {
   const titleClasses = 'text-lg font-semibold text-gray-900';
   const headerClasses =
     'sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3';
   return (
     <div className={headerClasses}>
-      <div id="confirmation-dialog-title" className={titleClasses}>
+      <div id={titleId} className={titleClasses}>
         {title}
       </div>
       <IconButton title="Close" variant="secondary" size="sm" onClick={handleCancel}>
@@ -31,10 +35,14 @@ export const Header: React.FC<{ title: string; handleCancel: () => void }> = ({ 
   );
 };
 
-export const Content: React.FC<{ message?: string }> = ({ message = '' }) => {
+export const Content: React.FC<{ message?: string; descriptionId?: string }> = ({ message = '', descriptionId }) => {
   const contentWrapperClasses =
     'break-all max-h-[calc(80vh-7rem)] overflow-y-auto overflow-x-hidden px-4 py-4 text-gray-800';
-  return <div className={contentWrapperClasses}>{message}</div>;
+  return (
+    <div id={descriptionId} className={contentWrapperClasses}>
+      {message}
+    </div>
+  );
 };
 
 export const Footer: React.FC<{
