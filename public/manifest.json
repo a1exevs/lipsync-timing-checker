@@ -2,7 +2,7 @@
   "short_name": "Lipsync Timing Checker",
   "name": "Lipsync Timing Checker",
   "description": "Application for calibrating viseme according to Audio track.",
-  "version": "0.8.0",
+  "version": "0.10.0",
   "icons": [
     {
       "src": "favicon.ico",
