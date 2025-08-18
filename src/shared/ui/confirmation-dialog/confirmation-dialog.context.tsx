@@ -58,6 +58,7 @@ export const ConfirmationDialogProvider: React.FC<{ children: React.ReactNode }>
         header={currentProps?.header}
         content={currentProps?.content}
         footer={currentProps?.footer}
+        initialFocusRef={currentProps?.initialFocusRef}
       />
     </ConfirmationDialogContext.Provider>
   );

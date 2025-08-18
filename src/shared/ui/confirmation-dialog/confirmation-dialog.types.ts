@@ -1,3 +1,4 @@
+import { Nullable } from '@alexevs/ts-guards';
 import React from 'react';
 
 export enum ConfirmationDialogResult {
@@ -23,6 +24,7 @@ export type ConfirmationDialogProps = {
   header?: MaybeRenderProp;
   content?: MaybeRenderProp;
   footer?: MaybeRenderProp;
+  initialFocusRef?: React.RefObject<Nullable<HTMLElement>>;
 };
 
 export type OpenConfirmationDialog = (props: ConfirmationDialogProps) => Promise<ConfirmationDialogResult>;
