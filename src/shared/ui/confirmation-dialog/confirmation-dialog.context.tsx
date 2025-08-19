@@ -31,7 +31,6 @@ export const ConfirmationDialogProvider: React.FC<{ children: React.ReactNode }>
       pendingRef.current = null;
     }
     setIsOpen(false);
-    setCurrentProps(null);
   }, []);
 
   const open = useCallback<OpenConfirmationDialog>(props => {

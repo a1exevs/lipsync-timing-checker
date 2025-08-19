@@ -1,5 +1,5 @@
 import { Nullable } from '@alexevs/ts-guards';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RemoveScroll } from 'react-remove-scroll';
 
@@ -92,12 +92,45 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     };
   }, []);
 
-  if (!isOpen) {
+  const [isMounted, setIsMounted] = useState<boolean>(isOpen);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLeaving, setIsLeaving] = useState<boolean>(false);
+  const ANIMATION_MS = 200;
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsMounted(true);
+      setIsLeaving(false);
+      setIsVisible(false);
+      // ensure first frame renders with invisible state, then show
+      requestAnimationFrame(() => setIsVisible(true));
+    } else if (isMounted) {
+      setIsVisible(false);
+      setIsLeaving(true);
+      const t = setTimeout(() => {
+        setIsMounted(false);
+        setIsLeaving(false);
+        // defer clearing props in provider until unmount is done
+      }, ANIMATION_MS);
+      return () => clearTimeout(t);
+    }
+  }, [isOpen, isMounted]);
+
+  if (!isMounted) {
     return null;
   }
 
+  const overlayAnimatedClasses = `${overlayClasses} transition-opacity duration-[${ANIMATION_MS}ms] ${
+    isVisible && !isLeaving ? 'opacity-100' : 'opacity-0'
+  }`;
+  const dialogAnimatedClasses = `${dialogContainerClasses} transition duration-[${ANIMATION_MS}ms] ease-out ${
+    isVisible && !isLeaving
+      ? 'opacity-100 u-translate-y-0 u-scale-100'
+      : 'opacity-0 u-translate-y-4 u-scale-95 will-change-transform'
+  }`;
+
   const dialogTree = (
-    <div className={overlayClasses} onMouseDown={handleOutsideClick}>
+    <div className={overlayAnimatedClasses} onMouseDown={handleOutsideClick}>
       <DialogActionsContext.Provider value={actions}>
         <div
           ref={containerRef}
@@ -105,7 +138,7 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
           aria-modal={modal}
           aria-labelledby={titleId}
           aria-describedby={message ? descriptionId : undefined}
-          className={dialogContainerClasses}
+          className={dialogAnimatedClasses}
           onMouseDown={e => e.stopPropagation()}
           tabIndex={-1}
         >
@@ -118,7 +151,7 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
   );
 
   const withScrollLock = (
-    <RemoveScroll enabled={isOpen} inert>
+    <RemoveScroll enabled={isMounted} inert>
       {dialogTree}
     </RemoveScroll>
   );
