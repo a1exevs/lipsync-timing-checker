@@ -2,10 +2,10 @@ import type { Meta } from '@storybook/react';
 import React from 'react';
 
 import { ConfirmationDialogCancelButton, ConfirmationDialogConfirmButton, useDialogActions } from 'src/shared/ui';
-import ConfirmationDialog from 'src/shared/ui/confirmation-dialog/confirmation-dialog';
+import ConfirmationDialog from 'src/shared/ui/dialog/dialog';
 import { buildDesktopStoryObj, buildMobileStoryObj, buildTabletStoryObj } from 'storybook-dir/helpers';
 
-const storyTitle = 'Shared/ConfirmationDialog/Direct';
+const storyTitle = 'Shared/Dialog/Direct';
 
 const noop = () => {};
 
@@ -27,6 +27,8 @@ export const DefaultMobile = buildMobileStoryObj<typeof meta>({});
 
 export const WithMessageDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Delete file',
     message: 'Are you sure you want to delete this file? This action cannot be undone.',
     confirmButtonText: 'Delete',
@@ -34,6 +36,8 @@ export const WithMessageDesktop = buildDesktopStoryObj<typeof meta>({
 });
 export const WithMessageTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Delete file',
     message: 'Are you sure you want to delete this file? This action cannot be undone.',
     confirmButtonText: 'Delete',
@@ -41,6 +45,8 @@ export const WithMessageTablet = buildTabletStoryObj<typeof meta>({
 });
 export const WithMessageMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Delete file',
     message: 'Are you sure you want to delete this file? This action cannot be undone.',
     confirmButtonText: 'Delete',
@@ -49,18 +55,24 @@ export const WithMessageMobile = buildMobileStoryObj<typeof meta>({
 
 export const WithoutCancelDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Proceed',
     hideCancelButton: true,
   },
 });
 export const WithoutCancelTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Proceed',
     hideCancelButton: true,
   },
 });
 export const WithoutCancelMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Proceed',
     hideCancelButton: true,
   },
@@ -68,18 +80,24 @@ export const WithoutCancelMobile = buildMobileStoryObj<typeof meta>({
 
 export const ModalDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Modal dialog',
     modal: true,
   },
 });
 export const ModalTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Modal dialog',
     modal: true,
   },
 });
 export const ModalMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Modal dialog',
     modal: true,
   },
@@ -87,6 +105,8 @@ export const ModalMobile = buildMobileStoryObj<typeof meta>({
 
 export const CustomSlotsDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     header: <div className="px-4 py-3 border-b">Custom header</div>,
     content: (
       <div className="px-4 py-4">
@@ -103,6 +123,8 @@ export const CustomSlotsDesktop = buildDesktopStoryObj<typeof meta>({
 });
 export const CustomSlotsTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     header: <div className="px-4 py-3 border-b">Custom header</div>,
     content: (
       <div className="px-4 py-4">
@@ -119,6 +141,8 @@ export const CustomSlotsTablet = buildTabletStoryObj<typeof meta>({
 });
 export const CustomSlotsMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     header: <div className="px-4 py-3 border-b">Custom header</div>,
     content: (
       <div className="px-4 py-4">
@@ -137,6 +161,8 @@ export const CustomSlotsMobile = buildMobileStoryObj<typeof meta>({
 // Render-props variant
 export const RenderPropsDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Render-props footer',
     footer: actions => (
       <div className="px-4 py-3 border-t flex justify-end gap-2">
@@ -152,6 +178,8 @@ export const RenderPropsDesktop = buildDesktopStoryObj<typeof meta>({
 });
 export const RenderPropsTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Render-props footer',
     footer: actions => (
       <div className="px-4 py-3 border-t flex justify-end gap-2">
@@ -167,6 +195,8 @@ export const RenderPropsTablet = buildTabletStoryObj<typeof meta>({
 });
 export const RenderPropsMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Render-props footer',
     footer: actions => (
       <div className="px-4 py-3 border-t flex justify-end gap-2">
@@ -198,18 +228,24 @@ const ContextFooter: React.FC = () => {
 
 export const ContextDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Context footer',
     footer: <ContextFooter />,
   },
 });
 export const ContextTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Context footer',
     footer: <ContextFooter />,
   },
 });
 export const ContextMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Context footer',
     footer: <ContextFooter />,
   },
@@ -222,6 +258,8 @@ export const CompoundsMobile = CustomSlotsMobile;
 
 export const LongScrollableContentDesktop = buildDesktopStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Long content',
     content: (
       <div className="px-4 py-4 space-y-3">
@@ -234,6 +272,8 @@ export const LongScrollableContentDesktop = buildDesktopStoryObj<typeof meta>({
 });
 export const LongScrollableContentTablet = buildTabletStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
+    onResolve: () => {},
     title: 'Long content',
     content: (
       <div className="px-4 py-4 space-y-3">
@@ -246,7 +286,9 @@ export const LongScrollableContentTablet = buildTabletStoryObj<typeof meta>({
 });
 export const LongScrollableContentMobile = buildMobileStoryObj<typeof meta>({
   args: {
+    instanceId: 'dialog',
     title: 'Long content',
+    onResolve: () => {},
     content: (
       <div className="px-4 py-4 space-y-3">
         {Array.from({ length: 40 }, (_, i) => (

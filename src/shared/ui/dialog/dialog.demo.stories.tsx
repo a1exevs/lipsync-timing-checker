@@ -3,11 +3,9 @@ import React from 'react';
 
 import { ConfirmationDialogCancelButton, ConfirmationDialogConfirmButton, useDialogActions } from 'src/shared/ui';
 import Button from 'src/shared/ui/button/button';
-import {
-  ConfirmationDialogProvider,
-  useConfirmationDialog,
-} from 'src/shared/ui/confirmation-dialog/confirmation-dialog.context';
-import { ConfirmationDialogResult } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.types';
+import ConfirmationDialogProvider from 'src/shared/ui/dialog/dialog.provider';
+import { ConfirmationDialogResult } from 'src/shared/ui/dialog/dialog.types';
+import useConfirmationDialog from 'src/shared/ui/dialog/hooks/use-confirmation-dialog';
 import { buildDesktopStoryObj, buildMobileStoryObj, buildTabletStoryObj } from 'storybook-dir/helpers';
 
 const DemoInner: React.FC = () => {
@@ -81,7 +79,7 @@ const Demo: React.FC = () => (
     <DemoInner />
   </ConfirmationDialogProvider>
 );
-const storyTitle = 'Shared/ConfirmationDialog/Demo';
+const storyTitle = 'Shared/Dialog/Demo';
 
 const meta = {
   title: storyTitle,

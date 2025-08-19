@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-import { Footer } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.compounds';
-import { MaybeRenderProp } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.types';
+import { Footer } from 'src/shared/ui/dialog/dialog.compounds';
+import { MaybeRenderProp } from 'src/shared/ui/dialog/dialog.types';
 
 const useFooterNode = ({
   renderMaybe,

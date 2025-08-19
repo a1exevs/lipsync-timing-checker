@@ -1,31 +1,28 @@
 import { Nullable } from '@alexevs/ts-guards';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { RemoveScroll } from 'react-remove-scroll';
 
-import { DialogActionsContext } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.actions';
+import { DialogActionsContext } from 'src/shared/ui/dialog/dialog-actions.context';
+import { DIALOG_OPEN_CLOSE_ANIMATION_MS } from 'src/shared/ui/dialog/dialog.consts';
 import {
-  ConfirmationDialogActions,
-  ConfirmationDialogProps,
   ConfirmationDialogResult,
+  DialogActionsContextValue,
+  InternalDialogProps,
   MaybeRenderProp,
-} from 'src/shared/ui/confirmation-dialog/confirmation-dialog.types';
-import useContentNode from 'src/shared/ui/confirmation-dialog/hooks/use-content-node';
-import useDialogHotkeys from 'src/shared/ui/confirmation-dialog/hooks/use-dialog-hotkeys';
-import useFocusTrap from 'src/shared/ui/confirmation-dialog/hooks/use-focus-trap';
-import useFooterNode from 'src/shared/ui/confirmation-dialog/hooks/use-footer-node';
-import useHeaderNode from 'src/shared/ui/confirmation-dialog/hooks/use-header-node';
-
-type InternalProps = ConfirmationDialogProps & {
-  isOpen: boolean;
-  onResolve: (result: ConfirmationDialogResult) => void;
-};
+} from 'src/shared/ui/dialog/dialog.types';
+import { getOrBuildDialogPortalRoot } from 'src/shared/ui/dialog/dialog.utils';
+import useContentNode from 'src/shared/ui/dialog/hooks/use-content-node';
+import useDialogHotkeys from 'src/shared/ui/dialog/hooks/use-dialog-hotkeys';
+import useFocusTrap from 'src/shared/ui/dialog/hooks/use-focus-trap';
+import useFooterNode from 'src/shared/ui/dialog/hooks/use-footer-node';
+import useHeaderNode from 'src/shared/ui/dialog/hooks/use-header-node';
 
 const overlayClasses = 'fixed inset-0 z-50 flex items-center justify-center bg-blue-900/40';
 const dialogContainerClasses =
   'relative mx-4 max-h-[80vh] w-full max-w-lg overflow-hidden rounded-md bg-white shadow-xl outline-none';
 
-const ConfirmationDialog: React.FC<InternalProps> = ({
+const ConfirmationDialog: React.FC<InternalDialogProps> = ({
+  instanceId,
   isOpen,
   onResolve,
   title,
@@ -37,6 +34,8 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
   content,
   footer,
   initialFocusRef,
+  isTop = true,
+  zIndexBase = 1000,
 }) => {
   const containerRef = useRef<Nullable<HTMLDivElement>>(null);
   const handleConfirm = useCallback(() => onResolve(ConfirmationDialogResult.CONFIRM), [onResolve]);
@@ -47,19 +46,20 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     }
   }, [modal, onResolve]);
 
-  const actions: ConfirmationDialogActions = useMemo(
+  const actions: DialogActionsContextValue = useMemo(
     () => ({ confirm: handleConfirm, cancel: handleCancel, outsideClick: handleOutsideClick }),
     [handleConfirm, handleCancel, handleOutsideClick],
   );
 
   const renderMaybe = useCallback(
     (node?: MaybeRenderProp): React.ReactNode =>
-      typeof node === 'function' ? (node as (a: ConfirmationDialogActions) => React.ReactNode)(actions) : node,
+      typeof node === 'function' ? (node as (a: DialogActionsContextValue) => React.ReactNode)(actions) : node,
     [actions],
   );
 
-  const titleId = 'confirmation-dialog-title';
-  const descriptionId = 'confirmation-dialog-description';
+  const titleId = `confirmation-dialog-title-${instanceId}`;
+  const descriptionId = `confirmation-dialog-description-${instanceId}`;
+
   const headerNode = useHeaderNode({ renderMaybe, header, title, titleId, handleCancel });
   const contentNode = useContentNode({ renderMaybe, content, message, title, descriptionId });
   const footerNode = useFooterNode({
@@ -71,31 +71,15 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     handleConfirm,
   });
 
-  useDialogHotkeys({ isOpen, onConfirm: handleConfirm, onCancel: handleCancel });
-  useFocusTrap({ isOpen, containerRef, initialFocusRef });
+  useDialogHotkeys({ isOpen: isOpen && isTop, onConfirm: handleConfirm, onCancel: handleCancel });
+  useFocusTrap({ isOpen: isOpen && isTop, containerRef, initialFocusRef });
 
-  // Portal container
-  const portalContainerRef = useRef<Nullable<HTMLDivElement>>(null);
-  useEffect(() => {
-    if (!portalContainerRef.current) {
-      const el = document.createElement('div');
-      el.setAttribute('data-dialog-portal', '');
-      document.body.appendChild(el);
-      portalContainerRef.current = el;
-    }
-    return () => {
-      const el = portalContainerRef.current;
-      if (el && el.parentNode) {
-        el.parentNode.removeChild(el);
-      }
-      portalContainerRef.current = null;
-    };
-  }, []);
+  // Shared portal root
+  const portalRoot = getOrBuildDialogPortalRoot();
 
   const [isMounted, setIsMounted] = useState<boolean>(isOpen);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isLeaving, setIsLeaving] = useState<boolean>(false);
-  const ANIMATION_MS = 200;
 
   useEffect(() => {
     if (isOpen) {
@@ -111,7 +95,7 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
         setIsMounted(false);
         setIsLeaving(false);
         // defer clearing props in provider until unmount is done
-      }, ANIMATION_MS);
+      }, DIALOG_OPEN_CLOSE_ANIMATION_MS);
       return () => clearTimeout(t);
     }
   }, [isOpen, isMounted]);
@@ -120,17 +104,17 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     return null;
   }
 
-  const overlayAnimatedClasses = `${overlayClasses} transition-opacity duration-[${ANIMATION_MS}ms] ${
+  const overlayAnimatedClasses = `${overlayClasses} transition-opacity duration-[${DIALOG_OPEN_CLOSE_ANIMATION_MS}ms] ${
     isVisible && !isLeaving ? 'opacity-100' : 'opacity-0'
   }`;
-  const dialogAnimatedClasses = `${dialogContainerClasses} transition duration-[${ANIMATION_MS}ms] ease-out ${
+  const dialogAnimatedClasses = `${dialogContainerClasses} transition duration-[${DIALOG_OPEN_CLOSE_ANIMATION_MS}ms] ease-out ${
     isVisible && !isLeaving
       ? 'opacity-100 u-translate-y-0 u-scale-100'
       : 'opacity-0 u-translate-y-4 u-scale-95 will-change-transform'
   }`;
 
   const dialogTree = (
-    <div className={overlayAnimatedClasses} onMouseDown={handleOutsideClick}>
+    <div className={overlayAnimatedClasses} onMouseDown={handleOutsideClick} style={{ zIndex: zIndexBase }}>
       <DialogActionsContext.Provider value={actions}>
         <div
           ref={containerRef}
@@ -141,6 +125,7 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
           className={dialogAnimatedClasses}
           onMouseDown={e => e.stopPropagation()}
           tabIndex={-1}
+          style={{ zIndex: zIndexBase + 1, pointerEvents: isTop ? 'auto' : 'none' }}
         >
           {headerNode}
           {contentNode}
@@ -150,16 +135,10 @@ const ConfirmationDialog: React.FC<InternalProps> = ({
     </div>
   );
 
-  const withScrollLock = (
-    <RemoveScroll enabled={isMounted} inert>
-      {dialogTree}
-    </RemoveScroll>
-  );
-
-  if (!portalContainerRef.current) {
-    return withScrollLock;
+  if (!portalRoot) {
+    return dialogTree;
   }
-  return createPortal(withScrollLock, portalContainerRef.current);
+  return createPortal(dialogTree, portalRoot);
 };
 
 export default ConfirmationDialog;

@@ -2,7 +2,7 @@ import { X as CloseIcon } from 'lucide-react';
 import React from 'react';
 
 import Button from 'src/shared/ui/button/button';
-import { useDialogActions } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.actions';
+import useDialogActions from 'src/shared/ui/dialog/hooks/use-dialog-actions';
 import IconButton from 'src/shared/ui/icon-button/icon-button';
 
 export const ConfirmButton: React.FC<{ text?: string }> = ({ text = 'Confirm' }) => {

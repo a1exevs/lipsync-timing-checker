@@ -3,11 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import Button from 'src/shared/ui/button/button';
-import {
-  ConfirmationDialogProvider,
-  useConfirmationDialog,
-} from 'src/shared/ui/confirmation-dialog/confirmation-dialog.context';
-import { ConfirmationDialogResult } from 'src/shared/ui/confirmation-dialog/confirmation-dialog.types';
+import ConfirmationDialogProvider from 'src/shared/ui/dialog/dialog.provider';
+import { ConfirmationDialogResult } from 'src/shared/ui/dialog/dialog.types';
+import useConfirmationDialog from 'src/shared/ui/dialog/hooks/use-confirmation-dialog';
 
 const TestComponent: React.FC = () => {
   const open = useConfirmationDialog({ title: 'Title', message: 'Message' });

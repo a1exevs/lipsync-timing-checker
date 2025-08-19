@@ -13,7 +13,7 @@ const useDialogHotkeys = ({
     if (!isOpen) {
       return;
     }
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         onCancel();
@@ -23,8 +23,9 @@ const useDialogHotkeys = ({
         onConfirm();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    const target: Document | undefined = typeof document !== 'undefined' ? document : undefined;
+    target?.addEventListener('keydown', handler);
+    return () => target?.removeEventListener('keydown', handler);
   }, [isOpen, onConfirm, onCancel]);
 };
 

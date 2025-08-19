@@ -1,5 +1,15 @@
 // ui
-export { Button, FilePicker, IconButton } from 'src/shared/ui';
+export {
+  Button,
+  FilePicker,
+  IconButton,
+  useConfirmationDialog,
+  ConfirmationDialogResult,
+  useDialogActions,
+  ConfirmationDialogConfirmButton,
+  ConfirmationDialogCancelButton,
+  ConfirmationDialogProvider,
+} from 'src/shared/ui';
 
 // api
 export {
