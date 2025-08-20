@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom';
 
 import { DialogActionsContext } from 'src/shared/ui/dialog/dialog-actions.context';
-import { DIALOG_OPEN_CLOSE_ANIMATION_MS } from 'src/shared/ui/dialog/dialog.consts';
+import { DIALOG_BASE_Z_INDEX, DIALOG_OPEN_CLOSE_ANIMATION_MS } from 'src/shared/ui/dialog/dialog.consts';
 import {
-  ConfirmationDialogResult,
   DialogActionsContextValue,
+  DialogResponse,
   InternalDialogProps,
   MaybeRenderProp,
 } from 'src/shared/ui/dialog/dialog.types';
@@ -21,7 +21,7 @@ const overlayClasses = 'fixed inset-0 z-50 flex items-center justify-center bg-b
 const dialogContainerClasses =
   'relative mx-4 max-h-[80vh] w-full max-w-lg overflow-hidden rounded-md bg-white shadow-xl outline-none';
 
-const ConfirmationDialog: React.FC<InternalDialogProps> = ({
+const Dialog: React.FC<InternalDialogProps> = ({
   instanceId,
   isOpen,
   onResolve,
@@ -35,14 +35,14 @@ const ConfirmationDialog: React.FC<InternalDialogProps> = ({
   footer,
   initialFocusRef,
   isTop = true,
-  zIndexBase = 1000,
+  zIndexBase = DIALOG_BASE_Z_INDEX,
 }) => {
   const containerRef = useRef<Nullable<HTMLDivElement>>(null);
-  const handleConfirm = useCallback(() => onResolve(ConfirmationDialogResult.CONFIRM), [onResolve]);
-  const handleCancel = useCallback(() => onResolve(ConfirmationDialogResult.CANCEL), [onResolve]);
+  const handleConfirm = useCallback(() => onResolve(DialogResponse.CONFIRM), [onResolve]);
+  const handleCancel = useCallback(() => onResolve(DialogResponse.CANCEL), [onResolve]);
   const handleOutsideClick = useCallback(() => {
     if (!modal) {
-      onResolve(ConfirmationDialogResult.OUTSIDE_CLICK);
+      onResolve(DialogResponse.OUTSIDE_CLICK);
     }
   }, [modal, onResolve]);
 
@@ -141,4 +141,4 @@ const ConfirmationDialog: React.FC<InternalDialogProps> = ({
   return createPortal(dialogTree, portalRoot);
 };
 
-export default ConfirmationDialog;
+export default Dialog;

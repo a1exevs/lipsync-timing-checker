@@ -1,17 +1,17 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import ConfirmationDialog from 'src/shared/ui/dialog/dialog';
+import Dialog from 'src/shared/ui/dialog/dialog';
 
-describe('ConfirmationDialog snapshots', () => {
+describe('Dialog', () => {
   it('renders default with title only', () => {
-    const { asFragment } = render(<ConfirmationDialog instanceId="dialog" isOpen title="Title" onResolve={() => {}} />);
+    const { asFragment } = render(<Dialog instanceId="dialog" isOpen title="Title" onResolve={() => {}} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders with message and custom confirm button text', () => {
     const { asFragment } = render(
-      <ConfirmationDialog
+      <Dialog
         instanceId="dialog"
         isOpen
         title="Delete file"
@@ -25,21 +25,19 @@ describe('ConfirmationDialog snapshots', () => {
 
   it('renders without cancel button', () => {
     const { asFragment } = render(
-      <ConfirmationDialog instanceId="dialog" isOpen title="Only confirm" hideCancelButton onResolve={() => {}} />,
+      <Dialog instanceId="dialog" isOpen title="Only confirm" hideCancelButton onResolve={() => {}} />,
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders in modal mode', () => {
-    const { asFragment } = render(
-      <ConfirmationDialog instanceId="dialog" isOpen title="Modal" modal onResolve={() => {}} />,
-    );
+    const { asFragment } = render(<Dialog instanceId="dialog" isOpen title="Modal" modal onResolve={() => {}} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders with custom header, content and footer', () => {
     const { asFragment } = render(
-      <ConfirmationDialog
+      <Dialog
         instanceId="dialog"
         isOpen
         title="Ignored title"

@@ -20,15 +20,12 @@ export const Header: React.FC<{ title: string; titleId: string; handleCancel: ()
   titleId,
   handleCancel,
 }) => {
-  const titleClasses = 'text-lg font-semibold text-gray-900';
-  const headerClasses =
-    'sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3';
   return (
-    <div className={headerClasses}>
-      <div id={titleId} className={titleClasses}>
+    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-gray-800 px-4 py-3">
+      <div id={titleId} className="text-lg font-semibold">
         {title}
       </div>
-      <IconButton title="Close" variant="secondary" size="sm" onClick={handleCancel}>
+      <IconButton title="Close" variant="danger" size="sm" onClick={handleCancel}>
         <CloseIcon size={16} />
       </IconButton>
     </div>
@@ -36,10 +33,11 @@ export const Header: React.FC<{ title: string; titleId: string; handleCancel: ()
 };
 
 export const Content: React.FC<{ message?: string; descriptionId?: string }> = ({ message = '', descriptionId }) => {
-  const contentWrapperClasses =
-    'break-all max-h-[calc(80vh-7rem)] overflow-y-auto overflow-x-hidden px-4 py-4 text-gray-800';
   return (
-    <div id={descriptionId} className={contentWrapperClasses}>
+    <div
+      id={descriptionId}
+      className="break-all max-h-[calc(80vh-7rem)] overflow-y-auto overflow-x-hidden px-4 py-4 bg-gray-800"
+    >
       {message}
     </div>
   );
@@ -51,10 +49,8 @@ export const Footer: React.FC<{
   handleCancel: () => void;
   handleConfirm: () => void;
 }> = ({ hideCancelButton, confirmButtonText, handleCancel, handleConfirm }) => {
-  const footerClasses =
-    'sticky bottom-0 z-10 flex items-center justify-end gap-2 border-t border-gray-200 bg-white px-4 py-3';
   return (
-    <div className={footerClasses}>
+    <div className="sticky bottom-0 z-10 flex items-center justify-end gap-2 border-t border-gray-200 bg-gray-800 px-4 py-3">
       {!hideCancelButton && <Button text="Cancel" variant="secondary" onClick={handleCancel} />}
       <Button text={confirmButtonText} variant="primary" onClick={handleConfirm} />
     </div>

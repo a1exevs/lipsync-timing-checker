@@ -2,7 +2,7 @@ import type { Meta } from '@storybook/react';
 import React from 'react';
 
 import { ConfirmationDialogCancelButton, ConfirmationDialogConfirmButton, useDialogActions } from 'src/shared/ui';
-import ConfirmationDialog from 'src/shared/ui/dialog/dialog';
+import Dialog from 'src/shared/ui/dialog/dialog';
 import { buildDesktopStoryObj, buildMobileStoryObj, buildTabletStoryObj } from 'storybook-dir/helpers';
 
 const storyTitle = 'Shared/Dialog/Direct';
@@ -11,13 +11,13 @@ const noop = () => {};
 
 const meta = {
   title: storyTitle,
-  component: ConfirmationDialog,
+  component: Dialog,
   args: {
     isOpen: true,
     onResolve: noop,
     title: 'Confirm action',
   },
-} satisfies Meta<typeof ConfirmationDialog>;
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
 

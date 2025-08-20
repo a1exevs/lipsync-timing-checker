@@ -3,8 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import Button from 'src/shared/ui/button/button';
-import ConfirmationDialogProvider from 'src/shared/ui/dialog/dialog.provider';
-import { ConfirmationDialogResult } from 'src/shared/ui/dialog/dialog.types';
+import DialogProvider from 'src/shared/ui/dialog/dialog.provider';
+import { DialogResponse } from 'src/shared/ui/dialog/dialog.types';
 import useConfirmationDialog from 'src/shared/ui/dialog/hooks/use-confirmation-dialog';
 
 const TestComponent: React.FC = () => {
@@ -22,26 +22,26 @@ const TestComponent: React.FC = () => {
   );
 };
 
-describe('ConfirmationDialog', () => {
+describe('Dialog', () => {
   const renderWithProvider = () =>
     render(
-      <ConfirmationDialogProvider>
+      <DialogProvider>
         <TestComponent />
-      </ConfirmationDialogProvider>,
+      </DialogProvider>,
     );
 
   it('confirms on enter key', async () => {
     renderWithProvider();
     fireEvent.click(screen.getByText('open'));
     fireEvent.keyDown(window, { key: 'Enter' });
-    expect(await screen.findByText(ConfirmationDialogResult.CONFIRM)).toBeInTheDocument();
+    expect(await screen.findByText(DialogResponse.CONFIRM)).toBeInTheDocument();
   });
 
   it('cancels on escape key', async () => {
     renderWithProvider();
     fireEvent.click(screen.getByText('open'));
     fireEvent.keyDown(window, { key: 'Escape' });
-    expect(await screen.findByText(ConfirmationDialogResult.CANCEL)).toBeInTheDocument();
+    expect(await screen.findByText(DialogResponse.CANCEL)).toBeInTheDocument();
   });
 
   it('returns OUTSIDE_CLICK on overlay click if not modal', async () => {
@@ -57,15 +57,15 @@ describe('ConfirmationDialog', () => {
       );
     };
     render(
-      <ConfirmationDialogProvider>
+      <DialogProvider>
         <Comp />
-      </ConfirmationDialogProvider>,
+      </DialogProvider>,
     );
     fireEvent.click(screen.getByText('open'));
     const dialogWrapper = screen.getByRole('dialog').parentElement;
     if (!isNull(dialogWrapper)) {
       fireEvent.mouseDown(dialogWrapper);
     }
-    expect(await screen.findByText(ConfirmationDialogResult.OUTSIDE_CLICK)).toBeInTheDocument();
+    expect(await screen.findByText(DialogResponse.OUTSIDE_CLICK)).toBeInTheDocument();
   });
 });

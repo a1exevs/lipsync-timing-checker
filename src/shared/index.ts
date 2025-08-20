@@ -4,11 +4,12 @@ export {
   FilePicker,
   IconButton,
   useConfirmationDialog,
-  ConfirmationDialogResult,
+  useInfoDialog,
+  DialogResponse,
   useDialogActions,
   ConfirmationDialogConfirmButton,
   ConfirmationDialogCancelButton,
-  ConfirmationDialogProvider,
+  DialogProvider,
 } from 'src/shared/ui';
 
 // api

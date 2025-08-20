@@ -1,7 +1,7 @@
 import { Nullable } from '@alexevs/ts-guards';
 import React from 'react';
 
-export enum ConfirmationDialogResult {
+export enum DialogResponse {
   CONFIRM = 'CONFIRM',
   CANCEL = 'CANCEL',
   OUTSIDE_CLICK = 'OUTSIDE_CLICK',
@@ -27,21 +27,23 @@ export type ConfirmationDialogProps = {
   initialFocusRef?: React.RefObject<Nullable<HTMLElement>>;
 };
 
+export type InfoDialogProps = Omit<ConfirmationDialogProps, 'hideCancelButton'>;
+
 export type InternalDialogProps = ConfirmationDialogProps & {
   instanceId: string;
   isOpen: boolean;
-  onResolve: (result: ConfirmationDialogResult) => void;
+  onResolve: (result: DialogResponse) => void;
   isTop?: boolean;
   zIndexBase?: number;
 };
 
-export type OpenConfirmationDialog = (props: ConfirmationDialogProps) => Promise<ConfirmationDialogResult>;
+export type OpenConfirmationDialog = (props: ConfirmationDialogProps) => Promise<DialogResponse>;
 
 export type StackedDialogData = {
   id: number;
   props: ConfirmationDialogProps;
   isOpen: boolean;
-  resolve: (result: ConfirmationDialogResult) => void;
+  resolve: (result: DialogResponse) => void;
 };
 
 export type DialogContextValue = {
