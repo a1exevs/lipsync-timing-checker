@@ -189,7 +189,7 @@ exports[`App matches snapshot 1`] = `
         class="flex items-center gap-6 my-4 rounded-md bg-gray-800 p-4 shadow"
       >
         <button
-          class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
           disabled=""
           title="Play"
           type="button"
@@ -216,7 +216,7 @@ exports[`App matches snapshot 1`] = `
           class="flex items-center gap-2"
         >
           <button
-            class="rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
             disabled=""
             title="Lock caret position"
             type="button"
@@ -243,7 +243,7 @@ exports[`App matches snapshot 1`] = `
             </svg>
           </button>
           <button
-            class="rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
             disabled=""
             title="Enable audio while dragging"
             type="button"
