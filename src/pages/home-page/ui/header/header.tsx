@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react';
 import React, { ReactNode, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { ABOUT_APP_DIALOG_SEEN_KEY, WORDS_DATA_EXAMPLE } from 'src/pages/home-page/model/consts';
 import { HighlighterProps } from 'src/pages/home-page/ui/header/header.types';
