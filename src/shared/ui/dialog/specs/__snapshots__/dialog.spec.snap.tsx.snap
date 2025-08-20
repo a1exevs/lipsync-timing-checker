@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Dialog renders default with title only 1`] = `<DocumentFragment />`;
+
+exports[`Dialog renders in modal mode 1`] = `<DocumentFragment />`;
+
+exports[`Dialog renders with custom header, content and footer 1`] = `<DocumentFragment />`;
+
+exports[`Dialog renders with message and custom confirm button text 1`] = `<DocumentFragment />`;
+
+exports[`Dialog renders without cancel button 1`] = `<DocumentFragment />`;

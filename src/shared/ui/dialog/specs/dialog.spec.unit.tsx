@@ -34,14 +34,14 @@ describe('Dialog', () => {
     renderWithProvider();
     fireEvent.click(screen.getByText('open'));
     fireEvent.keyDown(window, { key: 'Enter' });
-    expect(await screen.findByText(DialogResponse.CONFIRM)).toBeInTheDocument();
+    expect(await screen.findByText('Confirm')).toBeInTheDocument();
   });
 
   it('cancels on escape key', async () => {
     renderWithProvider();
     fireEvent.click(screen.getByText('open'));
     fireEvent.keyDown(window, { key: 'Escape' });
-    expect(await screen.findByText(DialogResponse.CANCEL)).toBeInTheDocument();
+    expect(await screen.findByText('Cancel')).toBeInTheDocument();
   });
 
   it('returns OUTSIDE_CLICK on overlay click if not modal', async () => {
