@@ -14,6 +14,8 @@ const enLabels = {
   UNLOCK_CARET_POSITION: 'Unlock caret position',
   ENABLE_AUDIO_WHILE_DRAGGING: 'Enable audio while dragging',
   DISABLE_AUDIO_WHILE_DRAGGING: 'Disable audio while dragging',
+  ABOUT_APP: 'About this app',
+  OK: 'Ok',
 };
 
 const enMessages = {};
