@@ -11,6 +11,7 @@ type Props = {
   fileName?: string;
   icon?: ReactNode;
   disabled?: boolean;
+  fileInputTestId?: string;
 };
 
 const FilePicker: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const FilePicker: React.FC<Props> = ({
   text,
   icon,
   disabled = false,
+  fileInputTestId,
 }) => {
   const fileRef = useRef<Nullable<HTMLInputElement>>(null);
   return (
@@ -36,7 +38,7 @@ const FilePicker: React.FC<Props> = ({
           {fileName}
         </span>
       )}
-      <FileInput ref={fileRef} accept={accept} handleFileUpload={handleFileUpload} />
+      <FileInput ref={fileRef} accept={accept} handleFileUpload={handleFileUpload} dataTestId={fileInputTestId} />
     </div>
   );
 };

@@ -1,0 +1,32 @@
+name: Project test
+
+on:
+  push:
+    branches: [ develop, testing, main ]
+  pull_request:
+    branches: [ develop, testing, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.9.0
+
+      - name: Install dependencies
+        run: |
+          npm install -g corepack@0.31.0
+          corepack enable
+          yarn install
+
+      - name: Unit tests
+        run: yarn test:unit
+
+      - name: Snapshot tests
+        run: yarn test:snap
