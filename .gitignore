@@ -133,3 +133,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .yarnrc
+
+test-results
+playwright-report
+
+docs
+storybook-static

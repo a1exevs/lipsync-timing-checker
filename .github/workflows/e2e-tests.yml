@@ -1,0 +1,32 @@
+name: E2E Tests (win)
+on:
+  pull_request:
+    branches: [ develop, testing, main ]
+jobs:
+  e2e-tests:
+    timeout-minutes: 60
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.9.0
+
+      - name: Install dependencies
+        run: |
+          npm install -g corepack@0.31.0
+          corepack enable
+          yarn install
+          yarn e2e:install
+
+      - name: E2E tests
+        run: yarn test:e2e
+        env:
+          BROWSER: chrome
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

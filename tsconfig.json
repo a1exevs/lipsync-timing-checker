@@ -25,18 +25,17 @@
     "paths": {
       "src/*": [
         "src/*"
+      ],
+      "storybook-dir/*": [
+        "./.storybook/*"
       ]
     }
   },
-  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
-    "dist", "build",
+    "dist",
+    "build",
     "coverage",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.old.ts",
-    "**/*.old.tsx",
-    "update-env.js"
+    "storybook-static"
   ]
 }

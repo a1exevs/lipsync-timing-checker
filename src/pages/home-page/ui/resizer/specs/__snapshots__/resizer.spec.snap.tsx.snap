@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Resizer renders with type chain 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute top-0 h-full cursor-col-resize"
+    style="z-index: 10; width: 8px; right: -4px;"
+  />
+</DocumentFragment>
+`;
+
+exports[`Resizer renders with type left 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute top-0 h-full cursor-col-resize left-0"
+    style="z-index: 10; width: 8px;"
+  />
+</DocumentFragment>
+`;
+
+exports[`Resizer renders with type right 1`] = `
+<DocumentFragment>
+  <div
+    class="absolute top-0 h-full cursor-col-resize right-0"
+    style="z-index: 10; width: 8px;"
+  />
+</DocumentFragment>
+`;
