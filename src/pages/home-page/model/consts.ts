@@ -1,3 +1,5 @@
+import { WordDTO } from 'src/pages/home-page/model/types';
+
 export const DEFAULT_TIME_LINE_SCALE_COEFFICIENT = 400;
 export const MIN_TIME_LINE_SCALE_COEFFICIENT = 100;
 export const TIME_LINE_SCALE_COEFFICIENT_STEP = 100;
@@ -24,3 +26,21 @@ export const EXAMPLE_AUDIO_FILE_NAME = `audio_calibration_1.mp3`;
 export const EXAMPLE_AUDIO_FILE_PATH = `${process.env.PUBLIC_URL}/example-1/${EXAMPLE_AUDIO_FILE_NAME}`;
 export const EXAMPLE_WORDS_DATA_FILE_NAME = `phonemes_timing_calibration_1_ru.json`;
 export const EXAMPLE_WORDS_DATA_FILE_PATH = `${process.env.PUBLIC_URL}/example-1/${EXAMPLE_WORDS_DATA_FILE_NAME}`;
+
+export const WORDS_DATA_EXAMPLE: { words: WordDTO[] } = {
+  words: [
+    {
+      word: 'Hello',
+      start: 0.12,
+      end: 0.48,
+      phonemes: [
+        { phoneme: 'HH', start: 0.12, end: 0.2 },
+        { phoneme: 'AH', start: 0.2, end: 0.32 },
+        { phoneme: 'L', start: 0.32, end: 0.4 },
+        { phoneme: 'OW', start: 0.4, end: 0.48 },
+      ],
+    },
+  ],
+};
+
+export const ABOUT_APP_DIALOG_SEEN_KEY = 'ltc-about-app-dialog-seen';

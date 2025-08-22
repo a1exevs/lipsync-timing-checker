@@ -1,3 +1,34 @@
+# Release v0.10.0
+## What's Changed
+* [Tests][Common] Unit-tests, Snapshot-tests, E2E-tests configuration, tests for converters and Resizer by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/42
+* [Common] renovate.json config by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/43
+* [Common][Documentation] TypeDoc config by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/44
+* [Common] Release steps by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/46
+* [Tests] Resizer Test id support by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/48
+* [Tests] DataIOPanel component Unit, Snap-tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/47
+* [Common][Improvement] Turn ON ESlint Relative Import Error Rule by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/49
+* [Tests] TimeScale component unit, snap-tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/50
+* [Tests] Phoneme component unit, snap-tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/51
+* [Tests] Word component unit, snap-tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/52
+* [Refactoring][Tests] Control Panel component implementation and unit, snap-tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/53
+* [Refactoring] Lang object for localization constants by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/54
+* [Refactoring] Directories corrections (FSD) by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/55
+* [Storybook] Configuration and Button stories by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/56
+* [Tests][Storybook] App Layer tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/57
+* [Storybook][Tests][Refactoring] App, Pages, Shared layers tests by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/58
+* [Common] Pin dependencies by @renovate[bot] in https://github.com/a1exevs/lipsync-timing-checker/pull/59
+* [Feature] 'Load example' functionality by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/61
+* [Common] Version increase v0.10.0 by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/62
+* [Bugfix] update-version.sh Manifest file git-add fix (path correction) by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/63
+* [Feature] Confirmation dialog by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/65
+* [Feature] About App dialog by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/66
+* [Bugfix] Home Page story fix by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/68
+
+## New Contributors
+* @renovate[bot] made their first contribution in https://github.com/a1exevs/lipsync-timing-checker/pull/59
+
+**Full Changelog**: https://github.com/a1exevs/lipsync-timing-checker/compare/v0.8.0...v0.10.0
+
 # Release v0.8.0
 ## What's Changed
 * [Feature] Initial PR by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/1

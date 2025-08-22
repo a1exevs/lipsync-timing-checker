@@ -40,7 +40,7 @@ newVersion=$( sed -n -e 's/.*"version": "\(.*\)",/\1/p' package.json | head -1 )
 echo "New version: $newVersion"
 
 git add package.json
-git add src/app/manifest.json
+git add public/manifest.json
 
 git commit -m "[Common] Version increase v$newVersion"
 

@@ -27,10 +27,11 @@ import useWordResizeStart from 'src/pages/home-page/model/hooks/use-word-resize-
 import { AudioTrackTextDataDTO, Word } from 'src/pages/home-page/model/types';
 import ControlPanel from 'src/pages/home-page/ui/control-panel/control-panel';
 import DataIOPanel from 'src/pages/home-page/ui/data-io-panel/data-io-panel';
+import Header from 'src/pages/home-page/ui/header/header';
 import { wordsDataContainerStyles } from 'src/pages/home-page/ui/home-page.consts';
 import TimeScale from 'src/pages/home-page/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home-page/ui/word/word';
-import { arrayToObject, capitalizeLabel, currentLang, getFileData, throttleTime } from 'src/shared';
+import { arrayToObject, getFileData, throttleTime } from 'src/shared';
 
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
@@ -353,7 +354,7 @@ const HomePage: React.FC = () => {
 
   return (
     <section className="flex flex-col">
-      <h1 className="text-center">{capitalizeLabel(currentLang.labels.APP_NAME)}</h1>
+      <Header />
       <DataIOPanel
         audioFileName={audioFileData?.fileName}
         wordsDataFileName={wordsDataFileData?.fileName}

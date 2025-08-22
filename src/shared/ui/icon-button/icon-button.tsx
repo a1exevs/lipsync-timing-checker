@@ -33,7 +33,7 @@ const IconButton: React.FC<Props> = ({
       onClick={handleClick}
       title={title}
       disabled={disabled}
-      className={`rounded-full transition ${sizes[size]} ${variants[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
+      className={`flex items-center justify-center rounded-full transition ${sizes[size]} ${variants[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
     >
       {children}
     </button>

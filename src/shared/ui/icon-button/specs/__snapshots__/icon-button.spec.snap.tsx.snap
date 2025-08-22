@@ -3,7 +3,7 @@
 exports[`IconButton snapshots renders danger variant 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-red-600 hover:bg-red-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-red-600 hover:bg-red-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -36,7 +36,7 @@ exports[`IconButton snapshots renders danger variant 1`] = `
 exports[`IconButton snapshots renders default 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -69,7 +69,7 @@ exports[`IconButton snapshots renders default 1`] = `
 exports[`IconButton snapshots renders disabled 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     disabled=""
     type="button"
   >
@@ -103,7 +103,7 @@ exports[`IconButton snapshots renders disabled 1`] = `
 exports[`IconButton snapshots renders primary variant 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -136,7 +136,7 @@ exports[`IconButton snapshots renders primary variant 1`] = `
 exports[`IconButton snapshots renders secondary variant 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -169,7 +169,7 @@ exports[`IconButton snapshots renders secondary variant 1`] = `
 exports[`IconButton snapshots renders with size lg 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-3 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-3 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -202,7 +202,7 @@ exports[`IconButton snapshots renders with size lg 1`] = `
 exports[`IconButton snapshots renders with size md 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -235,7 +235,7 @@ exports[`IconButton snapshots renders with size md 1`] = `
 exports[`IconButton snapshots renders with size sm 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-1 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-1 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     type="button"
   >
     <svg
@@ -268,7 +268,7 @@ exports[`IconButton snapshots renders with size sm 1`] = `
 exports[`IconButton snapshots renders with title 1`] = `
 <DocumentFragment>
   <button
-    class="rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex items-center justify-center rounded-full transition p-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
     title="Test title"
     type="button"
   >
