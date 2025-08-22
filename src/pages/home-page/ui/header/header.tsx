@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
+import { ReactComponent as Logo } from 'src/logo.svg';
 import { ABOUT_APP_DIALOG_SEEN_KEY, WORDS_DATA_EXAMPLE } from 'src/pages/home-page/model/consts';
 import { HighlighterProps } from 'src/pages/home-page/ui/header/header.types';
 import { capitalizeLabel, currentLang, IconButton, useInfoDialog } from 'src/shared';
@@ -10,6 +11,7 @@ import { capitalizeLabel, currentLang, IconButton, useInfoDialog } from 'src/sha
 const Header: React.FC = () => {
   const SyntaxHighlighterCompat = SyntaxHighlighter as unknown as React.ComponentType<HighlighterProps>;
 
+  // TODO Move consts to lang
   const infoContent: ReactNode = (
     <div className="break-all max-h-[calc(80vh-7rem)] overflow-y-auto overflow-x-hidden px-4 py-4 text-sm leading-6 space-y-3 bg-gray-800">
       <p>
@@ -60,10 +62,10 @@ const Header: React.FC = () => {
   }, [openInfo]);
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-gray-700 shadow-md shadow-black/30">
-      <h1 className="text-center text-2xl font-extrabold tracking-tight">
-        {capitalizeLabel(currentLang.labels.APP_NAME)}
-      </h1>
+    <header className="grid grid-cols-[auto,1fr,auto] gap-4 items-center px-4 py-3 bg-gray-800 border-b border-gray-700 shadow-md shadow-black/30">
+      {/* TODO Make built-in logo */}
+      <Logo className="w-16 h-16" aria-hidden="true" />
+      <h1 className="text-2xl font-extrabold tracking-tight">{capitalizeLabel(currentLang.labels.APP_NAME)}</h1>
       <IconButton title="Info" variant="secondary" size="sm" onClick={openInfo}>
         <Info size={18} />
       </IconButton>
