@@ -62,7 +62,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="grid grid-cols-[auto,1fr,auto] gap-4 items-center px-4 py-3 bg-gray-800 border-b border-gray-700 shadow-md shadow-black/30">
-      <Logo className="w-4 h-h" aria-hidden="true" />
+      <Logo className="w-16 h-16" aria-hidden="true" />
       <h1 className="text-2xl font-extrabold tracking-tight">{capitalizeLabel(currentLang.labels.APP_NAME)}</h1>
       <IconButton title="Info" variant="secondary" size="sm" onClick={openInfo}>
         <Info size={18} />
