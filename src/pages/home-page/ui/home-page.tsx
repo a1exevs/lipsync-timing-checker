@@ -33,6 +33,8 @@ import TimeScale from 'src/pages/home-page/ui/time-scale/time-scale';
 import WordComponent from 'src/pages/home-page/ui/word/word';
 import { arrayToObject, getFileData, throttleTime } from 'src/shared';
 
+// TODO Improve mobile experience (resizing, moving, issue with 2 fingers in WaveForm)
+
 const HomePage: React.FC = () => {
   const [audioFileData, setAudioFileData] = useState<Nullable<{ fileName: string; fileUrl: string }>>(null);
   const [wordsDataFileData, setWordsDataFileData] = useState<Nullable<{ fileName: string; extension: string }>>(null);
@@ -72,6 +74,8 @@ const HomePage: React.FC = () => {
     setWavesurfer(ws);
     setIsPlaying(false);
     setLockedCaretPosition(0);
+    // TODO Maybe set max(audio duration, last word end) as a timelineWidth
+    // TODO Support cases with words outside timeline
     const timelineWidth = ws.getDuration() * timelineScaleCoefficients;
     setTimelineWidth(timelineWidth);
 
@@ -113,6 +117,7 @@ const HomePage: React.FC = () => {
           return;
         }
         // TODO encapsulate JSON.parse in parser factory and add JSON structure validation
+        // TODO Add validation and toaster error messages
         const dataDTO: AudioTrackTextDataDTO = JSON.parse(e.target.result);
         const words: Word[] = dataDTO.words.map((wordDTO, index) =>
           convertWordDTOToWord({

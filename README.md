@@ -140,3 +140,5 @@ Automatically runs after dependencies installation to set up git hooks through h
 
 ## Repository
 Link to repository https://github.com/a1exevs/lipsync-timing-checker.
+
+Link to project https://github.com/users/a1exevs/projects/8
