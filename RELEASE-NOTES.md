@@ -1,3 +1,13 @@
+# Release v0.11.0
+## What's Changed
+* [Common] RELEASE-NOTES.md update v0.10.0 by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/70
+* [Common] Lock file maintenance by @renovate[bot] in https://github.com/a1exevs/lipsync-timing-checker/pull/64
+* [Common] Version increase v0.11.0 by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/72
+* [Feature] Favicon and Logo by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/71
+* [Bugfix] yarn.lock fix by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/74
+
+**Full Changelog**: https://github.com/a1exevs/lipsync-timing-checker/compare/v0.10.0...v0.11.0
+
 # Release v0.10.0
 ## What's Changed
 * [Tests][Common] Unit-tests, Snapshot-tests, E2E-tests configuration, tests for converters and Resizer by @a1exevs in https://github.com/a1exevs/lipsync-timing-checker/pull/42
