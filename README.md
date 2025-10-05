@@ -1,5 +1,7 @@
 # Lipsync Timing Checker
 
+![](./public/logo-og.png)
+
 # Description
 Application for calibrating viseme according to Audio track.
 
@@ -136,7 +138,6 @@ Automatically runs after dependencies installation to set up git hooks through h
 7) checkout "testing" and pull, then merge "main" into "testing" and push
 8) checkout "develop" and pull, then merge "testing" into "develop" and push 
 9) update RELEASE-NOTES.md with using generated notes in step 6, create PR with from "common/release-notes-update-vX.X.X" to "develop" message "[Common] RELEASE-NOTES.md update vX.X.X"
-
 
 ## Repository
 Link to repository https://github.com/a1exevs/lipsync-timing-checker.
